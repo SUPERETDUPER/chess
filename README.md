@@ -1,2 +1,2 @@
-# chess
-A classic chess game
+# Chess
+This game is currently being developped.
