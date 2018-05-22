@@ -3,6 +3,7 @@ package gui;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
@@ -14,13 +15,11 @@ public class BoardController {
     @FXML
     private void initialize() throws IOException {
         RowConstraints rowConstraint = new RowConstraints();
-        rowConstraint.setFillHeight(true);
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("board.fxml"));
+        rowConstraint.setVgrow(Priority.SOMETIMES);
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                board.add(fxmlLoader.load(), i, j);
+                board.add(FXMLLoader.load(getClass().getResource("/case.fxml")), i, j);
             }
 
             board.getRowConstraints().add(rowConstraint);

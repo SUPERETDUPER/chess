@@ -5,6 +5,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="gui.BoardController"
-      prefHeight="400.0" prefWidth="600.0">
-    <GridPane fx:id="board"/>
+      prefHeight="400.0" prefWidth="600.0"
+      alignment="CENTER" fillWidth="false">
+    <GridPane fx:id="board" VBox.vgrow="SOMETIMES"/>
 </VBox>

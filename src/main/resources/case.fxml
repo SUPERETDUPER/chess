@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Text?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="gui.CaseController" fx:id="case" prefWidth="${case.height}">
-
+           fx:controller="gui.CaseController" fx:id="case" prefWidth="${case.height}"
+           style="-fx-border-width: 2; -fx-border-color: black">
+    <Text>Test</Text>
 </StackPane>

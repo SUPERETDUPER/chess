@@ -17,7 +17,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Échec et Mat");
 
-        URL location = getClass().getClassLoader().getResource("case.fxml");
+        URL location = getClass().getResource("/board.fxml");
         primaryStage.setScene(new Scene(new FXMLLoader(location).load()));
         primaryStage.show();
     }
