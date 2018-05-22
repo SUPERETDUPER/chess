@@ -4,7 +4,7 @@
 <?import javafx.scene.text.Text?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="gui.CaseController" fx:id="case" prefWidth="${case.height}"
-           style="-fx-border-width: 2; -fx-border-color: black">
+           fx:controller="gui.CaseController"
+           style="-fx-border-width: 1; -fx-border-color: black">
     <Text>Test</Text>
 </StackPane>

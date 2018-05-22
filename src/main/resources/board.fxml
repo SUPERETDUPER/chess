@@ -7,5 +7,5 @@
       fx:controller="gui.BoardController"
       prefHeight="400.0" prefWidth="600.0"
       alignment="CENTER" fillWidth="false">
-    <GridPane fx:id="board" VBox.vgrow="SOMETIMES"/>
+    <GridPane fx:id="board" VBox.vgrow="SOMETIMES" prefWidth="${board.height}" style="-fx-background-color: green"/>
 </VBox>
