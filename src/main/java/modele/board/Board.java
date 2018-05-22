@@ -15,9 +15,7 @@ public class Board {
     }
 
     public Board() {
-        this(new HashMap<Position, Piece>(32));
-
-        //TODO Setup pieces
+        this(new HashMap<>(32));
     }
 
     @Nullable
@@ -25,21 +23,23 @@ public class Board {
         return board.get(position);
     }
 
+    @Nullable
     public Position getPosition(Piece piece){
         return board.inverse().get(piece);
     }
 
     public void movePiece(Position previous, Position next){
+        if (previous == next) throw new IllegalArgumentException("Position initiale et finale sont identiques");
         Piece piece = board.remove(previous);
         if (piece == null) throw new IllegalArgumentException("Aucune pièce à: " + previous);
         board.put(next, piece);
     }
 
-    public void put(Piece piece, Position position) {
+    public void ajouter(Position position, Piece piece) {
         board.put(position, piece);
     }
 
     public void removePiece(Position position){
-        board.remove(position);
+        if (board.remove(position) == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
     }
 }
