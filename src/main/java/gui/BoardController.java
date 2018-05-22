@@ -9,9 +9,14 @@ import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
 
+/**
+ * Controle le plateau de jeu
+ */
 public class BoardController {
+    private static final int TAILLE_DU_PLATEAU = 8;
+
     @FXML
-    private GridPane board;
+    private GridPane plateau;
 
     @FXML
     private void initialize() throws IOException {
@@ -20,13 +25,21 @@ public class BoardController {
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setHgrow(Priority.SOMETIMES);
 
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                board.add(FXMLLoader.load(getClass().getResource("/case.fxml")), i, j);
+        //Crée une case pour chaque position
+        for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
+            for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/case.fxml"));
+                fxmlLoader.setController(
+                        new CaseController(
+                                (i + j) % 2 == 0 //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
+                        )
+                );
+
+                plateau.add(fxmlLoader.load(), i, j);
             }
 
-            board.getRowConstraints().add(rowConstraint);
-            board.getColumnConstraints().add(columnConstraints);
+            plateau.getRowConstraints().add(rowConstraint);
+            plateau.getColumnConstraints().add(columnConstraints);
         }
     }
 }

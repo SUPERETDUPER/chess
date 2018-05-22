@@ -8,17 +8,30 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class App extends Application {
+    private static final String TITRE = "Échec et Mat";
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Commence l'interface graphique
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Échec et Mat");
+        primaryStage.setTitle(TITRE); //Définir le titre
 
-        URL location = getClass().getResource("/board.fxml");
-        primaryStage.setScene(new Scene(new FXMLLoader(location).load()));
+        //Load l'interface
+        primaryStage.setScene(
+                new Scene(
+                        new FXMLLoader(
+                                getClass().getResource("/board.fxml")
+                        ).load()
+                )
+        );
+
+        //Montrer l'interface
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 }
