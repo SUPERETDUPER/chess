@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:id="root">
-    <Text>Test</Text>
+    <Label fx:id="label">&#9812;</Label>
 </StackPane>
