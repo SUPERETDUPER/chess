@@ -1,4 +1,4 @@
-package main.modele.board;
+package modele.board;
 
 public class Position {
     private final int indexRangee;
