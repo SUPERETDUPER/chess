@@ -25,8 +25,14 @@ public class Board {
         return board.get(position);
     }
 
+    public Position getPosition(Piece piece){
+        return board.inverse().get(piece);
+    }
+
     public void movePiece(Position previous, Position next){
-        board.put(next, board.remove(previous));
+        Piece piece = board.remove(previous);
+        if (piece == null) throw new IllegalArgumentException("Aucune pièce à: " + previous);
+        board.put(next, piece);
     }
 
     public void put(Piece piece, Position position) {
