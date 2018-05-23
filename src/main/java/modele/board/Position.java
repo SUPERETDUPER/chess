@@ -19,6 +19,10 @@ public class Position {
         return indexRangee;
     }
 
+    public Position offset(int offsetRangee, int offsetColonne) {
+        return new Position(indexRangee + offsetRangee, indexColonne + offsetColonne);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;

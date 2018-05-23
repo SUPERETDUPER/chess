@@ -7,6 +7,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import modele.Modele;
+import modele.board.Board;
+import modele.board.BoardChangeListener;
 import modele.board.Position;
 
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.io.IOException;
 /**
  * Controle le plateau de jeu
  */
-public class BoardController {
+public class BoardController implements BoardChangeListener {
     private static final int TAILLE_DU_PLATEAU = 8;
 
     private final CaseController[][] caseControllers = new CaseController[TAILLE_DU_PLATEAU][TAILLE_DU_PLATEAU];
@@ -52,12 +54,16 @@ public class BoardController {
             plateau.getRowConstraints().add(rowConstraint);
             plateau.getColumnConstraints().add(columnConstraints);
         }
+
+        this.modele.getBoard().addListener(this);
+        notifyChange(this.modele.getBoard());
     }
 
-    public void redrawBoard() {
+    @Override
+    public void notifyChange(Board board) {
         for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
             for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
-                caseControllers[i][j].setPiece(modele.getBoard().getPiece(new Position(i, j)));
+                caseControllers[i][j].setPiece(board.getPiece(new Position(i, j)));
             }
         }
     }

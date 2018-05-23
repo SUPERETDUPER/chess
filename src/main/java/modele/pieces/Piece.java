@@ -1,5 +1,8 @@
 package modele.pieces;
 
+import modele.board.Board;
+import modele.moves.Action;
+
 public abstract class Piece {
     private final boolean isWhite;
 
@@ -18,4 +21,6 @@ public abstract class Piece {
     abstract int unicodeForWhite();
 
     abstract int unicodeForBlack();
+
+    abstract Action[] getPossibleActions(Board board);
 }

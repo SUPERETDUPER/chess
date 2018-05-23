@@ -40,7 +40,5 @@ public class App extends Application {
         //Montrer l'interface
         primaryStage.setMaximized(true);
         primaryStage.show();
-
-        controller.redrawBoard();
     }
 }
