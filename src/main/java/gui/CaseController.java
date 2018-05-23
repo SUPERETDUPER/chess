@@ -13,7 +13,7 @@ import modele.pieces.Piece;
  * Controle une case
  */
 public class CaseController {
-    public static final int HEIGHT_TO_FONT_RATIO = 2;
+    private static final float FONT_TO_HEIGHT_RATIO = 0.75F;
     @FXML
     private StackPane root;
     @FXML
@@ -29,7 +29,7 @@ public class CaseController {
     private void initialize() {
         //Met la couleur blanc ou gris
         root.setBackground(new Background(new BackgroundFill(isBlanc ? Color.WHITE : Color.LIGHTGRAY, null, null)));
-        root.heightProperty().addListener((observable, oldValue, newValue) -> text.setFont(Font.font(newValue.floatValue() / HEIGHT_TO_FONT_RATIO)));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> text.setFont(Font.font(newValue.floatValue() * FONT_TO_HEIGHT_RATIO)));
     }
 
     void setPiece(Piece piece) {

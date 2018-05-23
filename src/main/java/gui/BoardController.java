@@ -32,8 +32,10 @@ public class BoardController {
     private void initialize() throws IOException {
         RowConstraints rowConstraint = new RowConstraints();
         rowConstraint.setVgrow(Priority.SOMETIMES);
+        rowConstraint.setPercentHeight(100.0F / TAILLE_DU_PLATEAU);
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setHgrow(Priority.SOMETIMES);
+        columnConstraints.setPercentWidth(100.0F / TAILLE_DU_PLATEAU);
 
         //Crée une case pour chaque position
         for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
