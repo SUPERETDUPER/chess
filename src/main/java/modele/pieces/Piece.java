@@ -12,7 +12,7 @@ public abstract class Piece {
     }
 
     public String getUnicode() {
-        return "\\u" + (isWhite ? unicodeForWhite() : unicodeForBlack());
+        return Character.toString((char) (isWhite ? unicodeForWhite() : unicodeForBlack()));
     }
 
     abstract int unicodeForWhite();

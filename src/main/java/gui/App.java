@@ -24,9 +24,7 @@ public class App extends Application {
         primaryStage.setTitle(TITRE); //Définir le titre
 
         //Load l'interface
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/board.fxml")
-        );
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board.fxml"));
 
         Board board = new Board();
         board.ajouter(new Position(0, 0), new Roi(true));

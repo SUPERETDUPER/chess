@@ -1,5 +1,7 @@
 package modele.board;
 
+import java.util.Objects;
+
 public class Position {
     private final int indexRangee;
     private final int indexColonne;
@@ -28,5 +30,11 @@ public class Position {
     @Override
     public String toString() {
         return "rangee: " + indexRangee + " colonne: " + indexColonne;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(indexColonne, indexRangee);
     }
 }

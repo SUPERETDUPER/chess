@@ -34,6 +34,7 @@ class BoardTest {
      * Vérifie que
      * 1. getPosition fonctionne
      * 2. getPosition et null si la pièce n'existe pas
+     * 3. getPosition fonctionne avec deux fonctions identiques
      */
     @Test
     void getPosition() {
@@ -43,8 +44,9 @@ class BoardTest {
         Board board = new Board();
         board.ajouter(positionInitiale, piece);
 
-        Assertions.assertEquals(positionInitiale, board.getPosition(piece));
-        Assertions.assertNull(board.getPosition(new Roi(true)));
+        Assertions.assertEquals(positionInitiale, board.getPosition(piece)); //1
+        Assertions.assertNull(board.getPosition(new Roi(true))); //2
+        Assertions.assertNotNull(board.getPiece(new Position(0, 0))); //3
     }
 
     /**
@@ -61,7 +63,7 @@ class BoardTest {
         board.ajouter(positionInitiale, piece);
 
         Assertions.assertEquals(piece, board.getPiece(positionInitiale));
-        Assertions.assertNull(board.getPiece(new Position(0, 0)));
+        Assertions.assertNull(board.getPiece(new Position(0, 1)));
     }
 
     @Test
