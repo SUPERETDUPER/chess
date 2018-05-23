@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Board {
     private final BiMap<Position, Piece> board;
@@ -52,5 +53,9 @@ public class Board {
 
     public void removePiece(Position position){
         if (board.remove(position) == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
+    }
+
+    public Set<Piece> iteratePieces() {
+        return board.values();
     }
 }

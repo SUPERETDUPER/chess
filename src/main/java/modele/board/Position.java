@@ -3,6 +3,8 @@ package modele.board;
 import java.util.Objects;
 
 public class Position {
+    private static final int TAILLE = 8;
+
     private final int indexRangee;
     private final int indexColonne;
 
@@ -19,8 +21,17 @@ public class Position {
         return indexRangee;
     }
 
+    /**
+     * Retourne une position déplacé
+     *
+     * @return la nouvelle position
+     */
     public Position offset(int offsetRangee, int offsetColonne) {
         return new Position(indexRangee + offsetRangee, indexColonne + offsetColonne);
+    }
+
+    public boolean isValid() {
+        return 0 <= indexRangee && indexRangee < TAILLE && 0 <= indexColonne && indexColonne < TAILLE;
     }
 
     @Override

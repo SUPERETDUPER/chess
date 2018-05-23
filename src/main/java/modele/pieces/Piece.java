@@ -1,7 +1,9 @@
 package modele.pieces;
 
 import modele.board.Board;
-import modele.moves.Action;
+import modele.moves.Move;
+
+import java.util.Set;
 
 public abstract class Piece {
     private final boolean isWhite;
@@ -22,5 +24,5 @@ public abstract class Piece {
 
     abstract int unicodeForBlack();
 
-    abstract Action[] getPossibleActions(Board board);
+    public abstract Set<Move> generateMoves(Board board);
 }
