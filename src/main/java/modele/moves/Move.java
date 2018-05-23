@@ -18,6 +18,14 @@ public class Move {
         board.movePiece(start, end);
     }
 
+    public Position getStart() {
+        return start;
+    }
+
+    public Position getEnd() {
+        return end;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
@@ -26,6 +34,10 @@ public class Move {
         return this.end.equals(((Move) obj).end);
     }
 
+    @Override
+    public String toString() {
+        return "From: " + start + " to: " + end;
+    }
 
     @Override
     public int hashCode() {
