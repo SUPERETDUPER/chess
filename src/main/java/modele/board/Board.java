@@ -2,6 +2,7 @@ package modele.board;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import modele.pieces.Piece;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

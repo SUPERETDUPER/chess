@@ -4,8 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="gui.BoardController"
       prefHeight="400.0" prefWidth="600.0"
-      alignment="CENTER" fillWidth="false">
-    <GridPane fx:id="plateau" VBox.vgrow="SOMETIMES" prefWidth="${plateau.height}" style="-fx-background-color: green"/>
+      alignment="CENTER" fillWidth="false" fx:id="root">
+    <GridPane fx:id="plateau" VBox.vgrow="SOMETIMES" prefWidth="${root.height}" style="-fx-background-color: green"/>
 </VBox>

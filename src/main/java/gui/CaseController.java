@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import modele.pieces.Piece;
 
 /**
  * Controle une case
@@ -29,5 +30,10 @@ public class CaseController {
         //Met la couleur blanc ou gris
         root.setBackground(new Background(new BackgroundFill(isBlanc ? Color.WHITE : Color.LIGHTGRAY, null, null)));
         root.heightProperty().addListener((observable, oldValue, newValue) -> text.setFont(Font.font(newValue.floatValue() / HEIGHT_TO_FONT_RATIO)));
+    }
+
+    void setPiece(Piece piece) {
+        if (piece == null) text.setText(null);
+        else text.setText(piece.getUnicode());
     }
 }

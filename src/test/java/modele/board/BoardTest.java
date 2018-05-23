@@ -1,5 +1,7 @@
 package modele.board;
 
+import modele.pieces.Piece;
+import modele.pieces.Roi;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +15,7 @@ class BoardTest {
     @Test
     void movePiece() {
         //1.
-        Piece piece = new Piece(true) {
-        };
+        Piece piece = new Roi(true);
         Position positionInitiale = new Position(0, 0);
         Position positionFinale = new Position(6, 6);
 
@@ -36,16 +37,14 @@ class BoardTest {
      */
     @Test
     void getPosition() {
-        Piece piece = new Piece(true) {
-        };
+        Piece piece = new Roi(true);
         Position positionInitiale = new Position(0, 0);
 
         Board board = new Board();
         board.ajouter(positionInitiale, piece);
 
         Assertions.assertEquals(positionInitiale, board.getPosition(piece));
-        Assertions.assertNull(board.getPosition(new Piece(true) {
-        }));
+        Assertions.assertNull(board.getPosition(new Roi(true)));
     }
 
     /**
@@ -55,8 +54,7 @@ class BoardTest {
      */
     @Test
     void getPiece() {
-        Piece piece = new Piece(true) {
-        };
+        Piece piece = new Roi(true);
         Position positionInitiale = new Position(0, 0);
 
         Board board = new Board();
@@ -68,8 +66,7 @@ class BoardTest {
 
     @Test
     void removePiece() {
-        Piece piece = new Piece(true) {
-        };
+        Piece piece = new Roi(true);
         Position positionInitiale = new Position(0, 0);
 
         Board board = new Board();
