@@ -22,8 +22,8 @@ public class Move {
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof Move)) return false;
-        if (this.start != ((Move) obj).start) return false;
-        return this.end == ((Move) obj).end;
+        if (!this.start.equals(((Move) obj).start)) return false;
+        return this.end.equals(((Move) obj).end);
     }
 
 
