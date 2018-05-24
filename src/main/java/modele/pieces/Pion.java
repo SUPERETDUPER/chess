@@ -64,8 +64,19 @@ public class Pion extends Piece {
             if (end.isValid()) {
                 Piece piece = board.getPiece(end);
                 if (piece == null) {
-                    moves.add(new NormalMove(start, end));
-                    jumped = true;
+                    moves.add(new NormalMove(start, end) {
+                        @Override
+                        public void apply(Board board) {
+                            jumped = true;
+                            super.apply(board);
+                        }
+
+                        @Override
+                        public void undo(Board board) {
+                            jumped = false;
+                            super.undo(board);
+                        }
+                    });
                 }
             }
         }
