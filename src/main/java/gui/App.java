@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import modele.Modele;
 import modele.board.Board;
 import modele.board.Position;
+import modele.pieces.Cavalier;
 import modele.pieces.Roi;
 
 public class App extends Application {
@@ -18,6 +19,7 @@ public class App extends Application {
         Board board = new Board();
         board.ajouter(new Position(0, 0), new Roi(true));
         board.ajouter(new Position(7, 0), new Roi(false));
+        board.ajouter(new Position(1, 0), new Cavalier(true));
         modele = new Modele(board);
 
         launch(args);
