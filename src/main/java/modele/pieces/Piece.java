@@ -25,4 +25,8 @@ public abstract class Piece {
     abstract int unicodeForBlack();
 
     public abstract Set<Move> generateMoves(Board board);
+
+    boolean canEat(Piece piece) {
+        return piece.isWhite() != this.isWhite();
+    }
 }

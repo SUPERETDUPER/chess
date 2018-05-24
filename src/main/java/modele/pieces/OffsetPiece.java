@@ -26,11 +26,11 @@ abstract class OffsetPiece extends Piece {
             //Si la position n'est pas valide passer à la prochaine
             if (!nextPosition.isValid()) continue;
 
-            Piece pieceAPosition = board.getPiece(nextPosition);
+            Piece piece = board.getPiece(nextPosition);
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
-            if (pieceAPosition == null) moves.add(new NormalMove(currentPose, nextPosition));
-            else if (pieceAPosition.isWhite() != this.isWhite()) moves.add(new EatMove(currentPose, nextPosition));
+            if (piece == null) moves.add(new NormalMove(currentPose, nextPosition));
+            else if (canEat(piece)) moves.add(new EatMove(currentPose, nextPosition));
         }
 
         return moves;

@@ -1,5 +1,6 @@
 package modele.pieces;
 
+//TODO Implement castling
 public class Roi extends OffsetPiece {
     private static final int[][] OFFSETS = {
             {-1, -1},

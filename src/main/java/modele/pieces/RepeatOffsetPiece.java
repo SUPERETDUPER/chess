@@ -27,9 +27,11 @@ abstract class RepeatOffsetPiece extends Piece {
                 Piece piece = board.getPiece(end);
 
                 if (piece == null) moves.add(new NormalMove(startingPosition, end));
-                else if (piece.isWhite() == this.isWhite()) break;
                 else {
-                    moves.add(new EatMove(startingPosition, end));
+                    if (canEat(piece)) {
+                        moves.add(new EatMove(startingPosition, end));
+                    }
+
                     break;
                 }
 

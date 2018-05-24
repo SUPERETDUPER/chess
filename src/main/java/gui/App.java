@@ -25,6 +25,24 @@ public class App extends Application {
         board.ajouter(new Position(0, 6), new Cavalier(true));
         board.ajouter(new Position(0, 7), new Tour(true));
 
+        board.ajouter(new Position(1, 0), new Pion(true));
+        board.ajouter(new Position(1, 1), new Pion(true));
+        board.ajouter(new Position(1, 2), new Pion(true));
+        board.ajouter(new Position(1, 3), new Pion(true));
+        board.ajouter(new Position(1, 4), new Pion(true));
+        board.ajouter(new Position(1, 5), new Pion(true));
+        board.ajouter(new Position(1, 6), new Pion(true));
+        board.ajouter(new Position(1, 7), new Pion(true));
+
+        board.ajouter(new Position(6, 0), new Pion(false));
+        board.ajouter(new Position(6, 1), new Pion(false));
+        board.ajouter(new Position(6, 2), new Pion(false));
+        board.ajouter(new Position(6, 3), new Pion(false));
+        board.ajouter(new Position(6, 4), new Pion(false));
+        board.ajouter(new Position(6, 5), new Pion(false));
+        board.ajouter(new Position(6, 6), new Pion(false));
+        board.ajouter(new Position(6, 7), new Pion(false));
+
         board.ajouter(new Position(7, 0), new Tour(false));
         board.ajouter(new Position(7, 1), new Cavalier(false));
         board.ajouter(new Position(7, 2), new Fou(false));
