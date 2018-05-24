@@ -3,6 +3,7 @@ package modele.pieces;
 import modele.board.Board;
 import modele.board.Position;
 import modele.moves.Move;
+import modele.moves.NormalMove;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,7 +51,7 @@ public class Roi extends Piece {
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
             if (pieceAPosition != null && pieceAPosition.isWhite() == this.isWhite()) continue;
 
-            moves.add(new Move(currentPose, nextPosition));
+            moves.add(new NormalMove(currentPose, nextPosition));
         }
 
         return moves;

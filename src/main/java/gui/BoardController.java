@@ -12,6 +12,7 @@ import modele.board.BoardChangeListener;
 import modele.board.Position;
 import modele.moves.Move;
 import modele.pieces.Piece;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,18 +22,18 @@ import java.util.Set;
  * Controle le plateau de jeu
  */
 public class BoardController implements BoardChangeListener, CaseClickListener {
-    private static final int TAILLE_DU_PLATEAU = 8;
 
-    private final CaseController[][] caseControllers = new CaseController[TAILLE_DU_PLATEAU][TAILLE_DU_PLATEAU];
+    private final CaseController[][] caseControllers = new CaseController[Position.getMax()][Position.getMax()];
 
     @FXML
     private GridPane plateau;
 
+    @NotNull
     private Modele modele;
 
     private final HashMap<Position, Move> highlighted = new HashMap<>();
 
-    public BoardController(Modele modele) {
+    public BoardController(@NotNull Modele modele) {
         this.modele = modele;
     }
 
@@ -40,14 +41,14 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
     private void initialize() throws IOException {
         RowConstraints rowConstraint = new RowConstraints();
         rowConstraint.setVgrow(Priority.SOMETIMES);
-        rowConstraint.setPercentHeight(100.0F / TAILLE_DU_PLATEAU);
+        rowConstraint.setPercentHeight(100.0F / Position.getMax());
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setHgrow(Priority.SOMETIMES);
-        columnConstraints.setPercentWidth(100.0F / TAILLE_DU_PLATEAU);
+        columnConstraints.setPercentWidth(100.0F / Position.getMax());
 
         //Crée une case pour chaque position
-        for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
-            for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
+        for (int i = 0; i < Position.getMax(); i++) {
+            for (int j = 0; j < Position.getMax(); j++) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/case.fxml"));
                 caseControllers[i][j] = new CaseController(
                         new Position(i, j),
@@ -80,16 +81,16 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
         if (highlighted.isEmpty()) {
             Set<Move> moves = piece.generateMoves(modele.getBoard());
             for (Move move : moves) {
-                Position endPosition = move.getEnd();
-                highlighted.put(endPosition, move);
-                caseControllers[endPosition.getIndexRangee()][endPosition.getIndexColonne()].setHighlight(true);
+                Position displayPosition = move.getPositionToDisplay();
+                highlighted.put(displayPosition, move);
+                caseControllers[displayPosition.getIndexRangee()][displayPosition.getIndexColonne()].setHighlight(true);
             }
         }
         //Si highlighted et move exist
         else if (highlighted.containsKey(position)) {
             highlighted.get(position).apply(modele.getBoard());
-            for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
-                for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
+            for (int i = 0; i < Position.getMax(); i++) {
+                for (int j = 0; j < Position.getMax(); j++) {
                     caseControllers[i][j].setHighlight(false);
                 }
             }
@@ -97,8 +98,8 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
         }
         //Si highlighted et move n'existe pas
         else {
-            for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
-                for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
+            for (int i = 0; i < Position.getMax(); i++) {
+                for (int j = 0; j < Position.getMax(); j++) {
                     caseControllers[i][j].setHighlight(false);
                 }
             }
@@ -108,8 +109,8 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
 
     @Override
     public void notifyChange(Board board) {
-        for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
-            for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
+        for (int i = 0; i < Position.getMax(); i++) {
+            for (int j = 0; j < Position.getMax(); j++) {
                 caseControllers[i][j].setPiece(board.getPiece(new Position(i, j)));
             }
         }

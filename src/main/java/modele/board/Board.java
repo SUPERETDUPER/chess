@@ -44,6 +44,7 @@ public class Board {
         if (previous == next) throw new IllegalArgumentException("Position initiale et finale sont identiques");
         Piece piece = board.remove(previous);
         if (piece == null) throw new IllegalArgumentException("Aucune pièce à: " + previous);
+        if (board.get(next) != null) throw new IllegalArgumentException("Une pièce est à cette position");
         board.put(next, piece);
     }
 

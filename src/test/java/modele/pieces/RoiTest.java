@@ -3,6 +3,7 @@ package modele.pieces;
 import modele.board.Board;
 import modele.board.Position;
 import modele.moves.Move;
+import modele.moves.NormalMove;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -22,9 +23,9 @@ class RoiTest {
         Set<Move> moves = roi.generateMoves(board);
 
         Set<Move> expected = new HashSet<>();
-        expected.add(new Move(startingPos, new Position(0, 1)));
-        expected.add(new Move(startingPos, new Position(1, 0)));
-        expected.add(new Move(startingPos, new Position(1, 1)));
+        expected.add(new NormalMove(startingPos, new Position(0, 1)));
+        expected.add(new NormalMove(startingPos, new Position(1, 0)));
+        expected.add(new NormalMove(startingPos, new Position(1, 1)));
 
         Assertions.assertEquals(expected, moves);
     }

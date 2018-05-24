@@ -12,7 +12,14 @@ import modele.pieces.Roi;
 public class App extends Application {
     private static final String TITRE = "Échec et Mat";
 
+    private static Modele modele;
+
     public static void main(String[] args) {
+        Board board = new Board();
+        board.ajouter(new Position(0, 0), new Roi(true));
+        board.ajouter(new Position(7, 0), new Roi(false));
+        modele = new Modele(board);
+
         launch(args);
     }
 
@@ -26,9 +33,7 @@ public class App extends Application {
         //Load l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board.fxml"));
 
-        Board board = new Board();
-        board.ajouter(new Position(0, 0), new Roi(true));
-        BoardController controller = new BoardController(new Modele(board));
+        BoardController controller = new BoardController(modele);
         fxmlLoader.setController(controller);
 
         primaryStage.setScene(

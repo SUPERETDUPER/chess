@@ -2,6 +2,7 @@
   <configuration default="false" name="App" type="Application" factoryName="Application" singleton="true" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="gui.App" />
     <module name="chess" />
+    <option name="VM_PARAMETERS" value="-Dsun.awt.disablegrab=true" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>

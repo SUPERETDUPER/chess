@@ -52,4 +52,8 @@ public class Position {
     public int hashCode() {
         return Objects.hash(indexColonne, indexRangee);
     }
+
+    public static int getMax() {
+        return TAILLE;
+    }
 }
