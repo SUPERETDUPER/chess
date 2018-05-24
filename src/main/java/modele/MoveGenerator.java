@@ -18,7 +18,7 @@ public class MoveGenerator {
         List<Move> moves = new ArrayList<>();
 
         for (Piece piece : board.iteratePieces()) {
-            moves.addAll(piece.generateMoves(board));
+            moves.addAll(piece.generateAllMoves(board));
         }
 
         if (mustBeLegal) {

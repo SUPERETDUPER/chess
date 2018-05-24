@@ -1,5 +1,8 @@
 package modele.pieces;
 
+import modele.board.Board;
+import modele.board.Position;
+
 public class Tour extends RepeatOffsetPiece {
     private static final int[][] OFFSET = {
             {-1, 0},
@@ -10,6 +13,15 @@ public class Tour extends RepeatOffsetPiece {
 
     public Tour(boolean isWhite) {
         super(isWhite);
+    }
+
+    @Override
+    boolean attacksPosition(Board board, Position position) {
+        Position currentPosition = board.getPosition(this);
+        if (position.getIndexColonne() != currentPosition.getIndexColonne() && position.getIndexRangee() != currentPosition.getIndexRangee())
+            return false;
+
+        return super.attacksPosition(board, position);
     }
 
     @Override

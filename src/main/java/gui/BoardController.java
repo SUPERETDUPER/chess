@@ -81,7 +81,7 @@ public class BoardController {
 
         //Si aucun highlight et pièce appuyé, surligner toutes les possibilités
         if (currentMoves.isEmpty()) {
-            Set<Move> moves = piece.generateMoves(modele.getBoard());
+            Set<Move> moves = piece.generateLegalMoves(modele.getBoard(), modele.getBoard().getPosition(piece.isWhite() ? modele.getRoiBlanc() : modele.getRoiNoir()));
             for (Move move : moves) {
                 Position displayPosition = move.getPositionToDisplay();
                 currentMoves.put(displayPosition, move);

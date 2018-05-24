@@ -24,6 +24,13 @@ public class NormalMove implements Move {
     }
 
     @Override
+    public void undo(Board board) {
+        Piece piece = board.removePiece(end);
+        if (board.getPiece(start) != null) throw new IllegalArgumentException("Une pièce est à cette position");
+        board.ajouter(start, piece);
+    }
+
+    @Override
     public Position getPositionToDisplay() {
         return end;
     }

@@ -19,7 +19,8 @@ public class App extends Application {
         board.ajouter(new Position(0, 0), new Tour(true));
         board.ajouter(new Position(0, 1), new Cavalier(true));
         board.ajouter(new Position(0, 2), new Fou(true));
-        board.ajouter(new Position(0, 3), new Roi(true));
+        Roi roiBlanc = new Roi(true);
+        board.ajouter(new Position(0, 3), roiBlanc);
         board.ajouter(new Position(0, 4), new Dame(true));
         board.ajouter(new Position(0, 5), new Fou(true));
         board.ajouter(new Position(0, 6), new Cavalier(true));
@@ -46,12 +47,13 @@ public class App extends Application {
         board.ajouter(new Position(7, 0), new Tour(false));
         board.ajouter(new Position(7, 1), new Cavalier(false));
         board.ajouter(new Position(7, 2), new Fou(false));
-        board.ajouter(new Position(7, 3), new Roi(false));
+        Roi roiNoir = new Roi(false);
+        board.ajouter(new Position(7, 3), roiNoir);
         board.ajouter(new Position(7, 4), new Dame(false));
         board.ajouter(new Position(7, 5), new Fou(false));
         board.ajouter(new Position(7, 6), new Cavalier(false));
         board.ajouter(new Position(7, 7), new Tour(false));
-        modele = new Modele(board);
+        modele = new Modele(board, roiBlanc, roiNoir);
 
         launch(args);
     }

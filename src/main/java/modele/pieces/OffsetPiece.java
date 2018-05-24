@@ -15,7 +15,7 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public Set<Move> generateMoves(Board board) {
+    public Set<Move> generateAllMoves(Board board) {
         Set<Move> moves = new HashSet<>();
 
         Position currentPose = board.getPosition(this);
@@ -34,6 +34,17 @@ abstract class OffsetPiece extends Piece {
         }
 
         return moves;
+    }
+
+    @Override
+    boolean attacksPosition(Board board, Position position) {
+        Position currentPosition = board.getPosition(this);
+
+        for (int[] offset : getOffsets()) {
+            if (position.equals(currentPosition.offset(offset[0], offset[1]))) return true;
+        }
+
+        return false;
     }
 
     abstract int[][] getOffsets();

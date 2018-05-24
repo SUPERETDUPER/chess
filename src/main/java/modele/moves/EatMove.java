@@ -7,6 +7,7 @@ import modele.pieces.Piece;
 public class EatMove implements Move {
     private final Position start;
     private final Position end;
+    private Piece morceauPris;
 
     public EatMove(Position start, Position end) {
         this.start = start;
@@ -21,7 +22,14 @@ public class EatMove implements Move {
     @Override
     public void apply(Board board) {
         Piece piece = board.removePiece(start);
-        Piece morceauManger = board.removePiece(end);
+        morceauPris = board.removePiece(end);
         board.ajouter(end, piece);
+    }
+
+    @Override
+    public void undo(Board board) {
+        Piece piece = board.removePiece(end);
+        board.ajouter(end, morceauPris);
+        board.ajouter(start, piece);
     }
 }

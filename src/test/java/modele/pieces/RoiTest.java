@@ -20,7 +20,7 @@ class RoiTest {
         Position startingPos = new Position(0, 0);
         board.ajouter(startingPos, roi);
 
-        Set<Move> moves = roi.generateMoves(board);
+        Set<Move> moves = roi.generateAllMoves(board);
 
         Set<Move> expected = new HashSet<>();
         expected.add(new NormalMove(startingPos, new Position(0, 1)));

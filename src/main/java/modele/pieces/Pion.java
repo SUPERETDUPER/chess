@@ -28,7 +28,18 @@ public class Pion extends Piece {
     }
 
     @Override
-    public Set<Move> generateMoves(Board board) {
+    boolean attacksPosition(Board board, Position position) {
+        int orientation = isWhite() ? 1 : -1;
+
+        Position currentPosition = board.getPosition(this);
+
+        return position.equals(currentPosition.offset(orientation, -1)) ||
+                position.equals(currentPosition.offset(orientation, 1));
+
+    }
+
+    @Override
+    public Set<Move> generateAllMoves(Board board) {
         Set<Move> moves = new HashSet<>();
 
         Position start = board.getPosition(this);

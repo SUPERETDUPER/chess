@@ -15,7 +15,7 @@ abstract class RepeatOffsetPiece extends Piece {
     }
 
     @Override
-    public Set<Move> generateMoves(Board board) {
+    public Set<Move> generateAllMoves(Board board) {
         Set<Move> moves = new HashSet<>();
 
         Position startingPosition = board.getPosition(this);
@@ -40,6 +40,27 @@ abstract class RepeatOffsetPiece extends Piece {
         }
 
         return moves;
+    }
+
+    @Override
+    boolean attacksPosition(Board board, Position position) {
+        Position startingPosition = board.getPosition(this);
+
+        for (int[] offset : getRepeatOffset()) {
+            System.out.println("Scanning offset: " + offset[0] + " " + offset[1]);
+            Position testPosition = startingPosition.offset(offset[0], offset[1]);
+
+            while (testPosition.isValid()) {
+                if (testPosition.equals(position)) {
+                    System.out.println(testPosition + " " + position);
+                    return true;
+                }
+                if (board.getPiece(testPosition) != null) break;
+
+                testPosition = testPosition.offset(offset[0], offset[1]);
+            }
+        }
+        return false;
     }
 
     abstract int[][] getRepeatOffset();
