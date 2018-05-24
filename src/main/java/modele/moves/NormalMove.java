@@ -23,14 +23,6 @@ public class NormalMove implements Move {
         board.ajouter(end, piece);
     }
 
-    public Position getStart() {
-        return start;
-    }
-
-    public Position getEnd() {
-        return end;
-    }
-
     @Override
     public Position getPositionToDisplay() {
         return end;

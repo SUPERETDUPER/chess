@@ -2,6 +2,7 @@ package modele.pieces;
 
 import modele.board.Board;
 import modele.board.Position;
+import modele.moves.EatMove;
 import modele.moves.Move;
 import modele.moves.NormalMove;
 
@@ -49,9 +50,8 @@ public class Roi extends Piece {
             Piece pieceAPosition = board.getPiece(nextPosition);
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
-            if (pieceAPosition != null && pieceAPosition.isWhite() == this.isWhite()) continue;
-
-            moves.add(new NormalMove(currentPose, nextPosition));
+            if (pieceAPosition == null) moves.add(new NormalMove(currentPose, nextPosition));
+            else if (pieceAPosition.isWhite() != this.isWhite()) moves.add(new EatMove(currentPose, nextPosition));
         }
 
         return moves;
