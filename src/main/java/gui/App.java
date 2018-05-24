@@ -9,6 +9,7 @@ import modele.board.Board;
 import modele.board.Position;
 import modele.pieces.Cavalier;
 import modele.pieces.Roi;
+import modele.pieces.Tour;
 
 public class App extends Application {
     private static final String TITRE = "Échec et Mat";
@@ -17,9 +18,10 @@ public class App extends Application {
 
     public static void main(String[] args) {
         Board board = new Board();
-        board.ajouter(new Position(0, 0), new Roi(true));
+        board.ajouter(new Position(0, 1), new Roi(true));
         board.ajouter(new Position(7, 0), new Roi(false));
         board.ajouter(new Position(1, 0), new Cavalier(true));
+        board.ajouter(new Position(0, 0), new Tour(true));
         modele = new Modele(board);
 
         launch(args);
