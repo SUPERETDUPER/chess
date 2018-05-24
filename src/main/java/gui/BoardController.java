@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * Controle le plateau de jeu
  */
-public class BoardController implements CaseClickListener {
+public class BoardController {
 
     private final CaseController[][] caseControllers = new CaseController[Position.getMax()][Position.getMax()];
 
@@ -29,7 +29,7 @@ public class BoardController implements CaseClickListener {
     @NotNull
     private final Modele modele;
 
-    private final HashMap<Position, Move> highlighted = new HashMap<>();
+    private final HashMap<Position, Move> currentMoves = new HashMap<>();
 
     public BoardController(@NotNull Modele modele) {
         this.modele = modele;
@@ -37,6 +37,7 @@ public class BoardController implements CaseClickListener {
 
     @FXML
     private void initialize() throws IOException {
+        //Créer les constraintes pour les rangées/colonnes
         RowConstraints rowConstraint = new RowConstraints();
         rowConstraint.setVgrow(Priority.SOMETIMES);
         rowConstraint.setPercentHeight(100.0F / Position.getMax());
@@ -47,65 +48,72 @@ public class BoardController implements CaseClickListener {
         //Crée une case pour chaque position
         for (int i = 0; i < Position.getMax(); i++) {
             for (int j = 0; j < Position.getMax(); j++) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/case.fxml"));
+
+                //Créer un controleur
                 caseControllers[i][j] = new CaseController(
                         new Position(i, j),
-                        this,
+                        this::caseClicked,
                         (i + j) % 2 == 0 //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                 );
 
+                //Créer une case avec le controlleur
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/case.fxml"));
                 fxmlLoader.setController(caseControllers[i][j]);
 
+                //Ajouter la case
                 plateau.add(fxmlLoader.load(), i, j);
             }
 
+            //Appliquer la constraintes
             plateau.getRowConstraints().add(rowConstraint);
             plateau.getColumnConstraints().add(columnConstraints);
         }
 
-        redraw();
+        updateBoard();
     }
 
-    @Override
-    public void caseClicked(Position position) {
+    private void caseClicked(Position position) {
         Piece piece = modele.getBoard().getPiece(position);
 
         //Si aucun highlight et aucune pièce
-        if (highlighted.isEmpty() && piece == null) return;
+        if (currentMoves.isEmpty() && piece == null) return;
 
 
         //Si aucun highlight et pièce appuyé, surligner toutes les possibilités
-        if (highlighted.isEmpty()) {
+        if (currentMoves.isEmpty()) {
             Set<Move> moves = piece.generateMoves(modele.getBoard());
             for (Move move : moves) {
                 Position displayPosition = move.getPositionToDisplay();
-                highlighted.put(displayPosition, move);
+                currentMoves.put(displayPosition, move);
                 caseControllers[displayPosition.getIndexRangee()][displayPosition.getIndexColonne()].setHighlight(true);
             }
         }
-        //Si highlighted et move exist
-        else if (highlighted.containsKey(position)) {
-            highlighted.get(position).apply(modele.getBoard());
-            for (int i = 0; i < Position.getMax(); i++) {
-                for (int j = 0; j < Position.getMax(); j++) {
-                    caseControllers[i][j].setHighlight(false);
-                }
-            }
-            highlighted.clear();
-            redraw();
+        //Si currentMoves et move exist
+        else if (currentMoves.containsKey(position)) {
+            currentMoves.get(position).apply(modele.getBoard()); //Bouge la pièce
+            updateBoard(); //Affiche changement
+            clearHighlight(); //Enlève le highlight
         }
-        //Si highlighted et move n'existe pas
+        //Si highlighted exist et move n'existe pas
         else {
-            for (int i = 0; i < Position.getMax(); i++) {
-                for (int j = 0; j < Position.getMax(); j++) {
-                    caseControllers[i][j].setHighlight(false);
-                }
-            }
-            highlighted.clear();
+            clearHighlight();
         }
     }
 
-    private void redraw() {
+    private void clearHighlight() {
+        for (int i = 0; i < Position.getMax(); i++) {
+            for (int j = 0; j < Position.getMax(); j++) {
+                caseControllers[i][j].setHighlight(false);
+            }
+        }
+
+        currentMoves.clear();
+    }
+
+    /**
+     * Pour chaque case afficher la pièce à cette case
+     */
+    private void updateBoard() {
         for (int i = 0; i < Position.getMax(); i++) {
             for (int j = 0; j < Position.getMax(); j++) {
                 caseControllers[i][j].setPiece(modele.getBoard().getPiece(new Position(i, j)));

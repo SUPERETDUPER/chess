@@ -13,10 +13,17 @@ import modele.pieces.Piece;
 /**
  * Controle une case
  */
-public class CaseController {
+class CaseController {
+    @FunctionalInterface
+    interface CaseClickListener {
+        void caseClicked(Position position);
+    }
+
     private static final float FONT_TO_HEIGHT_RATIO = 0.75F;
+
     @FXML
     private StackPane root;
+
     @FXML
     private Text text;
 
@@ -24,7 +31,7 @@ public class CaseController {
     private final Position position;
     private final CaseClickListener caseClickListener;
 
-    public CaseController(Position position, CaseClickListener caseClickListener, boolean isBlanc) {
+    CaseController(Position position, CaseClickListener caseClickListener, boolean isBlanc) {
         this.isBlanc = isBlanc;
         this.position = position;
         this.caseClickListener = caseClickListener;
@@ -54,5 +61,4 @@ public class CaseController {
 
         root.setBackground(new Background(new BackgroundFill(result, null, null)));
     }
-
 }

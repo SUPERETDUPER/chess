@@ -8,7 +8,7 @@ import java.util.Set;
 public abstract class Piece {
     private final boolean isWhite;
 
-    public Piece(boolean isWhite) {
+    Piece(boolean isWhite) {
         this.isWhite = isWhite;
     }
 
