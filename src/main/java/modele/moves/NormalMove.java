@@ -21,7 +21,6 @@ public class NormalMove implements Move {
         Piece piece = board.removePiece(start);
         if (board.getPiece(end) != null) throw new IllegalArgumentException("Une pièce est à cette position");
         board.ajouter(end, piece);
-        board.notifyChange();
     }
 
     public Position getStart() {

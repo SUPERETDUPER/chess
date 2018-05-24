@@ -7,8 +7,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import modele.Modele;
-import modele.board.Board;
-import modele.board.BoardChangeListener;
 import modele.board.Position;
 import modele.moves.Move;
 import modele.pieces.Piece;
@@ -21,7 +19,7 @@ import java.util.Set;
 /**
  * Controle le plateau de jeu
  */
-public class BoardController implements BoardChangeListener, CaseClickListener {
+public class BoardController implements CaseClickListener {
 
     private final CaseController[][] caseControllers = new CaseController[Position.getMax()][Position.getMax()];
 
@@ -29,7 +27,7 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
     private GridPane plateau;
 
     @NotNull
-    private Modele modele;
+    private final Modele modele;
 
     private final HashMap<Position, Move> highlighted = new HashMap<>();
 
@@ -65,8 +63,7 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
             plateau.getColumnConstraints().add(columnConstraints);
         }
 
-        this.modele.getBoard().addListener(this);
-        notifyChange(this.modele.getBoard());
+        redraw();
     }
 
     @Override
@@ -95,6 +92,7 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
                 }
             }
             highlighted.clear();
+            redraw();
         }
         //Si highlighted et move n'existe pas
         else {
@@ -107,11 +105,10 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
         }
     }
 
-    @Override
-    public void notifyChange(Board board) {
+    private void redraw() {
         for (int i = 0; i < Position.getMax(); i++) {
             for (int j = 0; j < Position.getMax(); j++) {
-                caseControllers[i][j].setPiece(board.getPiece(new Position(i, j)));
+                caseControllers[i][j].setPiece(modele.getBoard().getPiece(new Position(i, j)));
             }
         }
     }
