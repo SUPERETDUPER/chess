@@ -14,6 +14,8 @@ import modele.moves.Move;
 import modele.pieces.Piece;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Controle le plateau de jeu
@@ -28,7 +30,7 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
 
     private Modele modele;
 
-    private Position highlighted;
+    private final HashMap<Position, Move> highlighted = new HashMap<>();
 
     public BoardController(Modele modele) {
         this.modele = modele;
@@ -70,23 +72,32 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
     public void caseClicked(Position position) {
         Piece piece = modele.getBoard().getPiece(position);
 
-        if (piece != null) {
-            //Si aucune position est surlignée, surligner toutes les possibilités
-            if (highlighted == null) {
-                for (Move move : piece.generateMoves(modele.getBoard())) {
-                    Position endPosition = move.getEnd();
-                    caseControllers[endPosition.getIndexRangee()][endPosition.getIndexColonne()].setHighlight(true);
-                }
-                highlighted = position;
-            } else if (highlighted.equals(position)) {
-                for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
-                    for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
-                        caseControllers[i][j].setHighlight(false);
-                    }
-                }
-                highlighted = null;
+        //Si aucun highlight et aucune pièce
+        if (highlighted.isEmpty() && piece == null) return;
+
+
+        //Si aucun highlight et pièce appuyé, surligner toutes les possibilités
+        if (highlighted.isEmpty()) {
+            Set<Move> moves = piece.generateMoves(modele.getBoard());
+            for (Move move : moves) {
+                Position endPosition = move.getEnd();
+                highlighted.put(endPosition, move);
+                caseControllers[endPosition.getIndexRangee()][endPosition.getIndexColonne()].setHighlight(true);
             }
-            //TODO Make highlight for different positions
+        }
+        //Si highlighted et move exist
+        else if (highlighted.containsKey(position)) {
+            //TODO Make move
+            System.out.println("Make move: " + highlighted.get(position));
+        }
+        //Si highlighted et move n'existe pas
+        else {
+            for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
+                for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
+                    caseControllers[i][j].setHighlight(false);
+                }
+            }
+            highlighted.clear();
         }
     }
 
