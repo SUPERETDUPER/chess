@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class Roi extends Piece {
     private static final int[][] OFFSETS = {
-            {-1, 0},
+            {-1, -1},
             {-1, 0},
             {-1, 1},
             {0, -1},

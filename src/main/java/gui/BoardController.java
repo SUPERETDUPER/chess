@@ -87,8 +87,13 @@ public class BoardController implements BoardChangeListener, CaseClickListener {
         }
         //Si highlighted et move exist
         else if (highlighted.containsKey(position)) {
-            //TODO Make move
-            System.out.println("Make move: " + highlighted.get(position));
+            highlighted.get(position).apply(modele.getBoard());
+            for (int i = 0; i < TAILLE_DU_PLATEAU; i++) {
+                for (int j = 0; j < TAILLE_DU_PLATEAU; j++) {
+                    caseControllers[i][j].setHighlight(false);
+                }
+            }
+            highlighted.clear();
         }
         //Si highlighted et move n'existe pas
         else {

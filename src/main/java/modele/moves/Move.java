@@ -14,8 +14,9 @@ public class Move {
         this.end = end;
     }
 
-    void apply(Board board) {
+    public void apply(Board board) {
         board.movePiece(start, end);
+        board.notifyChange();
     }
 
     public Position getStart() {
