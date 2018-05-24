@@ -9,8 +9,8 @@ import modele.moves.NormalMove;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class OffsetPiece extends Piece {
-    public OffsetPiece(boolean isWhite) {
+abstract class OffsetPiece extends Piece {
+    OffsetPiece(boolean isWhite) {
         super(isWhite);
     }
 

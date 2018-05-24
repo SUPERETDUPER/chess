@@ -7,9 +7,7 @@ import javafx.stage.Stage;
 import modele.Modele;
 import modele.board.Board;
 import modele.board.Position;
-import modele.pieces.Cavalier;
-import modele.pieces.Roi;
-import modele.pieces.Tour;
+import modele.pieces.*;
 
 public class App extends Application {
     private static final String TITRE = "Échec et Mat";
@@ -18,10 +16,23 @@ public class App extends Application {
 
     public static void main(String[] args) {
         Board board = new Board();
-        board.ajouter(new Position(0, 1), new Roi(true));
-        board.ajouter(new Position(7, 0), new Roi(false));
-        board.ajouter(new Position(1, 0), new Cavalier(true));
         board.ajouter(new Position(0, 0), new Tour(true));
+        board.ajouter(new Position(0, 1), new Cavalier(true));
+        board.ajouter(new Position(0, 2), new Fou(true));
+        board.ajouter(new Position(0, 3), new Roi(true));
+        board.ajouter(new Position(0, 4), new Dame(true));
+        board.ajouter(new Position(0, 5), new Fou(true));
+        board.ajouter(new Position(0, 6), new Cavalier(true));
+        board.ajouter(new Position(0, 7), new Tour(true));
+
+        board.ajouter(new Position(7, 0), new Tour(false));
+        board.ajouter(new Position(7, 1), new Cavalier(false));
+        board.ajouter(new Position(7, 2), new Fou(false));
+        board.ajouter(new Position(7, 3), new Roi(false));
+        board.ajouter(new Position(7, 4), new Dame(false));
+        board.ajouter(new Position(7, 5), new Fou(false));
+        board.ajouter(new Position(7, 6), new Cavalier(false));
+        board.ajouter(new Position(7, 7), new Tour(false));
         modele = new Modele(board);
 
         launch(args);

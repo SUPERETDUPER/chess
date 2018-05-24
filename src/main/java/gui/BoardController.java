@@ -61,7 +61,7 @@ public class BoardController {
                 fxmlLoader.setController(caseControllers[i][j]);
 
                 //Ajouter la case
-                plateau.add(fxmlLoader.load(), i, j);
+                plateau.add(fxmlLoader.load(), j, i);
             }
 
             //Appliquer la constraintes
