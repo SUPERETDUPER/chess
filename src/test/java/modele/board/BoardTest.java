@@ -9,29 +9,6 @@ class BoardTest {
 
     /**
      * Vérifie que
-     * 1. Une pièce bouge correctement
-     * 2. On ne peut pas bouger une pièce qui n'existe pas
-     */
-    @Test
-    void movePiece() {
-        //1.
-        Piece piece = new Roi(true);
-        Position positionInitiale = new Position(0, 0);
-        Position positionFinale = new Position(6, 6);
-
-        Board board = new Board();
-        board.ajouter(positionInitiale, piece);
-        board.movePiece(positionInitiale, positionFinale);
-
-        Assertions.assertEquals(piece, board.getPiece(positionFinale));
-        Assertions.assertEquals(positionFinale, board.getPosition(piece));
-
-        //2.
-        Assertions.assertThrows(IllegalArgumentException.class, () -> board.movePiece(positionInitiale, positionFinale));
-    }
-
-    /**
-     * Vérifie que
      * 1. getPosition fonctionne
      * 2. getPosition et null si la pièce n'existe pas
      * 3. getPosition fonctionne avec deux fonctions identiques

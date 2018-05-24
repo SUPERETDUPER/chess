@@ -2,6 +2,7 @@ package modele.moves;
 
 import modele.board.Board;
 import modele.board.Position;
+import modele.pieces.Piece;
 
 import java.util.Objects;
 
@@ -10,12 +11,16 @@ public class NormalMove implements Move {
     private final Position end;
 
     public NormalMove(Position start, Position end) {
+        if (start == end) throw new IllegalArgumentException("Position initiale et finale sont identiques");
+
         this.start = start;
         this.end = end;
     }
 
     public void apply(Board board) {
-        board.movePiece(start, end);
+        Piece piece = board.removePiece(start);
+        if (board.getPiece(end) != null) throw new IllegalArgumentException("Une pièce est à cette position");
+        board.ajouter(end, piece);
         board.notifyChange();
     }
 

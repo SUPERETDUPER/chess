@@ -40,20 +40,14 @@ public class Board {
         return board.inverse().get(piece);
     }
 
-    public void movePiece(Position previous, Position next){
-        if (previous == next) throw new IllegalArgumentException("Position initiale et finale sont identiques");
-        Piece piece = board.remove(previous);
-        if (piece == null) throw new IllegalArgumentException("Aucune pièce à: " + previous);
-        if (board.get(next) != null) throw new IllegalArgumentException("Une pièce est à cette position");
-        board.put(next, piece);
-    }
-
     public void ajouter(Position position, Piece piece) {
         board.put(position, piece);
     }
 
-    public void removePiece(Position position){
-        if (board.remove(position) == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
+    public Piece removePiece(Position position) {
+        Piece remove = board.remove(position);
+        if (remove == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
+        return remove;
     }
 
     public Set<Piece> iteratePieces() {
