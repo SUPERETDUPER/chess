@@ -26,7 +26,7 @@ public abstract class Piece {
 
     abstract int unicodeForBlack();
 
-    public Set<Move> generateLegalMoves(Board board, Position positionOfKing) {
+    public Set<Move> generateLegalMoves(Board board, Roi roi) {
         Set<Move> moves = generateAllMoves(board);
         Set<Move> legalMoves = new HashSet<>();
 
@@ -35,7 +35,7 @@ public abstract class Piece {
 
             move.apply(board);
 
-            if (boardIsLegal(board, positionOfKing)) {
+            if (boardIsLegal(board, board.getPosition(roi))) {
                 legalMoves.add(move);
             }
 
@@ -47,12 +47,13 @@ public abstract class Piece {
         return legalMoves;
     }
 
-    private boolean boardIsLegal(Board board, Position positionOfKing) {
+    private boolean boardIsLegal(Board board, Position positionDuRoi) {
         for (Piece piece : board.iteratePieces()) {
             if (canEat(piece)) {
                 System.out.println("scanning piece: " + piece.getClass().getSimpleName());
 
-                if (piece.attacksPosition(board, positionOfKing)) {
+                if (piece.attacksPosition(board, positionDuRoi)) {
+                    System.out.println("Not legal because of : " + piece.getClass().getSimpleName());
                     return false;
                 }
             }
