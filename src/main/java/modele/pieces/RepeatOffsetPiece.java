@@ -47,14 +47,13 @@ abstract class RepeatOffsetPiece extends Piece {
         Position startingPosition = board.getPosition(this);
 
         for (int[] offset : getRepeatOffset()) {
-            System.out.println("Scanning offset: " + offset[0] + " " + offset[1]);
             Position testPosition = startingPosition.offset(offset[0], offset[1]);
 
             while (testPosition.isValid()) {
                 if (testPosition.equals(position)) {
-                    System.out.println(testPosition + " " + position);
                     return true;
                 }
+
                 if (board.getPiece(testPosition) != null) break;
 
                 testPosition = testPosition.offset(offset[0], offset[1]);

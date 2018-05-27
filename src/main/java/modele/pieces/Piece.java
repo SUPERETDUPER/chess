@@ -31,8 +31,6 @@ public abstract class Piece {
         Set<Move> legalMoves = new HashSet<>();
 
         for (Move move : moves) {
-            System.out.println("Scanning moves: " + move);
-
             move.apply(board);
 
             if (boardIsLegal(board, board.getPosition(roi))) {
@@ -42,18 +40,14 @@ public abstract class Piece {
             move.undo(board);
         }
 
-        System.out.println(legalMoves + " " + legalMoves.size());
-
         return legalMoves;
     }
 
     private boolean boardIsLegal(Board board, Position positionDuRoi) {
         for (Piece piece : board.iteratePieces()) {
             if (canEat(piece)) {
-                System.out.println("scanning piece: " + piece.getClass().getSimpleName());
 
                 if (piece.attacksPosition(board, positionDuRoi)) {
-                    System.out.println("Not legal because of : " + piece.getClass().getSimpleName());
                     return false;
                 }
             }
