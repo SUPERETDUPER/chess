@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import modele.Modele;
 import modele.board.Board;
 import modele.board.Position;
+import modele.joueur.JoueurHumain;
 import modele.pieces.*;
 
 public class App extends Application {
@@ -53,7 +54,7 @@ public class App extends Application {
         board.ajouter(new Position(7, 5), new Fou(false));
         board.ajouter(new Position(7, 6), new Cavalier(false));
         board.ajouter(new Position(7, 7), new Tour(false));
-        modele = new Modele(board, roiBlanc, roiNoir);
+        modele = new Modele(board, roiBlanc, roiNoir, new JoueurHumain(), new JoueurHumain());
 
         launch(args);
     }

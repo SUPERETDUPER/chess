@@ -90,7 +90,7 @@ public class BoardController {
         }
         //Si currentMoves et move exist
         else if (currentMoves.containsKey(position)) {
-            currentMoves.get(position).apply(modele.getBoard()); //Bouge la pièce
+            modele.jouer(currentMoves.get(position)); //Bouge la pièce
             updateBoard(); //Affiche changement
             clearHighlight(); //Enlève le highlight
         }
