@@ -3,7 +3,7 @@ package modele.pieces;
 import modele.board.Board;
 import modele.board.Position;
 
-public class Tour extends RepeatOffsetPiece {
+public class Tour extends DirectionPiece {
     private static final int[][] OFFSET = {
             {-1, 0},
             {0, 1},
@@ -35,7 +35,7 @@ public class Tour extends RepeatOffsetPiece {
     }
 
     @Override
-    int[][] getRepeatOffset() {
+    int[][] getDirections() {
         return OFFSET;
     }
 }

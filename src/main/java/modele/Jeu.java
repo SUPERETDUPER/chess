@@ -37,13 +37,14 @@ public class Jeu {
     }
 
     public void commencer() {
-        getCurrentPlayer().notifierTour(new MoveEvent(true, this::jouer));
+        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(true, this::jouer));
     }
 
     public void jouer(Move move) {
-        move.apply(board);
-        currentPlayerIsWhite = !currentPlayerIsWhite;
-        getCurrentPlayer().notifierTour(new MoveEvent(currentPlayerIsWhite, this::jouer));
+        move.apply(board); //Jouer
+        currentPlayerIsWhite = !currentPlayerIsWhite; //Changer le tour
+        //TODO Check for checkmate and stale mate
+        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(currentPlayerIsWhite, this::jouer)); //Notifier l'autre joueur
     }
 
     private Joueur getCurrentPlayer() {

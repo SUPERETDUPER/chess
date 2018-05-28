@@ -9,6 +9,9 @@ import modele.moves.NormalMove;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Un morceau qui peut attacker les positions à ses côtés (Ex. cavalier, roi)
+ */
 abstract class OffsetPiece extends Piece {
     OffsetPiece(boolean isWhite) {
         super(isWhite);

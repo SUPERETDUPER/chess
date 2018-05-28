@@ -7,19 +7,11 @@ import modele.pieces.Piece;
 /**
  * Un mouvement qui mange une pièce
  */
-public class EatMove implements Move {
-    private final Position start;
-    private final Position end;
+public class EatMove extends Move {
     private Piece morceauPris;
 
     public EatMove(Position start, Position end) {
-        this.start = start;
-        this.end = end;
-    }
-
-    @Override
-    public Position getPositionToDisplay() {
-        return end;
+        super(start, end);
     }
 
     @Override

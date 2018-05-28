@@ -1,7 +1,7 @@
 package modele.pieces;
 
-public class Fou extends RepeatOffsetPiece {
-    private static final int[][] OFFSET = {
+public class Fou extends DirectionPiece {
+    private static final int[][] DIRECTIONS = {
             {-1, -1},
             {-1, 1},
             {1, -1},
@@ -14,8 +14,8 @@ public class Fou extends RepeatOffsetPiece {
     }
 
     @Override
-    int[][] getRepeatOffset() {
-        return OFFSET;
+    int[][] getDirections() {
+        return DIRECTIONS;
     }
 
     @Override

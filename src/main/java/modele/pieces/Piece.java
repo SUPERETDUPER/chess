@@ -7,6 +7,9 @@ import modele.moves.Move;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Une pièce de jeu
+ */
 public abstract class Piece {
     private final boolean isWhite;
 
@@ -18,6 +21,9 @@ public abstract class Piece {
         return isWhite;
     }
 
+    /**
+     * @return le code de la pièce en unicode
+     */
     public String getUnicode() {
         return Character.toString((char) (isWhite ? unicodeForWhite() : unicodeForBlack()));
     }

@@ -9,8 +9,11 @@ import modele.moves.NormalMove;
 import java.util.HashSet;
 import java.util.Set;
 
-abstract class RepeatOffsetPiece extends Piece {
-    RepeatOffsetPiece(boolean isWhite) {
+/**
+ * Une pièce qui attack dans une direction (ex. dame, fou, tour)
+ */
+abstract class DirectionPiece extends Piece {
+    DirectionPiece(boolean isWhite) {
         super(isWhite);
     }
 
@@ -20,8 +23,8 @@ abstract class RepeatOffsetPiece extends Piece {
 
         Position startingPosition = board.getPosition(this);
 
-        for (int[] offset : getRepeatOffset()) {
-            Position end = startingPosition.offset(offset[0], offset[1]);
+        for (int[] direction : getDirections()) {
+            Position end = startingPosition.offset(direction[0], direction[1]);
 
             while (end.isValid()) {
                 Piece piece = board.getPiece(end);
@@ -35,7 +38,7 @@ abstract class RepeatOffsetPiece extends Piece {
                     break;
                 }
 
-                end = end.offset(offset[0], offset[1]);
+                end = end.offset(direction[0], direction[1]);
             }
         }
 
@@ -46,8 +49,8 @@ abstract class RepeatOffsetPiece extends Piece {
     boolean attacksPosition(Board board, Position position) {
         Position startingPosition = board.getPosition(this);
 
-        for (int[] offset : getRepeatOffset()) {
-            Position testPosition = startingPosition.offset(offset[0], offset[1]);
+        for (int[] direction : getDirections()) {
+            Position testPosition = startingPosition.offset(direction[0], direction[1]);
 
             while (testPosition.isValid()) {
                 if (testPosition.equals(position)) {
@@ -56,11 +59,11 @@ abstract class RepeatOffsetPiece extends Piece {
 
                 if (board.getPiece(testPosition) != null) break;
 
-                testPosition = testPosition.offset(offset[0], offset[1]);
+                testPosition = testPosition.offset(direction[0], direction[1]);
             }
         }
         return false;
     }
 
-    abstract int[][] getRepeatOffset();
+    abstract int[][] getDirections();
 }

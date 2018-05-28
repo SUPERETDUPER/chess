@@ -4,12 +4,12 @@ import modele.moves.Move;
 
 import java.util.function.Consumer;
 
-public class MoveEvent {
+public class MoveCallbackWrapper {
     private boolean isConsumed = false;
     private final boolean isWhite;
     private final Consumer<Move> moveCallback;
 
-    public MoveEvent(boolean isWhite, Consumer<Move> moveCallback) {
+    public MoveCallbackWrapper(boolean isWhite, Consumer<Move> moveCallback) {
         this.isWhite = isWhite;
         this.moveCallback = moveCallback;
     }

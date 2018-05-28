@@ -7,7 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import modele.Jeu;
-import modele.MoveEvent;
+import modele.MoveCallbackWrapper;
 import modele.board.Position;
 import modele.joueur.Joueur;
 import modele.moves.Move;
@@ -37,7 +37,7 @@ public class BoardController implements Joueur {
     private final HashMap<Position, Move> currentMoves = new HashMap<>();
 
     @Nullable
-    private MoveEvent moveEvent;
+    private MoveCallbackWrapper moveCallbackWrapper;
 
     public BoardController(@NotNull Jeu jeu) {
         this.jeu = jeu;
@@ -81,8 +81,8 @@ public class BoardController implements Joueur {
     }
 
     @Override
-    public void notifierTour(MoveEvent moveEvent) {
-        this.moveEvent = moveEvent;
+    public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
+        this.moveCallbackWrapper = moveCallbackWrapper;
     }
 
     private void caseClicked(Position position) {
@@ -91,7 +91,7 @@ public class BoardController implements Joueur {
         //Si aucun pièce pré-sélectionné
         if (currentMoves.isEmpty()) {
             //Quitter si il n'y a rien a faire
-            if (piece == null || moveEvent == null || moveEvent.isConsumed() || moveEvent.isWhite() != piece.isWhite())
+            if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || moveCallbackWrapper.isWhite() != piece.isWhite())
                 return;
 
             //Calculer les mouvements possibles
@@ -108,7 +108,7 @@ public class BoardController implements Joueur {
         } else {
             //Si la case est une des options appliquer le movement
             if (currentMoves.containsKey(position)) {
-                moveEvent.jouer(currentMoves.get(position));
+                moveCallbackWrapper.jouer(currentMoves.get(position));
                 updateBoard(); //Affiche changement
             }
 
