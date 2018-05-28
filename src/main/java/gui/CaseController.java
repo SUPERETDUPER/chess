@@ -14,6 +14,11 @@ import modele.pieces.Piece;
  * Controle une case
  */
 class CaseController {
+    enum Highlight {
+        NORMAL,
+        ROUGE,
+        BLUE
+    }
 
     private static final float FONT_TO_HEIGHT_RATIO = 0.75F;
 
@@ -36,7 +41,7 @@ class CaseController {
     @FXML
     private void initialize() {
         //Met la couleur blanc ou gris
-        setHighlight(false);
+        setHighlight(Highlight.NORMAL);
         root.heightProperty().addListener((observable, oldValue, newValue) -> text.setFont(Font.font(newValue.floatValue() * FONT_TO_HEIGHT_RATIO)));
         root.setOnMouseClicked(event -> caseClickListener.caseClicked(position));
     }
@@ -46,13 +51,19 @@ class CaseController {
         else text.setText(piece.getUnicode());
     }
 
-    void setHighlight(boolean isHighlighted) {
+    void setHighlight(Highlight highlight) {
         Color result;
 
-        if (isHighlighted) {
-            result = isBlanc ? Color.LIGHTBLUE : Color.BLUE;
-        } else {
-            result = isBlanc ? Color.WHITE : Color.LIGHTGRAY;
+        switch (highlight) {
+            case BLUE:
+                result = isBlanc ? Color.LIGHTBLUE : Color.BLUE;
+                break;
+            case ROUGE:
+                result = Color.PALEVIOLETRED;
+                break;
+            default:
+                result = isBlanc ? Color.WHITE : Color.LIGHTGRAY;
+                break;
         }
 
         root.setBackground(new Background(new BackgroundFill(result, null, null)));

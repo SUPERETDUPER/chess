@@ -98,7 +98,11 @@ public class BoardController implements Joueur {
                 for (Move move : moves) {
                     Position displayPosition = move.getPositionToDisplay();
                     currentMoves.put(displayPosition, move);
-                    caseControllers[displayPosition.getIndexRangee()][displayPosition.getIndexColonne()].setHighlight(true);
+                    caseControllers[displayPosition.getIndexRangee()][displayPosition.getIndexColonne()].setHighlight(CaseController.Highlight.BLUE);
+                }
+
+                if (!moves.isEmpty()) {
+                    caseControllers[position.getIndexRangee()][position.getIndexColonne()].setHighlight(CaseController.Highlight.ROUGE);
                 }
             }
         }
@@ -120,7 +124,7 @@ public class BoardController implements Joueur {
     private void clearHighlight() {
         for (int i = 0; i < Position.getMax(); i++) {
             for (int j = 0; j < Position.getMax(); j++) {
-                caseControllers[i][j].setHighlight(false);
+                caseControllers[i][j].setHighlight(CaseController.Highlight.NORMAL);
             }
         }
 
