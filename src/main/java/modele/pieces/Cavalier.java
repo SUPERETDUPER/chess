@@ -12,8 +12,8 @@ public class Cavalier extends OffsetPiece {
             {1, -2}
     };
 
-    public Cavalier(boolean isWhite) {
-        super(isWhite);
+    public Cavalier(Couleur couleur) {
+        super(couleur);
     }
 
     @Override

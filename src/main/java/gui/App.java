@@ -18,8 +18,8 @@ public class App extends Application {
     private static Jeu jeu;
 
     public static void main(String[] args) {
-        Roi roiNoir = new Roi(false);
-        Roi roiBlanc = new Roi(true);
+        Roi roiNoir = new Roi(Couleur.NOIR);
+        Roi roiBlanc = new Roi(Couleur.BLANC);
 
         jeu = new Jeu(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir);
 
@@ -29,41 +29,41 @@ public class App extends Application {
     @NotNull
     private static Board getBoard(Roi roiNoir, Roi roiBlanc) {
         Board board = new Board();
-        board.ajouter(new Position(0, 0), new Tour(true));
-        board.ajouter(new Position(0, 1), new Cavalier(true));
-        board.ajouter(new Position(0, 2), new Fou(true));
+        board.ajouter(new Position(0, 0), new Tour(Couleur.BLANC));
+        board.ajouter(new Position(0, 1), new Cavalier(Couleur.BLANC));
+        board.ajouter(new Position(0, 2), new Fou(Couleur.BLANC));
         board.ajouter(new Position(0, 3), roiBlanc);
-        board.ajouter(new Position(0, 4), new Dame(true));
-        board.ajouter(new Position(0, 5), new Fou(true));
-        board.ajouter(new Position(0, 6), new Cavalier(true));
-        board.ajouter(new Position(0, 7), new Tour(true));
+        board.ajouter(new Position(0, 4), new Dame(Couleur.BLANC));
+        board.ajouter(new Position(0, 5), new Fou(Couleur.BLANC));
+        board.ajouter(new Position(0, 6), new Cavalier(Couleur.BLANC));
+        board.ajouter(new Position(0, 7), new Tour(Couleur.BLANC));
 
-        board.ajouter(new Position(1, 0), new Pion(true));
-        board.ajouter(new Position(1, 1), new Pion(true));
-        board.ajouter(new Position(1, 2), new Pion(true));
-        board.ajouter(new Position(1, 3), new Pion(true));
-        board.ajouter(new Position(1, 4), new Pion(true));
-        board.ajouter(new Position(1, 5), new Pion(true));
-        board.ajouter(new Position(1, 6), new Pion(true));
-        board.ajouter(new Position(1, 7), new Pion(true));
+        board.ajouter(new Position(1, 0), new Pion(Couleur.BLANC));
+        board.ajouter(new Position(1, 1), new Pion(Couleur.BLANC));
+        board.ajouter(new Position(1, 2), new Pion(Couleur.BLANC));
+        board.ajouter(new Position(1, 3), new Pion(Couleur.BLANC));
+        board.ajouter(new Position(1, 4), new Pion(Couleur.BLANC));
+        board.ajouter(new Position(1, 5), new Pion(Couleur.BLANC));
+        board.ajouter(new Position(1, 6), new Pion(Couleur.BLANC));
+        board.ajouter(new Position(1, 7), new Pion(Couleur.BLANC));
 
-        board.ajouter(new Position(6, 0), new Pion(false));
-        board.ajouter(new Position(6, 1), new Pion(false));
-        board.ajouter(new Position(6, 2), new Pion(false));
-        board.ajouter(new Position(6, 3), new Pion(false));
-        board.ajouter(new Position(6, 4), new Pion(false));
-        board.ajouter(new Position(6, 5), new Pion(false));
-        board.ajouter(new Position(6, 6), new Pion(false));
-        board.ajouter(new Position(6, 7), new Pion(false));
+        board.ajouter(new Position(6, 0), new Pion(Couleur.NOIR));
+        board.ajouter(new Position(6, 1), new Pion(Couleur.NOIR));
+        board.ajouter(new Position(6, 2), new Pion(Couleur.NOIR));
+        board.ajouter(new Position(6, 3), new Pion(Couleur.NOIR));
+        board.ajouter(new Position(6, 4), new Pion(Couleur.NOIR));
+        board.ajouter(new Position(6, 5), new Pion(Couleur.NOIR));
+        board.ajouter(new Position(6, 6), new Pion(Couleur.NOIR));
+        board.ajouter(new Position(6, 7), new Pion(Couleur.NOIR));
 
-        board.ajouter(new Position(7, 0), new Tour(false));
-        board.ajouter(new Position(7, 1), new Cavalier(false));
-        board.ajouter(new Position(7, 2), new Fou(false));
+        board.ajouter(new Position(7, 0), new Tour(Couleur.NOIR));
+        board.ajouter(new Position(7, 1), new Cavalier(Couleur.NOIR));
+        board.ajouter(new Position(7, 2), new Fou(Couleur.NOIR));
         board.ajouter(new Position(7, 3), roiNoir);
-        board.ajouter(new Position(7, 4), new Dame(false));
-        board.ajouter(new Position(7, 5), new Fou(false));
-        board.ajouter(new Position(7, 6), new Cavalier(false));
-        board.ajouter(new Position(7, 7), new Tour(false));
+        board.ajouter(new Position(7, 4), new Dame(Couleur.NOIR));
+        board.ajouter(new Position(7, 5), new Fou(Couleur.NOIR));
+        board.ajouter(new Position(7, 6), new Cavalier(Couleur.NOIR));
+        board.ajouter(new Position(7, 7), new Tour(Couleur.NOIR));
 
         return board;
     }
@@ -92,8 +92,8 @@ public class App extends Application {
         primaryStage.setMaximized(true);
         primaryStage.show();
 
-        jeu.ajouterJoueur(new JoueurHumain(controller, true));
-        jeu.ajouterJoueur(new JoueurOrdi(jeu, false));
+        jeu.ajouterJoueur(new JoueurHumain(controller, Couleur.BLANC));
+        jeu.ajouterJoueur(new JoueurOrdi(jeu, Couleur.NOIR));
         jeu.commencer();
     }
 }

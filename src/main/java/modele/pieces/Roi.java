@@ -13,8 +13,8 @@ public class Roi extends OffsetPiece {
             {1, 1}
     };
 
-    public Roi(boolean isWhite) {
-        super(isWhite);
+    public Roi(Couleur couleur) {
+        super(couleur);
     }
 
     @Override

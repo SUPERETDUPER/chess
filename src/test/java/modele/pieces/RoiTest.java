@@ -14,7 +14,7 @@ class RoiTest {
 
     @Test
     void generateMoves() {
-        Roi roi = new Roi(true);
+        Roi roi = new Roi(Couleur.BLANC);
 
         Board board = new Board();
         Position startingPos = new Position(0, 0);

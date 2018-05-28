@@ -13,8 +13,8 @@ import java.util.Set;
  * Une pièce qui attack dans une direction (ex. dame, fou, tour)
  */
 abstract class DirectionPiece extends Piece {
-    DirectionPiece(boolean isWhite) {
-        super(isWhite);
+    DirectionPiece(Couleur couleur) {
+        super(couleur);
     }
 
     @Override
@@ -31,7 +31,7 @@ abstract class DirectionPiece extends Piece {
 
                 if (piece == null) moves.add(new NormalMove(startingPosition, end));
                 else {
-                    if (canEat(piece)) {
+                    if (piece.getCouleur() != couleur) {
                         moves.add(new EatMove(startingPosition, end));
                     }
 

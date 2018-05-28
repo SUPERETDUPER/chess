@@ -13,8 +13,8 @@ public class Dame extends DirectionPiece {
     };
 
 
-    public Dame(boolean isWhite) {
-        super(isWhite);
+    public Dame(Couleur couleur) {
+        super(couleur);
     }
 
     @Override

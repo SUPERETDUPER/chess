@@ -9,8 +9,8 @@ public class Fou extends DirectionPiece {
     };
 
 
-    public Fou(boolean isWhite) {
-        super(isWhite);
+    public Fou(Couleur couleur) {
+        super(couleur);
     }
 
     @Override

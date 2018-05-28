@@ -12,21 +12,21 @@ import java.util.Set;
  * Une pièce de jeu
  */
 public abstract class Piece {
-    private final boolean isWhite;
+    final Couleur couleur;
 
-    Piece(boolean isWhite) {
-        this.isWhite = isWhite;
+    public Piece(Couleur couleur) {
+        this.couleur = couleur;
     }
 
-    public boolean isWhite() {
-        return isWhite;
+    public Couleur getCouleur() {
+        return couleur;
     }
 
     /**
      * @return le code de la pièce en unicode
      */
     public String getUnicode() {
-        return Character.toString((char) (isWhite ? unicodeForWhite() : unicodeForBlack()));
+        return Character.toString((char) (couleur == Couleur.BLANC ? unicodeForWhite() : unicodeForBlack()));
     }
 
     abstract int unicodeForWhite();
@@ -42,7 +42,7 @@ public abstract class Piece {
         for (Move move : moves) {
             move.apply(tempBoard);
 
-            if (jeu.roiInCheck(isWhite)) {
+            if (jeu.roiInCheck(couleur)) {
                 legalMoves.add(move);
             }
 
@@ -55,10 +55,6 @@ public abstract class Piece {
     public abstract Set<Move> generateAllMoves(Board board);
 
     public abstract boolean attacksPosition(Board board, Position position);
-
-    public boolean canEat(Piece piece) {
-        return piece.isWhite() != this.isWhite();
-    }
 
     public abstract int getValue();
 }

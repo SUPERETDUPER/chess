@@ -11,8 +11,8 @@ public class Tour extends DirectionPiece {
             {0, -1}
     };
 
-    public Tour(boolean isWhite) {
-        super(isWhite);
+    public Tour(Couleur couleur) {
+        super(couleur);
     }
 
     @Override

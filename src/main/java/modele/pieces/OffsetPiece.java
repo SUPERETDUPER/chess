@@ -13,8 +13,8 @@ import java.util.Set;
  * Un morceau qui peut attacker les positions à ses côtés (Ex. cavalier, roi)
  */
 abstract class OffsetPiece extends Piece {
-    OffsetPiece(boolean isWhite) {
-        super(isWhite);
+    OffsetPiece(Couleur couleur) {
+        super(couleur);
     }
 
     @Override
@@ -33,7 +33,7 @@ abstract class OffsetPiece extends Piece {
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
             if (piece == null) moves.add(new NormalMove(currentPose, nextPosition));
-            else if (canEat(piece)) moves.add(new EatMove(currentPose, nextPosition));
+            else if (piece.getCouleur() != couleur) moves.add(new EatMove(currentPose, nextPosition));
         }
 
         return moves;

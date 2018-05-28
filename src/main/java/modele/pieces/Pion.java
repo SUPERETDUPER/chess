@@ -13,8 +13,8 @@ import java.util.Set;
 public class Pion extends Piece {
     private boolean jumped = false;
 
-    public Pion(boolean isWhite) {
-        super(isWhite);
+    public Pion(Couleur couleur) {
+        super(couleur);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class Pion extends Piece {
 
     @Override
     public boolean attacksPosition(Board board, Position position) {
-        int orientation = isWhite() ? 1 : -1;
+        int orientation = getCouleur() == Couleur.BLANC ? 1 : -1;
 
         Position currentPosition = board.getPosition(this);
 
@@ -46,7 +46,7 @@ public class Pion extends Piece {
 
         boolean blocked = false;
 
-        int orientation = isWhite() ? 1 : -1;
+        int orientation = getCouleur() == Couleur.BLANC ? 1 : -1;
 
         Position end = start.offset(orientation, 0);
 
@@ -85,14 +85,14 @@ public class Pion extends Piece {
 
         if (end.isValid()) {
             Piece piece = board.getPiece(end);
-            if (piece != null && canEat(piece)) moves.add(new EatMove(start, end));
+            if (piece != null && piece.getCouleur() != couleur) moves.add(new EatMove(start, end));
         }
 
         end = start.offset(orientation, 1);
 
         if (end.isValid()) {
             Piece piece = board.getPiece(end);
-            if (piece != null && canEat(piece)) moves.add(new EatMove(start, end));
+            if (piece != null && piece.getCouleur() != couleur) moves.add(new EatMove(start, end));
         }
 
 

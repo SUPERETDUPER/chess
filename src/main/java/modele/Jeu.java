@@ -3,8 +3,10 @@ package modele;
 import modele.board.Board;
 import modele.joueur.Joueur;
 import modele.moves.Move;
+import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import modele.pieces.Roi;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,12 +21,13 @@ public class Jeu {
     @NotNull
     private final Roi roiNoir;
 
+    //TODO Change to hash enum
     @Nullable
     private Joueur joueurBlanc;
     @Nullable
     private Joueur joueurNoir;
 
-    private boolean currentPlayerIsWhite = true;
+    private Couleur currentPlayerCouleur = Couleur.BLANC;
 
     public Jeu(@NotNull Board board, @NotNull Roi roiBlanc, @NotNull Roi roiNoir) {
         this.board = board;
@@ -32,9 +35,9 @@ public class Jeu {
         this.roiNoir = roiNoir;
     }
 
-    public boolean roiInCheck(boolean isRoiBlanc) {
+    public boolean roiInCheck(Couleur couleurDuRoi) {
         for (Piece piece : board.iteratePieces()) {
-            if (piece.isWhite() != isRoiBlanc && piece.attacksPosition(board, board.getPosition(getRoi(isRoiBlanc)))) {
+            if (piece.getCouleur() != couleurDuRoi && piece.attacksPosition(board, board.getPosition(getRoi(couleurDuRoi)))) {
                 return false;
             }
         }
@@ -43,11 +46,11 @@ public class Jeu {
     }
 
     @NotNull
-    public static Set<Move> getAllLegalMoves(Jeu jeu, boolean forWhite) {
+    public static Set<Move> getAllLegalMoves(Jeu jeu, Couleur couleur) {
         Set<Move> moves = new HashSet<>();
 
         for (Piece piece : jeu.getBoard().iteratePieces()) {
-            if (piece.isWhite() == forWhite) {
+            if (piece.getCouleur() == couleur) {
                 moves.addAll(piece.getLegalMoves(jeu));
             }
         }
@@ -56,7 +59,7 @@ public class Jeu {
     }
 
     public void ajouterJoueur(@NotNull Joueur joueur) {
-        if (joueur.isBlanc()) joueurBlanc = joueur;
+        if (joueur.getCouleur() == Couleur.BLANC) joueurBlanc = joueur;
         else joueurNoir = joueur;
     }
 
@@ -66,12 +69,12 @@ public class Jeu {
 
     public void jouer(Move move) {
         move.apply(board); //Jouer
-        currentPlayerIsWhite = !currentPlayerIsWhite; //Changer le tour
+        currentPlayerCouleur = currentPlayerCouleur == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
-        Set<Move> moves = getAllLegalMoves(this, currentPlayerIsWhite);
+        Set<Move> moves = getAllLegalMoves(this, currentPlayerCouleur);
 
         if (moves.isEmpty()) {
-            if (roiInCheck(currentPlayerIsWhite)) {
+            if (roiInCheck(currentPlayerCouleur)) {
                 System.out.println("Stalemate");
             } else {
                 System.out.println("Checkmate");
@@ -82,8 +85,9 @@ public class Jeu {
     }
 
 
+    @Contract(pure = true)
     private Joueur getCurrentPlayer() {
-        return currentPlayerIsWhite ? joueurBlanc : joueurNoir;
+        return currentPlayerCouleur == Couleur.BLANC ? joueurBlanc : joueurNoir;
     }
 
     @NotNull
@@ -91,17 +95,7 @@ public class Jeu {
         return board;
     }
 
-    public Roi getRoi(boolean isRoiBlanc) {
-        return isRoiBlanc ? this.roiBlanc : roiNoir;
-    }
-
-    @NotNull
-    public Roi getRoiBlanc() {
-        return roiBlanc;
-    }
-
-    @NotNull
-    public Roi getRoiNoir() {
-        return roiNoir;
+    public Roi getRoi(Couleur couleur) {
+        return couleur == Couleur.BLANC ? this.roiBlanc : roiNoir;
     }
 }

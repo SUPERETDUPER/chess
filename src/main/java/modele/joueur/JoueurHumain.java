@@ -2,23 +2,24 @@ package modele.joueur;
 
 import gui.BoardController;
 import modele.MoveCallbackWrapper;
+import modele.pieces.Couleur;
 
 public class JoueurHumain implements Joueur {
     private final BoardController boardController;
-    private final boolean isBlanc;
+    private final Couleur couleur;
 
-    public JoueurHumain(BoardController boardController, boolean isBlanc) {
+    public JoueurHumain(BoardController boardController, Couleur couleur) {
         this.boardController = boardController;
-        this.isBlanc = isBlanc;
+        this.couleur = couleur;
     }
 
     @Override
     public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
-        boardController.getTour(isBlanc, moveCallbackWrapper);
+        boardController.getTour(couleur, moveCallbackWrapper);
     }
 
     @Override
-    public boolean isBlanc() {
-        return isBlanc;
+    public Couleur getCouleur() {
+        return couleur;
     }
 }

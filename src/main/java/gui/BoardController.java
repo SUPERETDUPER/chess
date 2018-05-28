@@ -10,6 +10,7 @@ import modele.Jeu;
 import modele.MoveCallbackWrapper;
 import modele.board.Position;
 import modele.moves.Move;
+import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,7 @@ public class BoardController {
 
     @Nullable
     private MoveCallbackWrapper moveCallbackWrapper;
-    private boolean tourBlanc;
+    private Couleur couleurDuTour;
 
     public BoardController(@NotNull Jeu jeu) {
         this.jeu = jeu;
@@ -80,9 +81,9 @@ public class BoardController {
         updateBoard();
     }
 
-    public void getTour(boolean tourBlanc, MoveCallbackWrapper moveCallbackWrapper) {
+    public void getTour(Couleur couleurDuTour, MoveCallbackWrapper moveCallbackWrapper) {
         this.moveCallbackWrapper = moveCallbackWrapper;
-        this.tourBlanc = tourBlanc;
+        this.couleurDuTour = couleurDuTour;
     }
 
     private void caseClicked(Position position) {
@@ -91,7 +92,7 @@ public class BoardController {
         //Si aucun pièce pré-sélectionné
         if (currentMoves.isEmpty()) {
             //Quitter si il n'y a rien a faire
-            if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || tourBlanc != piece.isWhite())
+            if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || couleurDuTour != piece.getCouleur())
                 return;
 
             removeCurrentMoves();

@@ -3,21 +3,22 @@ package modele.joueur;
 import modele.Jeu;
 import modele.MoveCallbackWrapper;
 import modele.moves.Move;
+import modele.pieces.Couleur;
 
 import java.util.Set;
 
 public class JoueurOrdi implements Joueur {
     private final Jeu jeu;
-    private final boolean isWhite;
+    private final Couleur couleur;
 
-    public JoueurOrdi(Jeu jeu, boolean isWhite) {
+    public JoueurOrdi(Jeu jeu, Couleur couleur) {
         this.jeu = jeu;
-        this.isWhite = isWhite;
+        this.couleur = couleur;
     }
 
     @Override
     public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
-        Set<Move> moves = Jeu.getAllLegalMoves(jeu, isWhite);
+        Set<Move> moves = Jeu.getAllLegalMoves(jeu, couleur);
 
         Move bestMove = null;
 
@@ -27,7 +28,7 @@ public class JoueurOrdi implements Joueur {
                 continue;
             }
 
-            if (isWhite) {
+            if (couleur == Couleur.BLANC) {
                 if (move.getValue() < bestMove.getValue()) {
                     bestMove = move;
                 }
@@ -42,7 +43,7 @@ public class JoueurOrdi implements Joueur {
     }
 
     @Override
-    public boolean isBlanc() {
-        return isWhite;
+    public Couleur getCouleur() {
+        return couleur;
     }
 }

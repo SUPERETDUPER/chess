@@ -2,6 +2,7 @@ package modele.moves;
 
 import modele.board.Board;
 import modele.board.Position;
+import modele.pieces.Couleur;
 import modele.pieces.Piece;
 
 /**
@@ -30,6 +31,6 @@ public class EatMove extends Move {
 
     @Override
     public int getValue() {
-        return morceauPris.getValue() * (morceauPris.isWhite() ? 1 : -1);
+        return morceauPris.getValue() * (morceauPris.getCouleur() == Couleur.BLANC ? 1 : -1);
     }
 }
