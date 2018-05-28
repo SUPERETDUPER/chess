@@ -6,38 +6,34 @@ import modele.moves.Move;
 import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import modele.pieces.Roi;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Jeu {
     @NotNull
     private final Board board;
-    @NotNull
-    private final Roi roiBlanc;
-    @NotNull
-    private final Roi roiNoir;
 
-    //TODO Change to hash enum
-    @Nullable
-    private Joueur joueurBlanc;
-    @Nullable
-    private Joueur joueurNoir;
+    @NotNull
+    private final EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
+
+    @NotNull
+    private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
     private Couleur currentPlayerCouleur = Couleur.BLANC;
 
-    public Jeu(@NotNull Board board, @NotNull Roi roiBlanc, @NotNull Roi roiNoir) {
+    public Jeu(@NotNull Board board, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
         this.board = board;
-        this.roiBlanc = roiBlanc;
-        this.roiNoir = roiNoir;
+
+        rois.put(premierRoi.getCouleur(), premierRoi);
+        rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
     }
 
     public boolean roiInCheck(Couleur couleurDuRoi) {
         for (Piece piece : board.iteratePieces()) {
-            if (piece.getCouleur() != couleurDuRoi && piece.attacksPosition(board, board.getPosition(getRoi(couleurDuRoi)))) {
+            if (piece.getCouleur() != couleurDuRoi && piece.attacksPosition(board, board.getPosition(rois.get(couleurDuRoi)))) {
                 return false;
             }
         }
@@ -59,12 +55,11 @@ public class Jeu {
     }
 
     public void ajouterJoueur(@NotNull Joueur joueur) {
-        if (joueur.getCouleur() == Couleur.BLANC) joueurBlanc = joueur;
-        else joueurNoir = joueur;
+        joueurs.put(joueur.getCouleur(), joueur);
     }
 
     public void commencer() {
-        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(this::jouer));
+        joueurs.get(currentPlayerCouleur).notifierTour(new MoveCallbackWrapper(this::jouer));
     }
 
     public void jouer(Move move) {
@@ -81,21 +76,12 @@ public class Jeu {
             }
         }
 
-        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
+        joueurs.get(currentPlayerCouleur).notifierTour(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
     }
 
-
-    @Contract(pure = true)
-    private Joueur getCurrentPlayer() {
-        return currentPlayerCouleur == Couleur.BLANC ? joueurBlanc : joueurNoir;
-    }
 
     @NotNull
     public Board getBoard() {
         return board;
-    }
-
-    public Roi getRoi(Couleur couleur) {
-        return couleur == Couleur.BLANC ? this.roiBlanc : roiNoir;
     }
 }
