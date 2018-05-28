@@ -94,6 +94,8 @@ public class BoardController implements Joueur {
             if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || moveCallbackWrapper.isWhite() != piece.isWhite())
                 return;
 
+            removeCurrentMoves();
+
             //Calculer les mouvements possibles
             Set<Move> moves = piece.generateLegalMoves(jeu.getBoard(), piece.isWhite() ? jeu.getRoiBlanc() : jeu.getRoiNoir());
 
