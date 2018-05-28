@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import modele.Jeu;
 import modele.board.Board;
 import modele.board.Position;
+import modele.joueur.JoueurOrdi;
 import modele.pieces.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -91,7 +92,7 @@ public class App extends Application {
         primaryStage.show();
 
         jeu.setJoueurBlanc(controller);
-        jeu.setJoueurNoir(controller);
+        jeu.setJoueurNoir(new JoueurOrdi(jeu));
         jeu.commencer();
     }
 }

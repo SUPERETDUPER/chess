@@ -6,6 +6,7 @@ import modele.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,7 +14,15 @@ import java.util.Set;
  * Utilise le BiMap de Google Guava
  */
 public class Board {
-    private final BiMap<Position, Piece> board = HashBiMap.create(32);
+    private final BiMap<Position, Piece> board;
+
+    public Board() {
+        this.board = HashBiMap.create(32);
+    }
+
+    public Board(Map<Position, Piece> startingMap) {
+        board = HashBiMap.create(startingMap);
+    }
 
     @Nullable
     public Piece getPiece(Position position) {
@@ -39,5 +48,9 @@ public class Board {
     @NotNull
     public Set<Piece> iteratePieces() {
         return board.values();
+    }
+
+    public Board getCopie() {
+        return new Board(board);
     }
 }

@@ -56,6 +56,10 @@ public class Jeu {
         return board;
     }
 
+    public Roi getRoi(boolean isRoiBlanc) {
+        return isRoiBlanc ? this.roiBlanc : roiNoir;
+    }
+
     @NotNull
     public Roi getRoiBlanc() {
         return roiBlanc;

@@ -36,14 +36,16 @@ public abstract class Piece {
         Set<Move> moves = generateAllMoves(board);
         Set<Move> legalMoves = new HashSet<>();
 
-        for (Move move : moves) {
-            move.apply(board);
+        Board tempBoard = board.getCopie();
 
-            if (boardIsLegal(board, board.getPosition(roi))) {
+        for (Move move : moves) {
+            move.apply(tempBoard);
+
+            if (boardIsLegal(tempBoard, tempBoard.getPosition(roi))) {
                 legalMoves.add(move);
             }
 
-            move.undo(board);
+            move.undo(tempBoard);
         }
 
         return legalMoves;
