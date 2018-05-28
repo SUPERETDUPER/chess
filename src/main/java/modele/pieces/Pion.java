@@ -98,4 +98,9 @@ public class Pion extends Piece {
 
         return moves;
     }
+
+    @Override
+    public int getValue() {
+        return 1;
+    }
 }

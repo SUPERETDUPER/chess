@@ -27,4 +27,9 @@ public class EatMove extends Move {
         board.ajouter(end, morceauPris);
         board.ajouter(start, piece);
     }
+
+    @Override
+    public int getValue() {
+        return morceauPris.getValue() * (morceauPris.isWhite() ? 1 : -1);
+    }
 }

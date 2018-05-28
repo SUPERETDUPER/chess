@@ -27,4 +27,9 @@ public class Fou extends DirectionPiece {
     int unicodeForBlack() {
         return 9821;
     }
+
+    @Override
+    public int getValue() {
+        return 3;
+    }
 }

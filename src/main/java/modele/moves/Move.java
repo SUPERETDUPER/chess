@@ -22,6 +22,8 @@ public abstract class Move {
 
     public abstract void undo(Board board);
 
+    public abstract int getValue();
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;

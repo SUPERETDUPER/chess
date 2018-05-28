@@ -59,4 +59,6 @@ public abstract class Piece {
     public boolean canEat(Piece piece) {
         return piece.isWhite() != this.isWhite();
     }
+
+    public abstract int getValue();
 }

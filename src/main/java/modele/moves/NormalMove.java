@@ -21,4 +21,9 @@ public class NormalMove extends Move {
         if (board.getPiece(start) != null) throw new IllegalArgumentException("Une pièce est à cette position");
         board.ajouter(start, piece);
     }
+
+    @Override
+    public int getValue() {
+        return 0;
+    }
 }

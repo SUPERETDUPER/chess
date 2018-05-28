@@ -31,4 +31,9 @@ public class Roi extends OffsetPiece {
     int[][] getOffsets() {
         return OFFSETS;
     }
+
+    @Override
+    public int getValue() {
+        return 1000;
+    }
 }

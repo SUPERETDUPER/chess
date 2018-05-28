@@ -38,4 +38,9 @@ public class Tour extends DirectionPiece {
     int[][] getDirections() {
         return OFFSET;
     }
+
+    @Override
+    public int getValue() {
+        return 5;
+    }
 }

@@ -18,13 +18,25 @@ public class JoueurOrdi implements Joueur {
     public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
         Set<Move> moves = Helper.getAllLegalMoves(moveCallbackWrapper.isWhite(), jeu.getBoard(), jeu.getRoi(moveCallbackWrapper.isWhite()));
 
-        int element = (int) ((moves.size() - 1) * Math.random());
-
-        int i = 0;
+        Move bestMove = null;
 
         for (Move move : moves) {
-            if (element == i) moveCallbackWrapper.jouer(move);
-            i++;
+            if (bestMove == null) {
+                bestMove = move;
+                continue;
+            }
+
+            if (moveCallbackWrapper.isWhite()) {
+                if (move.getValue() < bestMove.getValue()) {
+                    bestMove = move;
+                }
+            } else {
+                if (move.getValue() > bestMove.getValue()) {
+                    bestMove = move;
+                }
+            }
         }
+
+        moveCallbackWrapper.jouer(bestMove);
     }
 }

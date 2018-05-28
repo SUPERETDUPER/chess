@@ -31,4 +31,9 @@ public class Dame extends DirectionPiece {
     int unicodeForBlack() {
         return 9819;
     }
+
+    @Override
+    public int getValue() {
+        return 8;
+    }
 }
