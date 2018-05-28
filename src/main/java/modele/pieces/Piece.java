@@ -42,7 +42,7 @@ public abstract class Piece {
         for (Move move : moves) {
             move.apply(tempBoard);
 
-            if (Helper.boardIsLegal(tempBoard, tempBoard.getPosition(roi))) {
+            if (Helper.boardIsLegal(tempBoard, roi)) {
                 legalMoves.add(move);
             }
 

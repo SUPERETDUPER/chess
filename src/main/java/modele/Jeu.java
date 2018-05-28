@@ -49,7 +49,7 @@ public class Jeu {
         Set<Move> moves = Helper.getAllLegalMoves(currentPlayerIsWhite, this.board, this.getRoi(currentPlayerIsWhite));
 
         if (moves.isEmpty()) {
-            if (Helper.boardIsLegal(board, board.getPosition(getRoi(currentPlayerIsWhite)))) {
+            if (Helper.boardIsLegal(board, getRoi(currentPlayerIsWhite))) {
                 System.out.println("Stalemate");
             } else {
                 System.out.println("Checkmate");

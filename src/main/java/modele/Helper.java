@@ -1,7 +1,6 @@
 package modele;
 
 import modele.board.Board;
-import modele.board.Position;
 import modele.moves.Move;
 import modele.pieces.Piece;
 import modele.pieces.Roi;
@@ -11,9 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Helper {
-    public static boolean boardIsLegal(Board board, Position positionDuRoi) {
+    public static boolean boardIsLegal(Board board, Piece roi) {
         for (Piece piece : board.iteratePieces()) {
-            if (piece.canEat(piece) && piece.attacksPosition(board, positionDuRoi)) {
+            if (piece.canEat(roi) && piece.attacksPosition(board, board.getPosition(roi))) {
                 return false;
             }
         }
