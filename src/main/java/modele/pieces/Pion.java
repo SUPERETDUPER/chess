@@ -28,7 +28,7 @@ public class Pion extends Piece {
     }
 
     @Override
-    boolean attacksPosition(Board board, Position position) {
+    public boolean attacksPosition(Board board, Position position) {
         int orientation = isWhite() ? 1 : -1;
 
         Position currentPosition = board.getPosition(this);

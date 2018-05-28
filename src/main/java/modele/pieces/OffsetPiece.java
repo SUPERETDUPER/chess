@@ -40,7 +40,7 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    boolean attacksPosition(Board board, Position position) {
+    public boolean attacksPosition(Board board, Position position) {
         Position currentPosition = board.getPosition(this);
 
         for (int[] offset : getOffsets()) {

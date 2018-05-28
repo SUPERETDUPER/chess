@@ -1,5 +1,6 @@
 package modele.pieces;
 
+import modele.Helper;
 import modele.board.Board;
 import modele.board.Position;
 import modele.moves.Move;
@@ -32,7 +33,7 @@ public abstract class Piece {
 
     abstract int unicodeForBlack();
 
-    public Set<Move> generateLegalMoves(Board board, Roi roi) {
+    public Set<Move> getLegalMoves(Board board, Roi roi) {
         Set<Move> moves = generateAllMoves(board);
         Set<Move> legalMoves = new HashSet<>();
 
@@ -41,7 +42,7 @@ public abstract class Piece {
         for (Move move : moves) {
             move.apply(tempBoard);
 
-            if (boardIsLegal(tempBoard, tempBoard.getPosition(roi))) {
+            if (Helper.boardIsLegal(tempBoard, tempBoard.getPosition(roi))) {
                 legalMoves.add(move);
             }
 
@@ -51,23 +52,11 @@ public abstract class Piece {
         return legalMoves;
     }
 
-    private boolean boardIsLegal(Board board, Position positionDuRoi) {
-        for (Piece piece : board.iteratePieces()) {
-            if (canEat(piece)) {
-
-                if (piece.attacksPosition(board, positionDuRoi)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public abstract Set<Move> generateAllMoves(Board board);
 
-    abstract boolean attacksPosition(Board board, Position position);
+    public abstract boolean attacksPosition(Board board, Position position);
 
-    boolean canEat(Piece piece) {
+    public boolean canEat(Piece piece) {
         return piece.isWhite() != this.isWhite();
     }
 }

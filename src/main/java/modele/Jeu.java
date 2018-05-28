@@ -7,6 +7,8 @@ import modele.pieces.Roi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+
 public class Jeu {
     @NotNull
     private final Board board;
@@ -43,9 +45,20 @@ public class Jeu {
     public void jouer(Move move) {
         move.apply(board); //Jouer
         currentPlayerIsWhite = !currentPlayerIsWhite; //Changer le tour
-        //TODO Check for checkmate and stale mate
+
+        Set<Move> moves = Helper.getAllLegalMoves(currentPlayerIsWhite, this.board, this.getRoi(currentPlayerIsWhite));
+
+        if (moves.isEmpty()) {
+            if (Helper.boardIsLegal(board, board.getPosition(getRoi(currentPlayerIsWhite)))) {
+                System.out.println("Stalemate");
+            } else {
+                System.out.println("Checkmate");
+            }
+        }
+
         getCurrentPlayer().notifierTour(new MoveCallbackWrapper(currentPlayerIsWhite, this::jouer)); //Notifier l'autre joueur
     }
+
 
     private Joueur getCurrentPlayer() {
         return currentPlayerIsWhite ? joueurBlanc : joueurNoir;

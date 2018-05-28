@@ -46,7 +46,7 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    boolean attacksPosition(Board board, Position position) {
+    public boolean attacksPosition(Board board, Position position) {
         Position startingPosition = board.getPosition(this);
 
         for (int[] direction : getDirections()) {

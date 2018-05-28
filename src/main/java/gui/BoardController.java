@@ -97,7 +97,7 @@ public class BoardController implements Joueur {
             removeCurrentMoves();
 
             //Calculer les mouvements possibles
-            Set<Move> moves = piece.generateLegalMoves(jeu.getBoard(), piece.isWhite() ? jeu.getRoiBlanc() : jeu.getRoiNoir());
+            Set<Move> moves = piece.getLegalMoves(jeu.getBoard(), piece.isWhite() ? jeu.getRoiBlanc() : jeu.getRoiNoir());
 
             //Ajouter le mouvement à la liste
             for (Move move : moves) {
