@@ -14,10 +14,6 @@ import modele.pieces.Piece;
  * Controle une case
  */
 class CaseController {
-    @FunctionalInterface
-    interface CaseClickListener {
-        void caseClicked(Position position);
-    }
 
     private static final float FONT_TO_HEIGHT_RATIO = 0.75F;
 
@@ -60,5 +56,10 @@ class CaseController {
         }
 
         root.setBackground(new Background(new BackgroundFill(result, null, null)));
+    }
+
+    @FunctionalInterface
+    public interface CaseClickListener {
+        void caseClicked(Position position);
     }
 }

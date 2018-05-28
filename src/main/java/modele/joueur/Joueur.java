@@ -1,7 +1,7 @@
 package modele.joueur;
 
-import modele.moves.Move;
+import modele.Modele;
 
 public interface Joueur {
-    Move notifierTour();
+    void notifierTour(Modele.MoveCallback moveCallback);
 }

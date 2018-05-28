@@ -13,7 +13,9 @@ import modele.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,8 +33,14 @@ public class BoardController {
 
     private final HashMap<Position, Move> currentMoves = new HashMap<>();
 
+    private final List<MoveListener> moveListeners = new ArrayList<>();
+
     public BoardController(@NotNull Modele modele) {
         this.modele = modele;
+    }
+
+    public void addListener(MoveListener moveListener) {
+        moveListeners.add(moveListener);
     }
 
     @FXML
@@ -90,7 +98,11 @@ public class BoardController {
         }
         //Si currentMoves et move exist
         else if (currentMoves.containsKey(position)) {
-            modele.jouer(currentMoves.get(position)); //Bouge la pièce
+            //Bouge la pièce
+            for (MoveListener moveListener : moveListeners) {
+                moveListener.notifyMove(currentMoves.get(position));
+            }
+
             updateBoard(); //Affiche changement
             clearHighlight(); //Enlève le highlight
         }

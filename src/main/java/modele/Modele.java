@@ -7,6 +7,11 @@ import modele.pieces.Roi;
 import org.jetbrains.annotations.NotNull;
 
 public class Modele {
+    @FunctionalInterface
+    public interface MoveCallback {
+        void jouer(Move move);
+    }
+
     @NotNull
     private final Board board;
     @NotNull
@@ -27,12 +32,12 @@ public class Modele {
     }
 
     public void commencer() {
-        Move move = joueurBlanc.notifierTour();
-        if (move != null) move.apply(board);
+        joueurBlanc.notifierTour(this::jouer);
     }
 
     public void jouer(Move move) {
         move.apply(board);
+        joueurNoir.notifierTour(this::jouer);
     }
 
     @NotNull

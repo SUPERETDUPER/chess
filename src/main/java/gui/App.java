@@ -9,18 +9,32 @@ import modele.board.Board;
 import modele.board.Position;
 import modele.joueur.JoueurHumain;
 import modele.pieces.*;
+import org.jetbrains.annotations.NotNull;
 
 public class App extends Application {
     private static final String TITRE = "Échec et Mat";
 
     private static Modele modele;
+    private static JoueurHumain joueurBlanc;
+    private static JoueurHumain joueurNoir;
 
     public static void main(String[] args) {
+        Roi roiNoir = new Roi(false);
+        Roi roiBlanc = new Roi(true);
+
+        joueurBlanc = new JoueurHumain();
+        joueurNoir = new JoueurHumain();
+        modele = new Modele(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir, joueurBlanc, joueurNoir);
+
+        launch(args);
+    }
+
+    @NotNull
+    private static Board getBoard(Roi roiNoir, Roi roiBlanc) {
         Board board = new Board();
         board.ajouter(new Position(0, 0), new Tour(true));
         board.ajouter(new Position(0, 1), new Cavalier(true));
         board.ajouter(new Position(0, 2), new Fou(true));
-        Roi roiBlanc = new Roi(true);
         board.ajouter(new Position(0, 3), roiBlanc);
         board.ajouter(new Position(0, 4), new Dame(true));
         board.ajouter(new Position(0, 5), new Fou(true));
@@ -48,15 +62,12 @@ public class App extends Application {
         board.ajouter(new Position(7, 0), new Tour(false));
         board.ajouter(new Position(7, 1), new Cavalier(false));
         board.ajouter(new Position(7, 2), new Fou(false));
-        Roi roiNoir = new Roi(false);
         board.ajouter(new Position(7, 3), roiNoir);
         board.ajouter(new Position(7, 4), new Dame(false));
         board.ajouter(new Position(7, 5), new Fou(false));
         board.ajouter(new Position(7, 6), new Cavalier(false));
         board.ajouter(new Position(7, 7), new Tour(false));
-        modele = new Modele(board, roiBlanc, roiNoir, new JoueurHumain(), new JoueurHumain());
-
-        launch(args);
+        return board;
     }
 
     /**
@@ -70,6 +81,8 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board.fxml"));
 
         BoardController controller = new BoardController(modele);
+        controller.addListener(joueurBlanc);
+        controller.addListener(joueurNoir);
         fxmlLoader.setController(controller);
 
         primaryStage.setScene(
@@ -81,5 +94,7 @@ public class App extends Application {
         //Montrer l'interface
         primaryStage.setMaximized(true);
         primaryStage.show();
+
+        modele.commencer();
     }
 }
