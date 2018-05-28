@@ -9,7 +9,6 @@ import javafx.scene.layout.RowConstraints;
 import modele.Jeu;
 import modele.MoveCallbackWrapper;
 import modele.board.Position;
-import modele.joueur.Joueur;
 import modele.moves.Move;
 import modele.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +21,7 @@ import java.util.Set;
 /**
  * Controle le plateau de jeu
  */
-public class BoardController implements Joueur {
+public class BoardController {
     //La liste de cases
     @NotNull
     private final CaseController[][] caseControllers = new CaseController[Position.getLimite()][Position.getLimite()];
@@ -38,6 +37,7 @@ public class BoardController implements Joueur {
 
     @Nullable
     private MoveCallbackWrapper moveCallbackWrapper;
+    private boolean tourBlanc;
 
     public BoardController(@NotNull Jeu jeu) {
         this.jeu = jeu;
@@ -80,9 +80,9 @@ public class BoardController implements Joueur {
         updateBoard();
     }
 
-    @Override
-    public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
+    public void getTour(boolean tourBlanc, MoveCallbackWrapper moveCallbackWrapper) {
         this.moveCallbackWrapper = moveCallbackWrapper;
+        this.tourBlanc = tourBlanc;
     }
 
     private void caseClicked(Position position) {
@@ -91,7 +91,7 @@ public class BoardController implements Joueur {
         //Si aucun pièce pré-sélectionné
         if (currentMoves.isEmpty()) {
             //Quitter si il n'y a rien a faire
-            if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || moveCallbackWrapper.isWhite() != piece.isWhite())
+            if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || tourBlanc != piece.isWhite())
                 return;
 
             removeCurrentMoves();

@@ -30,16 +30,13 @@ public class Jeu {
         this.roiNoir = roiNoir;
     }
 
-    public void setJoueurBlanc(@Nullable Joueur joueurBlanc) {
-        this.joueurBlanc = joueurBlanc;
-    }
-
-    public void setJoueurNoir(@Nullable Joueur joueurNoir) {
-        this.joueurNoir = joueurNoir;
+    public void ajouterJoueur(@NotNull Joueur joueur) {
+        if (joueur.isBlanc()) joueurBlanc = joueur;
+        else joueurNoir = joueur;
     }
 
     public void commencer() {
-        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(true, this::jouer));
+        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(this::jouer));
     }
 
     public void jouer(Move move) {
@@ -56,7 +53,7 @@ public class Jeu {
             }
         }
 
-        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(currentPlayerIsWhite, this::jouer)); //Notifier l'autre joueur
+        getCurrentPlayer().notifierTour(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
     }
 
 

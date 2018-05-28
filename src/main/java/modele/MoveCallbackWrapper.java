@@ -6,11 +6,9 @@ import java.util.function.Consumer;
 
 public class MoveCallbackWrapper {
     private boolean isConsumed = false;
-    private final boolean isWhite;
     private final Consumer<Move> moveCallback;
 
-    public MoveCallbackWrapper(boolean isWhite, Consumer<Move> moveCallback) {
-        this.isWhite = isWhite;
+    public MoveCallbackWrapper(Consumer<Move> moveCallback) {
         this.moveCallback = moveCallback;
     }
 
@@ -21,9 +19,5 @@ public class MoveCallbackWrapper {
 
     public boolean isConsumed() {
         return isConsumed;
-    }
-
-    public boolean isWhite() {
-        return isWhite;
     }
 }

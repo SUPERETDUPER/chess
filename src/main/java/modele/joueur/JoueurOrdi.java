@@ -9,14 +9,16 @@ import java.util.Set;
 
 public class JoueurOrdi implements Joueur {
     private final Jeu jeu;
+    private final boolean isWhite;
 
-    public JoueurOrdi(Jeu jeu) {
+    public JoueurOrdi(Jeu jeu, boolean isWhite) {
         this.jeu = jeu;
+        this.isWhite = isWhite;
     }
 
     @Override
     public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
-        Set<Move> moves = Helper.getAllLegalMoves(moveCallbackWrapper.isWhite(), jeu.getBoard(), jeu.getRoi(moveCallbackWrapper.isWhite()));
+        Set<Move> moves = Helper.getAllLegalMoves(isWhite, jeu.getBoard(), jeu.getRoi(isWhite));
 
         Move bestMove = null;
 
@@ -26,7 +28,7 @@ public class JoueurOrdi implements Joueur {
                 continue;
             }
 
-            if (moveCallbackWrapper.isWhite()) {
+            if (isWhite) {
                 if (move.getValue() < bestMove.getValue()) {
                     bestMove = move;
                 }
@@ -38,5 +40,10 @@ public class JoueurOrdi implements Joueur {
         }
 
         moveCallbackWrapper.jouer(bestMove);
+    }
+
+    @Override
+    public boolean isBlanc() {
+        return isWhite;
     }
 }
