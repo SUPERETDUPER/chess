@@ -4,6 +4,9 @@ import modele.board.Board;
 import modele.board.Position;
 import modele.pieces.Piece;
 
+/**
+ * Un mouvement qui mange une pièce
+ */
 public class EatMove implements Move {
     private final Position start;
     private final Position end;
@@ -21,9 +24,9 @@ public class EatMove implements Move {
 
     @Override
     public void apply(Board board) {
-        Piece piece = board.removePiece(start);
-        morceauPris = board.removePiece(end);
-        board.ajouter(end, piece);
+        Piece piece = board.removePiece(start); //Enlève la pièce au départ
+        morceauPris = board.removePiece(end); //Enlève la pièce à la fin
+        board.ajouter(end, piece); //Ajoute la pièce du départ à la fin
     }
 
     @Override

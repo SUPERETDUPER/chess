@@ -18,7 +18,7 @@ public class Tour extends RepeatOffsetPiece {
     @Override
     boolean attacksPosition(Board board, Position position) {
         Position currentPosition = board.getPosition(this);
-        if (position.getIndexColonne() != currentPosition.getIndexColonne() && position.getIndexRangee() != currentPosition.getIndexRangee())
+        if (position.getColonne() != currentPosition.getColonne() && position.getRangee() != currentPosition.getRangee())
             return false;
 
         return super.attacksPosition(board, position);

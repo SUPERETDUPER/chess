@@ -9,6 +9,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import modele.board.Position;
 import modele.pieces.Piece;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 /**
  * Controle une case
@@ -23,16 +27,24 @@ class CaseController {
     private static final float FONT_TO_HEIGHT_RATIO = 0.75F;
 
     @FXML
-    private StackPane root;
+    private StackPane root; //La boite qui contient le text
 
     @FXML
-    private Text text;
+    private Text text; //Le text
 
     private final boolean isBlanc;
+    @NotNull
     private final Position position;
-    private final CaseClickListener caseClickListener;
 
-    CaseController(Position position, CaseClickListener caseClickListener, boolean isBlanc) {
+    @NotNull
+    private final Consumer<Position> caseClickListener;
+
+    /**
+     * @param position          la position de la case
+     * @param caseClickListener le listener à appeler quand la case est appuyé
+     * @param isBlanc           si la case est blanche
+     */
+    CaseController(@NotNull Position position, @NotNull Consumer<Position> caseClickListener, boolean isBlanc) {
         this.isBlanc = isBlanc;
         this.position = position;
         this.caseClickListener = caseClickListener;
@@ -40,37 +52,43 @@ class CaseController {
 
     @FXML
     private void initialize() {
-        //Met la couleur blanc ou gris
-        setHighlight(Highlight.NORMAL);
-        root.heightProperty().addListener((observable, oldValue, newValue) -> text.setFont(Font.font(newValue.floatValue() * FONT_TO_HEIGHT_RATIO)));
-        root.setOnMouseClicked(event -> caseClickListener.caseClicked(position));
+        setCouleur(Highlight.NORMAL);  //Met la couleur de l'arrière plan de la case
+
+        //Bind la taille du text à la hauteur de la case
+        root.heightProperty().addListener(
+                (observable, oldValue, newValue) ->
+                        text.setFont(Font.font(newValue.floatValue() * FONT_TO_HEIGHT_RATIO))
+        );
     }
 
-    void setPiece(Piece piece) {
+    @FXML
+    private void handleClick() {
+        caseClickListener.accept(position);
+    }
+
+    /**
+     * @param piece la piece à montrer
+     */
+    void setPiece(@Nullable Piece piece) {
         if (piece == null) text.setText(null);
         else text.setText(piece.getUnicode());
     }
 
-    void setHighlight(Highlight highlight) {
-        Color result;
-
-        switch (highlight) {
-            case BLUE:
-                result = isBlanc ? Color.LIGHTBLUE : Color.BLUE;
-                break;
-            case ROUGE:
-                result = Color.PALEVIOLETRED;
-                break;
-            default:
-                result = isBlanc ? Color.WHITE : Color.LIGHTGRAY;
-                break;
-        }
-
-        root.setBackground(new Background(new BackgroundFill(result, null, null)));
+    /**
+     * @param highlight la nouvelle couleur de l'arrière plan de l'arrière plan
+     */
+    void setCouleur(@NotNull Highlight highlight) {
+        root.setBackground(new Background(new BackgroundFill(getCouleur(highlight), null, null)));
     }
 
-    @FunctionalInterface
-    public interface CaseClickListener {
-        void caseClicked(Position position);
+    private Color getCouleur(@NotNull Highlight highlight) {
+        switch (highlight) {
+            case BLUE:
+                return isBlanc ? Color.LIGHTBLUE : Color.BLUE;
+            case ROUGE:
+                return Color.PALEVIOLETRED;
+            default:
+                return isBlanc ? Color.WHITE : Color.LIGHTGRAY;
+        }
     }
 }

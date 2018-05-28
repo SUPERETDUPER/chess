@@ -1,24 +1,28 @@
 package modele.board;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 public class Position {
-    private static final int TAILLE = 8;
+    private static final int LIMITE = 8;
 
-    private final int indexRangee;
-    private final int indexColonne;
+    private final int rangee;
+    private final int colonne;
 
-    public Position(int indexRangee, int indexColonne) {
-        this.indexRangee = indexRangee;
-        this.indexColonne = indexColonne;
+    public Position(int rangee, int indexColonne) {
+        this.rangee = rangee;
+        this.colonne = indexColonne;
     }
 
-    public int getIndexColonne() {
-        return indexColonne;
+    public int getColonne() {
+        return colonne;
     }
 
-    public int getIndexRangee() {
-        return indexRangee;
+    public int getRangee() {
+        return rangee;
     }
 
     /**
@@ -26,34 +30,39 @@ public class Position {
      *
      * @return la nouvelle position
      */
+    @NotNull
     public Position offset(int offsetRangee, int offsetColonne) {
-        return new Position(indexRangee + offsetRangee, indexColonne + offsetColonne);
+        return new Position(rangee + offsetRangee, colonne + offsetColonne);
     }
 
+    /**
+     * @return si la position rentre dans les limites
+     */
     public boolean isValid() {
-        return 0 <= indexRangee && indexRangee < TAILLE && 0 <= indexColonne && indexColonne < TAILLE;
+        return 0 <= rangee && rangee < LIMITE && 0 <= colonne && colonne < LIMITE;
+    }
+
+    @Contract(pure = true)
+    public static int getLimite() {
+        return LIMITE;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof Position)) return false;
-        if (((Position) obj).getIndexRangee() != this.indexRangee) return false;
-        return ((Position) obj).getIndexColonne() == this.indexColonne;
+        if (((Position) obj).getRangee() != this.rangee) return false;
+        return ((Position) obj).getColonne() == this.colonne;
     }
 
     @Override
     public String toString() {
-        return "rangee: " + indexRangee + " colonne: " + indexColonne;
+        return "rangee: " + rangee + " colonne: " + colonne;
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(indexColonne, indexRangee);
-    }
-
-    public static int getMax() {
-        return TAILLE;
+        return Objects.hash(colonne, rangee);
     }
 }

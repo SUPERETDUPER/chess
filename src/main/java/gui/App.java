@@ -62,6 +62,7 @@ public class App extends Application {
         board.ajouter(new Position(7, 5), new Fou(false));
         board.ajouter(new Position(7, 6), new Cavalier(false));
         board.ajouter(new Position(7, 7), new Tour(false));
+
         return board;
     }
 

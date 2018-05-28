@@ -23,8 +23,9 @@ import java.util.Set;
  * Controle le plateau de jeu
  */
 public class BoardController implements Joueur {
-
-    private final CaseController[][] caseControllers = new CaseController[Position.getMax()][Position.getMax()];
+    //La liste de cases
+    @NotNull
+    private final CaseController[][] caseControllers = new CaseController[Position.getLimite()][Position.getLimite()];
 
     @FXML
     private GridPane plateau;
@@ -47,14 +48,14 @@ public class BoardController implements Joueur {
         //Créer les constraintes pour les rangées/colonnes
         RowConstraints rowConstraint = new RowConstraints();
         rowConstraint.setVgrow(Priority.SOMETIMES);
-        rowConstraint.setPercentHeight(100.0F / Position.getMax());
+        rowConstraint.setPercentHeight(100.0F / Position.getLimite());
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setHgrow(Priority.SOMETIMES);
-        columnConstraints.setPercentWidth(100.0F / Position.getMax());
+        columnConstraints.setPercentWidth(100.0F / Position.getLimite());
 
         //Crée une case pour chaque position
-        for (int i = 0; i < Position.getMax(); i++) {
-            for (int j = 0; j < Position.getMax(); j++) {
+        for (int i = 0; i < Position.getLimite(); i++) {
+            for (int j = 0; j < Position.getLimite(); j++) {
 
                 //Créer un controleur
                 caseControllers[i][j] = new CaseController(
@@ -87,44 +88,52 @@ public class BoardController implements Joueur {
     private void caseClicked(Position position) {
         Piece piece = jeu.getBoard().getPiece(position);
 
-        //Si aucun highlight et aucune pièce
-        if (currentMoves.isEmpty() && piece == null) return;
-
-
-        //Si aucun highlight et pièce appuyé, surligner toutes les possibilités
+        //Si aucun pièce pré-sélectionné
         if (currentMoves.isEmpty()) {
-            if (moveEvent != null && moveEvent.isWhite() == piece.isWhite() && !moveEvent.isConsumed()) {
-                Set<Move> moves = piece.generateLegalMoves(jeu.getBoard(), piece.isWhite() ? jeu.getRoiBlanc() : jeu.getRoiNoir());
-                for (Move move : moves) {
-                    Position displayPosition = move.getPositionToDisplay();
-                    currentMoves.put(displayPosition, move);
-                    caseControllers[displayPosition.getIndexRangee()][displayPosition.getIndexColonne()].setHighlight(CaseController.Highlight.BLUE);
-                }
+            //Quitter si il n'y a rien a faire
+            if (piece == null || moveEvent == null || moveEvent.isConsumed() || moveEvent.isWhite() != piece.isWhite())
+                return;
 
-                if (!moves.isEmpty()) {
-                    caseControllers[position.getIndexRangee()][position.getIndexColonne()].setHighlight(CaseController.Highlight.ROUGE);
-                }
+            //Calculer les mouvements possibles
+            Set<Move> moves = piece.generateLegalMoves(jeu.getBoard(), piece.isWhite() ? jeu.getRoiBlanc() : jeu.getRoiNoir());
+
+            //Ajouter le mouvement à la liste
+            for (Move move : moves) {
+                addCurrentMove(move);
             }
-        }
 
-        //Si currentMoves et move exist
-        else if (currentMoves.containsKey(position)) {
-            //Bouge la pièce
-            moveEvent.jouer(currentMoves.get(position));
+            //Surligner la position de départ
+            caseControllers[position.getRangee()][position.getColonne()].setCouleur(CaseController.Highlight.ROUGE);
 
-            updateBoard(); //Affiche changement
-            clearHighlight(); //Enlève le highlight
-        }
-        //Si highlighted exist et move n'existe pas
-        else {
-            clearHighlight();
+        } else {
+            //Si la case est une des options appliquer le movement
+            if (currentMoves.containsKey(position)) {
+                moveEvent.jouer(currentMoves.get(position));
+                updateBoard(); //Affiche changement
+            }
+
+            removeCurrentMoves(); //Déselectionner tout
         }
     }
 
-    private void clearHighlight() {
-        for (int i = 0; i < Position.getMax(); i++) {
-            for (int j = 0; j < Position.getMax(); j++) {
-                caseControllers[i][j].setHighlight(CaseController.Highlight.NORMAL);
+    /**
+     * Ajoute un movement à la liste de mouvements possible et surligne cette case
+     *
+     * @param move le movement à montrer
+     */
+    private void addCurrentMove(Move move) {
+        Position positionToDisplay = move.getPositionToDisplay();
+        currentMoves.put(positionToDisplay, move);
+        caseControllers[positionToDisplay.getRangee()][positionToDisplay.getColonne()].setCouleur(CaseController.Highlight.BLUE);
+    }
+
+    /**
+     * Enlève tout les mouvements
+     */
+    private void removeCurrentMoves() {
+        for (int i = 0; i < Position.getLimite(); i++) {
+            for (int j = 0; j < Position.getLimite(); j++) {
+                caseControllers[i][j].setCouleur(CaseController.Highlight.NORMAL);
             }
         }
 
@@ -135,8 +144,8 @@ public class BoardController implements Joueur {
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        for (int i = 0; i < Position.getMax(); i++) {
-            for (int j = 0; j < Position.getMax(); j++) {
+        for (int i = 0; i < Position.getLimite(); i++) {
+            for (int j = 0; j < Position.getLimite(); j++) {
                 caseControllers[i][j].setPiece(jeu.getBoard().getPiece(new Position(i, j)));
             }
         }
