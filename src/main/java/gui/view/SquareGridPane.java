@@ -14,7 +14,7 @@ public class SquareGridPane extends GridPane {
 
     @Override
     protected double computePrefWidth(double height) {
-        //noinspection SuspiciousNameCombination
+//        noinspection SuspiciousNameCombination
         return height;
     }
 }

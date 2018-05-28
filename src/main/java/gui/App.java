@@ -4,27 +4,22 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import modele.Modele;
+import modele.Jeu;
 import modele.board.Board;
 import modele.board.Position;
-import modele.joueur.JoueurHumain;
 import modele.pieces.*;
 import org.jetbrains.annotations.NotNull;
 
 public class App extends Application {
     private static final String TITRE = "Échec et Mat";
 
-    private static Modele modele;
-    private static JoueurHumain joueurBlanc;
-    private static JoueurHumain joueurNoir;
+    private static Jeu jeu;
 
     public static void main(String[] args) {
         Roi roiNoir = new Roi(false);
         Roi roiBlanc = new Roi(true);
 
-        joueurBlanc = new JoueurHumain();
-        joueurNoir = new JoueurHumain();
-        modele = new Modele(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir, joueurBlanc, joueurNoir);
+        jeu = new Jeu(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir);
 
         launch(args);
     }
@@ -80,9 +75,8 @@ public class App extends Application {
         //Load l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board.fxml"));
 
-        BoardController controller = new BoardController(modele);
-        controller.addListener(joueurBlanc);
-        controller.addListener(joueurNoir);
+        BoardController controller = new BoardController(jeu);
+
         fxmlLoader.setController(controller);
 
         primaryStage.setScene(
@@ -95,6 +89,8 @@ public class App extends Application {
         primaryStage.setMaximized(true);
         primaryStage.show();
 
-        modele.commencer();
+        jeu.setJoueurBlanc(controller);
+        jeu.setJoueurNoir(controller);
+        jeu.commencer();
     }
 }

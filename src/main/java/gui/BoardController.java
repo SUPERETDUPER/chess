@@ -6,22 +6,23 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import modele.Modele;
+import modele.Jeu;
+import modele.MoveEvent;
 import modele.board.Position;
+import modele.joueur.Joueur;
 import modele.moves.Move;
 import modele.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 /**
  * Controle le plateau de jeu
  */
-public class BoardController {
+public class BoardController implements Joueur {
 
     private final CaseController[][] caseControllers = new CaseController[Position.getMax()][Position.getMax()];
 
@@ -29,18 +30,16 @@ public class BoardController {
     private GridPane plateau;
 
     @NotNull
-    private final Modele modele;
+    private final Jeu jeu;
 
+    @NotNull
     private final HashMap<Position, Move> currentMoves = new HashMap<>();
 
-    private final List<MoveListener> moveListeners = new ArrayList<>();
+    @Nullable
+    private MoveEvent moveEvent;
 
-    public BoardController(@NotNull Modele modele) {
-        this.modele = modele;
-    }
-
-    public void addListener(MoveListener moveListener) {
-        moveListeners.add(moveListener);
+    public BoardController(@NotNull Jeu jeu) {
+        this.jeu = jeu;
     }
 
     @FXML
@@ -80,8 +79,13 @@ public class BoardController {
         updateBoard();
     }
 
+    @Override
+    public void notifierTour(MoveEvent moveEvent) {
+        this.moveEvent = moveEvent;
+    }
+
     private void caseClicked(Position position) {
-        Piece piece = modele.getBoard().getPiece(position);
+        Piece piece = jeu.getBoard().getPiece(position);
 
         //Si aucun highlight et aucune pièce
         if (currentMoves.isEmpty() && piece == null) return;
@@ -89,19 +93,20 @@ public class BoardController {
 
         //Si aucun highlight et pièce appuyé, surligner toutes les possibilités
         if (currentMoves.isEmpty()) {
-            Set<Move> moves = piece.generateLegalMoves(modele.getBoard(), piece.isWhite() ? modele.getRoiBlanc() : modele.getRoiNoir());
-            for (Move move : moves) {
-                Position displayPosition = move.getPositionToDisplay();
-                currentMoves.put(displayPosition, move);
-                caseControllers[displayPosition.getIndexRangee()][displayPosition.getIndexColonne()].setHighlight(true);
+            if (moveEvent != null && moveEvent.isWhite() == piece.isWhite() && !moveEvent.isConsumed()) {
+                Set<Move> moves = piece.generateLegalMoves(jeu.getBoard(), piece.isWhite() ? jeu.getRoiBlanc() : jeu.getRoiNoir());
+                for (Move move : moves) {
+                    Position displayPosition = move.getPositionToDisplay();
+                    currentMoves.put(displayPosition, move);
+                    caseControllers[displayPosition.getIndexRangee()][displayPosition.getIndexColonne()].setHighlight(true);
+                }
             }
         }
+
         //Si currentMoves et move exist
         else if (currentMoves.containsKey(position)) {
             //Bouge la pièce
-            for (MoveListener moveListener : moveListeners) {
-                moveListener.notifyMove(currentMoves.get(position));
-            }
+            moveEvent.jouer(currentMoves.get(position));
 
             updateBoard(); //Affiche changement
             clearHighlight(); //Enlève le highlight
@@ -128,7 +133,7 @@ public class BoardController {
     private void updateBoard() {
         for (int i = 0; i < Position.getMax(); i++) {
             for (int j = 0; j < Position.getMax(); j++) {
-                caseControllers[i][j].setPiece(modele.getBoard().getPiece(new Position(i, j)));
+                caseControllers[i][j].setPiece(jeu.getBoard().getPiece(new Position(i, j)));
             }
         }
     }

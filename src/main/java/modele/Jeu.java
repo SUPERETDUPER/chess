@@ -5,39 +5,49 @@ import modele.joueur.Joueur;
 import modele.moves.Move;
 import modele.pieces.Roi;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Modele {
-    @FunctionalInterface
-    public interface MoveCallback {
-        void jouer(Move move);
-    }
-
+public class Jeu {
     @NotNull
     private final Board board;
     @NotNull
     private final Roi roiBlanc;
     @NotNull
     private final Roi roiNoir;
-    @NotNull
-    private final Joueur joueurBlanc;
-    @NotNull
-    private final Joueur joueurNoir;
 
-    public Modele(@NotNull Board board, @NotNull Roi roiBlanc, @NotNull Roi roiNoir, @NotNull Joueur joueurBlanc, @NotNull Joueur joueurNoir) {
+    @Nullable
+    private Joueur joueurBlanc;
+    @Nullable
+    private Joueur joueurNoir;
+
+    private boolean currentPlayerIsWhite = true;
+
+    public Jeu(@NotNull Board board, @NotNull Roi roiBlanc, @NotNull Roi roiNoir) {
         this.board = board;
         this.roiBlanc = roiBlanc;
         this.roiNoir = roiNoir;
+    }
+
+    public void setJoueurBlanc(@Nullable Joueur joueurBlanc) {
         this.joueurBlanc = joueurBlanc;
+    }
+
+    public void setJoueurNoir(@Nullable Joueur joueurNoir) {
         this.joueurNoir = joueurNoir;
     }
 
     public void commencer() {
-        joueurBlanc.notifierTour(this::jouer);
+        getCurrentPlayer().notifierTour(new MoveEvent(true, this::jouer));
     }
 
     public void jouer(Move move) {
         move.apply(board);
-        joueurNoir.notifierTour(this::jouer);
+        currentPlayerIsWhite = !currentPlayerIsWhite;
+        getCurrentPlayer().notifierTour(new MoveEvent(currentPlayerIsWhite, this::jouer));
+    }
+
+    private Joueur getCurrentPlayer() {
+        return currentPlayerIsWhite ? joueurBlanc : joueurNoir;
     }
 
     @NotNull
