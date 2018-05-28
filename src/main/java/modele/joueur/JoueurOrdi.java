@@ -1,6 +1,5 @@
 package modele.joueur;
 
-import modele.Helper;
 import modele.Jeu;
 import modele.MoveCallbackWrapper;
 import modele.moves.Move;
@@ -18,7 +17,7 @@ public class JoueurOrdi implements Joueur {
 
     @Override
     public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
-        Set<Move> moves = Helper.getAllLegalMoves(isWhite, jeu.getBoard(), jeu.getRoi(isWhite));
+        Set<Move> moves = Jeu.getAllLegalMoves(jeu, isWhite);
 
         Move bestMove = null;
 

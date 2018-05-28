@@ -3,10 +3,12 @@ package modele;
 import modele.board.Board;
 import modele.joueur.Joueur;
 import modele.moves.Move;
+import modele.pieces.Piece;
 import modele.pieces.Roi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Jeu {
@@ -30,6 +32,29 @@ public class Jeu {
         this.roiNoir = roiNoir;
     }
 
+    public boolean roiInCheck(boolean isRoiBlanc) {
+        for (Piece piece : board.iteratePieces()) {
+            if (piece.isWhite() != isRoiBlanc && piece.attacksPosition(board, board.getPosition(getRoi(isRoiBlanc)))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @NotNull
+    public static Set<Move> getAllLegalMoves(Jeu jeu, boolean forWhite) {
+        Set<Move> moves = new HashSet<>();
+
+        for (Piece piece : jeu.getBoard().iteratePieces()) {
+            if (piece.isWhite() == forWhite) {
+                moves.addAll(piece.getLegalMoves(jeu));
+            }
+        }
+
+        return moves;
+    }
+
     public void ajouterJoueur(@NotNull Joueur joueur) {
         if (joueur.isBlanc()) joueurBlanc = joueur;
         else joueurNoir = joueur;
@@ -43,10 +68,10 @@ public class Jeu {
         move.apply(board); //Jouer
         currentPlayerIsWhite = !currentPlayerIsWhite; //Changer le tour
 
-        Set<Move> moves = Helper.getAllLegalMoves(currentPlayerIsWhite, this.board, this.getRoi(currentPlayerIsWhite));
+        Set<Move> moves = getAllLegalMoves(this, currentPlayerIsWhite);
 
         if (moves.isEmpty()) {
-            if (Helper.boardIsLegal(board, getRoi(currentPlayerIsWhite))) {
+            if (roiInCheck(currentPlayerIsWhite)) {
                 System.out.println("Stalemate");
             } else {
                 System.out.println("Checkmate");
