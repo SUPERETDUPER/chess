@@ -19,7 +19,7 @@ public class Jeu {
     }
 
     public void jouer(Move move) {
-        move.apply(jeuData.getBoard()); //Jouer
+        move.apply(jeuData.getPlateau()); //Jouer
         tourA = tourA == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
         Set<Move> moves = jeuData.getAllLegalMoves(tourA);

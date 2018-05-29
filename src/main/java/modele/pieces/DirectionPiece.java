@@ -1,10 +1,10 @@
 package modele.pieces;
 
-import modele.board.Board;
-import modele.board.Position;
 import modele.moves.EatMove;
 import modele.moves.Move;
 import modele.moves.NormalMove;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,16 +18,16 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    public Set<Move> generateAllMoves(Board board) {
+    public Set<Move> generateAllMoves(Plateau plateau) {
         Set<Move> moves = new HashSet<>();
 
-        Position startingPosition = board.getPosition(this);
+        Position startingPosition = plateau.getPosition(this);
 
         for (int[] direction : getDirections()) {
             Position end = startingPosition.offset(direction[0], direction[1]);
 
             while (end.isValid()) {
-                Piece piece = board.getPiece(end);
+                Piece piece = plateau.getPiece(end);
 
                 if (piece == null) moves.add(new NormalMove(startingPosition, end));
                 else {
@@ -46,8 +46,8 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    public boolean attacksPosition(Board board, Position position) {
-        Position startingPosition = board.getPosition(this);
+    public boolean attacksPosition(Plateau plateau, Position position) {
+        Position startingPosition = plateau.getPosition(this);
 
         for (int[] direction : getDirections()) {
             Position testPosition = startingPosition.offset(direction[0], direction[1]);
@@ -57,7 +57,7 @@ abstract class DirectionPiece extends Piece {
                     return true;
                 }
 
-                if (board.getPiece(testPosition) != null) break;
+                if (plateau.getPiece(testPosition) != null) break;
 
                 testPosition = testPosition.offset(direction[0], direction[1]);
             }

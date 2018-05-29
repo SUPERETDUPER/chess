@@ -12,6 +12,9 @@ public class SquareGridPane extends GridPane {
         return Orientation.VERTICAL;
     }
 
+    /**
+     * Définit la largeur préféré comme étant la hauteur
+     */
     @Override
     protected double computePrefWidth(double height) {
 //        noinspection SuspiciousNameCombination

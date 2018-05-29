@@ -1,9 +1,9 @@
 package modele.pieces;
 
-import modele.board.Board;
-import modele.board.Position;
 import modele.moves.Move;
 import modele.moves.NormalMove;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class RoiTest {
     void generateMoves() {
         Roi roi = new Roi(Couleur.BLANC);
 
-        Board board = new Board();
+        Plateau plateau = new Plateau();
         Position startingPos = new Position(0, 0);
-        board.ajouter(startingPos, roi);
+        plateau.ajouter(startingPos, roi);
 
-        Set<Move> moves = roi.generateAllMoves(board);
+        Set<Move> moves = roi.generateAllMoves(plateau);
 
         Set<Move> expected = new HashSet<>();
         expected.add(new NormalMove(startingPos, new Position(0, 1)));

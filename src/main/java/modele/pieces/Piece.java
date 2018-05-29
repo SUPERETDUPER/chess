@@ -1,9 +1,9 @@
 package modele.pieces;
 
 import modele.JeuData;
-import modele.board.Board;
-import modele.board.Position;
 import modele.moves.Move;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,27 +34,27 @@ public abstract class Piece {
     abstract int unicodeForBlack();
 
     public Set<Move> getLegalMoves(JeuData jeuData) {
-        Set<Move> moves = generateAllMoves(jeuData.getBoard());
+        Set<Move> moves = generateAllMoves(jeuData.getPlateau());
         Set<Move> legalMoves = new HashSet<>();
 
-        Board tempBoard = jeuData.getBoard().getCopie();
+        Plateau tempPlateau = jeuData.getPlateau().getCopie();
 
         for (Move move : moves) {
-            move.apply(tempBoard);
+            move.apply(tempPlateau);
 
-            if (!jeuData.roiInCheck(couleur, tempBoard)) {
+            if (!jeuData.roiInCheck(couleur, tempPlateau)) {
                 legalMoves.add(move);
             }
 
-            move.undo(tempBoard);
+            move.undo(tempPlateau);
         }
 
         return legalMoves;
     }
 
-    public abstract Set<Move> generateAllMoves(Board board);
+    public abstract Set<Move> generateAllMoves(Plateau plateau);
 
-    public abstract boolean attacksPosition(Board board, Position position);
+    public abstract boolean attacksPosition(Plateau plateau, Position position);
 
     public abstract int getValue();
 }

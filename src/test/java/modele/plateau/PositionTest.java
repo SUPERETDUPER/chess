@@ -1,4 +1,4 @@
-package modele.board;
+package modele.plateau;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

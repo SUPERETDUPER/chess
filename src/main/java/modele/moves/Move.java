@@ -1,7 +1,7 @@
 package modele.moves;
 
-import modele.board.Board;
-import modele.board.Position;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 
 import java.util.Objects;
 
@@ -18,9 +18,9 @@ public abstract class Move {
         return end;
     }
 
-    public abstract void apply(Board board);
+    public abstract void apply(Plateau plateau);
 
-    public abstract void undo(Board board);
+    public abstract void undo(Plateau plateau);
 
     public abstract int getValue();
 

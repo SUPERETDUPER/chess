@@ -1,10 +1,10 @@
 package modele.pieces;
 
-import modele.board.Board;
-import modele.board.Position;
 import modele.moves.EatMove;
 import modele.moves.Move;
 import modele.moves.NormalMove;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,10 +28,10 @@ public class Pion extends Piece {
     }
 
     @Override
-    public boolean attacksPosition(Board board, Position position) {
+    public boolean attacksPosition(Plateau plateau, Position position) {
         int orientation = getCouleur() == Couleur.BLANC ? 1 : -1;
 
-        Position currentPosition = board.getPosition(this);
+        Position currentPosition = plateau.getPosition(this);
 
         return position.equals(currentPosition.offset(orientation, -1)) ||
                 position.equals(currentPosition.offset(orientation, 1));
@@ -39,10 +39,10 @@ public class Pion extends Piece {
     }
 
     @Override
-    public Set<Move> generateAllMoves(Board board) {
+    public Set<Move> generateAllMoves(Plateau plateau) {
         Set<Move> moves = new HashSet<>();
 
-        Position start = board.getPosition(this);
+        Position start = plateau.getPosition(this);
 
         boolean blocked = false;
 
@@ -51,7 +51,7 @@ public class Pion extends Piece {
         Position end = start.offset(orientation, 0);
 
         if (end.isValid()) {
-            Piece piece = board.getPiece(end);
+            Piece piece = plateau.getPiece(end);
             if (piece == null) moves.add(new NormalMove(start, end));
             else {
                 blocked = true;
@@ -62,19 +62,19 @@ public class Pion extends Piece {
             end = start.offset(2 * orientation, 0);
 
             if (end.isValid()) {
-                Piece piece = board.getPiece(end);
+                Piece piece = plateau.getPiece(end);
                 if (piece == null) {
                     moves.add(new NormalMove(start, end) {
                         @Override
-                        public void apply(Board board) {
+                        public void apply(Plateau plateau) {
                             jumped = true;
-                            super.apply(board);
+                            super.apply(plateau);
                         }
 
                         @Override
-                        public void undo(Board board) {
+                        public void undo(Plateau plateau) {
                             jumped = false;
-                            super.undo(board);
+                            super.undo(plateau);
                         }
                     });
                 }
@@ -84,14 +84,14 @@ public class Pion extends Piece {
         end = start.offset(orientation, -1);
 
         if (end.isValid()) {
-            Piece piece = board.getPiece(end);
+            Piece piece = plateau.getPiece(end);
             if (piece != null && piece.getCouleur() != couleur) moves.add(new EatMove(start, end));
         }
 
         end = start.offset(orientation, 1);
 
         if (end.isValid()) {
-            Piece piece = board.getPiece(end);
+            Piece piece = plateau.getPiece(end);
             if (piece != null && piece.getCouleur() != couleur) moves.add(new EatMove(start, end));
         }
 

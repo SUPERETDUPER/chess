@@ -1,25 +1,25 @@
 package modele.moves;
 
-import modele.board.Board;
-import modele.board.Position;
 import modele.pieces.Piece;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 
 public class NormalMove extends Move {
     public NormalMove(Position start, Position end) {
         super(start, end);
     }
 
-    public void apply(Board board) {
-        Piece piece = board.removePiece(start);
-        if (board.getPiece(end) != null) throw new IllegalArgumentException("Une pièce est à cette position");
-        board.ajouter(end, piece);
+    public void apply(Plateau plateau) {
+        Piece piece = plateau.removePiece(start);
+        if (plateau.getPiece(end) != null) throw new IllegalArgumentException("Une pièce est à cette position");
+        plateau.ajouter(end, piece);
     }
 
     @Override
-    public void undo(Board board) {
-        Piece piece = board.removePiece(end);
-        if (board.getPiece(start) != null) throw new IllegalArgumentException("Une pièce est à cette position");
-        board.ajouter(start, piece);
+    public void undo(Plateau plateau) {
+        Piece piece = plateau.removePiece(end);
+        if (plateau.getPiece(start) != null) throw new IllegalArgumentException("Une pièce est à cette position");
+        plateau.ajouter(start, piece);
     }
 
     @Override

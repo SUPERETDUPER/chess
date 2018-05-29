@@ -1,4 +1,4 @@
-package modele.board;
+package modele.plateau;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

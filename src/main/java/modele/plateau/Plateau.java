@@ -1,4 +1,4 @@
-package modele.board;
+package modele.plateau;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -13,14 +13,14 @@ import java.util.Set;
  * Represente le plateau de jeu. Permet d'acceder directement à la pièce à une position ou à la position d'une pièce
  * Utilise le BiMap de Google Guava
  */
-public class Board {
+public class Plateau {
     private final BiMap<Position, Piece> board;
 
-    public Board() {
+    public Plateau() {
         this.board = HashBiMap.create(32);
     }
 
-    public Board(Map<Position, Piece> startingMap) {
+    public Plateau(Map<Position, Piece> startingMap) {
         board = HashBiMap.create(startingMap);
     }
 
@@ -50,7 +50,7 @@ public class Board {
         return board.values();
     }
 
-    public Board getCopie() {
-        return new Board(board);
+    public Plateau getCopie() {
+        return new Plateau(board);
     }
 }

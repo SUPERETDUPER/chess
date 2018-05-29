@@ -1,10 +1,10 @@
 package modele.pieces;
 
-import modele.board.Board;
-import modele.board.Position;
 import modele.moves.EatMove;
 import modele.moves.Move;
 import modele.moves.NormalMove;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,10 +18,10 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public Set<Move> generateAllMoves(Board board) {
+    public Set<Move> generateAllMoves(Plateau plateau) {
         Set<Move> moves = new HashSet<>();
 
-        Position currentPose = board.getPosition(this);
+        Position currentPose = plateau.getPosition(this);
 
         for (int[] offset : getOffsets()) {
             Position nextPosition = currentPose.offset(offset[0], offset[1]);
@@ -29,7 +29,7 @@ abstract class OffsetPiece extends Piece {
             //Si la position n'est pas valide passer à la prochaine
             if (!nextPosition.isValid()) continue;
 
-            Piece piece = board.getPiece(nextPosition);
+            Piece piece = plateau.getPiece(nextPosition);
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
             if (piece == null) moves.add(new NormalMove(currentPose, nextPosition));
@@ -40,8 +40,8 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public boolean attacksPosition(Board board, Position position) {
-        Position currentPosition = board.getPosition(this);
+    public boolean attacksPosition(Plateau plateau, Position position) {
+        Position currentPosition = plateau.getPosition(this);
 
         for (int[] offset : getOffsets()) {
             if (position.equals(currentPosition.offset(offset[0], offset[1]))) return true;

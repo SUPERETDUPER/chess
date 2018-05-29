@@ -1,11 +1,11 @@
 package modele;
 
-import modele.board.Board;
 import modele.joueur.Joueur;
 import modele.moves.Move;
 import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import modele.pieces.Roi;
+import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class JeuData {
     @NotNull
-    private final Board board;
+    private final Plateau plateau;
 
     @NotNull
     private final EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
@@ -22,16 +22,16 @@ public class JeuData {
     @NotNull
     private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
-    public JeuData(@NotNull Board board, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
-        this.board = board;
+    public JeuData(@NotNull Plateau plateau, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
+        this.plateau = plateau;
 
         rois.put(premierRoi.getCouleur(), premierRoi);
         rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
     }
 
     @NotNull
-    public Board getBoard() {
-        return board;
+    public Plateau getPlateau() {
+        return plateau;
     }
 
     @NotNull
@@ -52,7 +52,7 @@ public class JeuData {
     public Set<Move> getAllLegalMoves(Couleur couleur) {
         Set<Move> moves = new HashSet<>();
 
-        for (Piece piece : getBoard().iteratePieces()) {
+        for (Piece piece : getPlateau().iteratePieces()) {
             if (piece.getCouleur() == couleur) {
                 moves.addAll(piece.getLegalMoves(this));
             }
@@ -61,9 +61,9 @@ public class JeuData {
         return moves;
     }
 
-    public boolean roiInCheck(Couleur couleurDuRoi, Board board) {
-        for (Piece piece : board.iteratePieces()) {
-            if (piece.getCouleur() != couleurDuRoi && piece.attacksPosition(board, board.getPosition(getRoi(couleurDuRoi)))) {
+    public boolean roiInCheck(Couleur couleurDuRoi, Plateau plateau) {
+        for (Piece piece : plateau.iteratePieces()) {
+            if (piece.getCouleur() != couleurDuRoi && piece.attacksPosition(plateau, plateau.getPosition(getRoi(couleurDuRoi)))) {
                 return true;
             }
         }
@@ -72,6 +72,6 @@ public class JeuData {
     }
 
     public boolean roiInCheck(Couleur couleurDuRoi) {
-        return roiInCheck(couleurDuRoi, board);
+        return roiInCheck(couleurDuRoi, plateau);
     }
 }

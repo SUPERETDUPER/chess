@@ -1,7 +1,7 @@
 package modele.pieces;
 
-import modele.board.Board;
-import modele.board.Position;
+import modele.plateau.Plateau;
+import modele.plateau.Position;
 
 public class Tour extends DirectionPiece {
     private static final int[][] OFFSET = {
@@ -16,12 +16,12 @@ public class Tour extends DirectionPiece {
     }
 
     @Override
-    public boolean attacksPosition(Board board, Position position) {
-        Position currentPosition = board.getPosition(this);
+    public boolean attacksPosition(Plateau plateau, Position position) {
+        Position currentPosition = plateau.getPosition(this);
         if (position.getColonne() != currentPosition.getColonne() && position.getRangee() != currentPosition.getRangee())
             return false;
 
-        return super.attacksPosition(board, position);
+        return super.attacksPosition(plateau, position);
     }
 
     @Override
