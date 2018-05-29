@@ -30,6 +30,13 @@ public class App extends Application {
         launch(args);
     }
 
+    /**
+     * Retourne un nouveau plateau avec la position du début
+     *
+     * @param roiNoir  le roi noir à utiliser
+     * @param roiBlanc le roi blanc à utiliser
+     * @return le plateau en position initiale
+     */
     @NotNull
     private static Plateau creePlateau(Roi roiNoir, Roi roiBlanc) {
         Plateau plateau = new Plateau();
@@ -77,27 +84,25 @@ public class App extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle(TITRE); //Définir le titre
+        primaryStage.setTitle(TITRE); //Définir le titre de la fenêtre
 
-        //Load l'interface
+        //Créer le controller d'interface
+        BoardController boardController = new BoardController(jeuData);
+
+        //Créer l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board.fxml"));
-
-        BoardController controller = new BoardController(jeuData);
-
-        fxmlLoader.setController(controller);
-
-        primaryStage.setScene(
-                new Scene(
-                        fxmlLoader.load()
-                )
-        );
+        fxmlLoader.setController(boardController);
 
         //Montrer l'interface
+        primaryStage.setScene(new Scene(fxmlLoader.load()));
         primaryStage.setMaximized(true);
         primaryStage.show();
 
-        jeuData.ajouterJoueur(new JoueurHumain(controller, Couleur.BLANC));
+        //Créer et ajouter deux joueurs au modèle
+        jeuData.ajouterJoueur(new JoueurHumain(boardController, Couleur.BLANC));
         jeuData.ajouterJoueur(new JoueurOrdi(jeuData, Couleur.NOIR));
+
+        //Créer une partie et commencer
         new Jeu(jeuData).commencer();
     }
 }

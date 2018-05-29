@@ -4,7 +4,7 @@ import modele.MoveCallbackWrapper;
 import modele.pieces.Couleur;
 
 public interface Joueur {
-    void notifierTour(MoveCallbackWrapper moveCallbackWrapper);
+    void getMouvement(MoveCallbackWrapper moveCallbackWrapper);
 
     Couleur getCouleur();
 }

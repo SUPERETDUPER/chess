@@ -60,18 +60,4 @@ public class JeuData {
 
         return moves;
     }
-
-    public boolean roiInCheck(Couleur couleurDuRoi, Plateau plateau) {
-        for (Piece piece : plateau.iteratePieces()) {
-            if (piece.getCouleur() != couleurDuRoi && piece.attacksPosition(plateau, plateau.getPosition(getRoi(couleurDuRoi)))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean roiInCheck(Couleur couleurDuRoi) {
-        return roiInCheck(couleurDuRoi, plateau);
-    }
 }

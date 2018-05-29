@@ -12,6 +12,7 @@ import modele.moves.Move;
 import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import modele.plateau.Position;
+import modele.plateau.PositionIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,12 +21,24 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Controle le plateau de jeuData
+ * Controle le plateau de jeu
  */
 public class BoardController {
-    //La liste de cases
+    private static final RowConstraints ROW_CONSTRAINT = new RowConstraints();
+    private static final ColumnConstraints COLUMN_CONSTRAINTS = new ColumnConstraints();
+
+    static {
+        //Créer les constraintes pour les rangées/colonnes
+        ROW_CONSTRAINT.setVgrow(Priority.SOMETIMES);
+        ROW_CONSTRAINT.setPercentHeight(100.0F / Position.getLimite());
+        COLUMN_CONSTRAINTS.setHgrow(Priority.SOMETIMES);
+        COLUMN_CONSTRAINTS.setPercentWidth(100.0F / Position.getLimite());
+    }
+
+
+    //La liste de controllers de case
     @NotNull
-    private final CaseController[][] caseControllers = new CaseController[Position.getLimite()][Position.getLimite()];
+    private final Tableau<CaseController> caseControllers = new Tableau<>();
 
     @FXML
     private GridPane plateau;
@@ -33,8 +46,8 @@ public class BoardController {
     @NotNull
     private final JeuData jeuData;
 
-    @NotNull
-    private final HashMap<Position, Move> currentMoves = new HashMap<>();
+    @Nullable
+    private HashMap<Position, Move> currentMoves = null;
 
     @Nullable
     private MoveCallbackWrapper moveCallbackWrapper;
@@ -46,42 +59,38 @@ public class BoardController {
 
     @FXML
     private void initialize() throws IOException {
-        //Créer les constraintes pour les rangées/colonnes
-        RowConstraints rowConstraint = new RowConstraints();
-        rowConstraint.setVgrow(Priority.SOMETIMES);
-        rowConstraint.setPercentHeight(100.0F / Position.getLimite());
-        ColumnConstraints columnConstraints = new ColumnConstraints();
-        columnConstraints.setHgrow(Priority.SOMETIMES);
-        columnConstraints.setPercentWidth(100.0F / Position.getLimite());
-
         //Crée une case pour chaque position
-        for (int i = 0; i < Position.getLimite(); i++) {
-            for (int j = 0; j < Position.getLimite(); j++) {
+        PositionIterator positionIterator = new PositionIterator();
 
-                //Créer un controleur
-                caseControllers[i][j] = new CaseController(
-                        new Position(i, j),
-                        this::caseClicked,
-                        (i + j) % 2 == 0 //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
-                );
+        while (positionIterator.hasNext()) {
+            Position position = positionIterator.next();
 
-                //Créer une case avec le controlleur
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/case.fxml"));
-                fxmlLoader.setController(caseControllers[i][j]);
+            //Créer un controleur
+            CaseController caseController = new CaseController(
+                    position,
+                    this::caseClicked,
+                    (position.getColonne() + position.getRangee()) % 2 == 0 //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
+            );
 
-                //Ajouter la case
-                plateau.add(fxmlLoader.load(), j, i);
-            }
+            //Créer une case avec le controlleur
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/case.fxml"));
+            fxmlLoader.setController(caseController);
 
-            //Appliquer la constraintes
-            plateau.getRowConstraints().add(rowConstraint);
-            plateau.getColumnConstraints().add(columnConstraints);
+            //Ajouter la case au plateau et à la liste
+            plateau.add(fxmlLoader.load(), position.getColonne(), position.getRangee());
+            caseControllers.add(position, caseController);
         }
 
-        updateBoard();
+        //Ajouter les constraintes pour chaque rangée/colonne
+        for (int i = 0; i < Position.getLimite(); i++) {
+            plateau.getRowConstraints().add(ROW_CONSTRAINT);
+            plateau.getColumnConstraints().add(COLUMN_CONSTRAINTS);
+        }
+
+        updateBoard(); //Afficher les pièces tels quelles le sont présentement
     }
 
-    public void getTour(Couleur couleurDuTour, MoveCallbackWrapper moveCallbackWrapper) {
+    public void getMovement(Couleur couleurDuTour, MoveCallbackWrapper moveCallbackWrapper) {
         this.moveCallbackWrapper = moveCallbackWrapper;
         this.couleurDuTour = couleurDuTour;
     }
@@ -90,15 +99,15 @@ public class BoardController {
         Piece piece = jeuData.getPlateau().getPiece(position);
 
         //Si aucun pièce pré-sélectionné
-        if (currentMoves.isEmpty()) {
+        if (currentMoves == null) {
             //Quitter si il n'y a rien a faire
             if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || couleurDuTour != piece.getCouleur())
                 return;
 
-            removeCurrentMoves();
-
             //Calculer les mouvements possibles
             Set<Move> moves = piece.getLegalMoves(jeuData);
+
+            currentMoves = new HashMap<>();
 
             //Ajouter le mouvement à la liste
             for (Move move : moves) {
@@ -106,7 +115,7 @@ public class BoardController {
             }
 
             //Surligner la position de départ
-            caseControllers[position.getRangee()][position.getColonne()].setCouleur(CaseController.Highlight.ROUGE);
+            caseControllers.get(position).setCouleur(CaseController.Highlight.ROUGE);
 
         } else {
             //Si la case est une des options appliquer le movement
@@ -127,30 +136,30 @@ public class BoardController {
     private void addCurrentMove(Move move) {
         Position positionToDisplay = move.getPositionToDisplay();
         currentMoves.put(positionToDisplay, move);
-        caseControllers[positionToDisplay.getRangee()][positionToDisplay.getColonne()].setCouleur(CaseController.Highlight.BLUE);
+        caseControllers.get(positionToDisplay).setCouleur(CaseController.Highlight.BLUE);
     }
 
     /**
      * Enlève tout les mouvements
      */
     private void removeCurrentMoves() {
-        for (int i = 0; i < Position.getLimite(); i++) {
-            for (int j = 0; j < Position.getLimite(); j++) {
-                caseControllers[i][j].setCouleur(CaseController.Highlight.NORMAL);
-            }
+        for (CaseController caseController : caseControllers) {
+            caseController.setCouleur(CaseController.Highlight.NORMAL);
         }
 
-        currentMoves.clear();
+        currentMoves = null;
     }
 
     /**
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        for (int i = 0; i < Position.getLimite(); i++) {
-            for (int j = 0; j < Position.getLimite(); j++) {
-                caseControllers[i][j].setPiece(jeuData.getPlateau().getPiece(new Position(i, j)));
-            }
+        PositionIterator positionIterator = new PositionIterator();
+
+        while (positionIterator.hasNext()) {
+            Position position = positionIterator.next();
+
+            caseControllers.get(position).setPiece(jeuData.getPlateau().getPiece(position));
         }
     }
 }

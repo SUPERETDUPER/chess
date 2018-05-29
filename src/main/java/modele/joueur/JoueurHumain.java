@@ -14,8 +14,8 @@ public class JoueurHumain implements Joueur {
     }
 
     @Override
-    public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
-        boardController.getTour(couleur, moveCallbackWrapper);
+    public void getMouvement(MoveCallbackWrapper moveCallbackWrapper) {
+        boardController.getMovement(couleur, moveCallbackWrapper);
     }
 
     @Override

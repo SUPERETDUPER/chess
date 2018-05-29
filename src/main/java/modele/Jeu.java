@@ -15,7 +15,7 @@ public class Jeu {
     }
 
     public void commencer() {
-        jeuData.getJoueur(tourA).notifierTour(new MoveCallbackWrapper(this::jouer));
+        jeuData.getJoueur(tourA).getMouvement(new MoveCallbackWrapper(this::jouer));
     }
 
     public void jouer(Move move) {
@@ -25,13 +25,13 @@ public class Jeu {
         Set<Move> moves = jeuData.getAllLegalMoves(tourA);
 
         if (moves.isEmpty()) {
-            if (jeuData.roiInCheck(tourA)) {
+            if (Helper.roiInCheck(jeuData.getPlateau(), jeuData.getRoi(tourA))) {
                 System.out.println("Checkmate");
             } else {
                 System.out.println("Stalemate");
             }
         } else {
-            jeuData.getJoueur(tourA).notifierTour(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
+            jeuData.getJoueur(tourA).getMouvement(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
         }
     }
 

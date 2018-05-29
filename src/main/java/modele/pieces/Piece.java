@@ -1,5 +1,6 @@
 package modele.pieces;
 
+import modele.Helper;
 import modele.JeuData;
 import modele.moves.Move;
 import modele.plateau.Plateau;
@@ -42,7 +43,7 @@ public abstract class Piece {
         for (Move move : moves) {
             move.apply(tempPlateau);
 
-            if (!jeuData.roiInCheck(couleur, tempPlateau)) {
+            if (!Helper.roiInCheck(tempPlateau, jeuData.getRoi(couleur))) {
                 legalMoves.add(move);
             }
 
