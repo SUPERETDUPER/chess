@@ -4,16 +4,19 @@ import modele.JeuData;
 import modele.moves.Move;
 import modele.pieces.Couleur;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-//TODO Upgrade algorithm to min/max
+//TODO Upgrade algorithm to min/max with alpha-beta pruning
 
 /**
  * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
  */
 public class JoueurOrdi extends Joueur {
-    private JeuData jeuData;
+    private final JeuData jeuData;
+    private final static int MAX_DEPTH = 4;
 
     public JoueurOrdi(JeuData jeuData, Couleur couleur) {
         super(couleur);
@@ -27,30 +30,73 @@ public class JoueurOrdi extends Joueur {
      */
     @Override
     public void getMouvement(Consumer<Move> callback) {
-        Set<Move> moves = jeuData.getAllLegalMoves(this.getCouleur());
+        callback.accept(calculerMeilleurMouvement(new MoveSequence(), getCouleur()).getFirst());
+    }
 
-        Move meilleurMouvement = null;
+    private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
+        if (pastSequence.getLength() == MAX_DEPTH) return pastSequence;
 
-        //Analyse chaque mouvement
+        Set<Move> moves = jeuData.getAllMoves(couleur);
+
+        MoveSequence bestMove = null;
+
         for (Move move : moves) {
-            if (meilleurMouvement == null) {
-                meilleurMouvement = move;
-                continue;
-            }
+            move.appliquer(jeuData.getPlateau());
+            MoveSequence moveSequence = calculerMeilleurMouvement(pastSequence.addAndReturn(move), oppose(couleur));
 
-            //Si le mouvement remporte plus de point c'est le nouveau meilleur mouvement
-            if (this.getCouleur() == Couleur.BLANC) {
-                if (move.getValeur() > meilleurMouvement.getValeur()) {
-                    meilleurMouvement = move;
+            if (bestMove == null) {
+                bestMove = moveSequence;
+            } else if (couleur == Couleur.BLANC) {
+                if (moveSequence.getValue() > bestMove.getValue()) {
+                    bestMove = moveSequence;
                 }
             } else {
-                if (move.getValeur() < meilleurMouvement.getValeur()) {
-                    meilleurMouvement = move;
+                if (moveSequence.getValue() < bestMove.getValue()) {
+                    bestMove = moveSequence;
                 }
             }
+
+            move.undo(jeuData.getPlateau());
         }
 
-        //Appliquer (jouer) le meilleurMouvement
-        callback.accept(meilleurMouvement);
+        return bestMove == null ? pastSequence : bestMove;
+    }
+
+    private Couleur oppose(Couleur couleur) {
+        return couleur == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC;
+    }
+
+    private class MoveSequence {
+        private final List<Move> moves;
+        private final int value;
+
+        MoveSequence() {
+            this.value = 0;
+            this.moves = new ArrayList<>();
+
+        }
+
+        private MoveSequence(List<Move> moves, int value) {
+            this.moves = moves;
+            this.value = value;
+        }
+
+        MoveSequence addAndReturn(Move move) {
+            List<Move> newList = new ArrayList<>(moves);
+            newList.add(move);
+            return new MoveSequence(newList, value + move.getValeur());
+        }
+
+        int getValue() {
+            return value;
+        }
+
+        int getLength() {
+            return moves.size();
+        }
+
+        Move getFirst() {
+            return moves.get(0);
+        }
     }
 }

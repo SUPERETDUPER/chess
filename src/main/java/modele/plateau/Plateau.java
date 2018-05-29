@@ -57,4 +57,18 @@ public class Plateau {
     public Plateau getCopie() {
         return new Plateau(board);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+
+        for (Piece piece : iteratePieces()) {
+            stringBuilder.append(getPosition(piece)).append(" ").append(piece).append(", ");
+        }
+
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
+    }
 }

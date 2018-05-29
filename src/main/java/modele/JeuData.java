@@ -42,7 +42,7 @@ public class JeuData {
     }
 
     @NotNull
-    private Set<Move> getAllMoves(Couleur couleur) {
+    public Set<Move> getAllMoves(Couleur couleur) {
         Set<Move> moves = new HashSet<>();
 
         for (Piece piece : plateau.iteratePieces()) {

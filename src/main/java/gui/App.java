@@ -102,8 +102,8 @@ public class App extends Application {
         Jeu jeu = new Jeu(jeuData);
 
         //Ajouter et créer les joueurs
-        jeu.ajouterJoueur(new JoueurHumain(boardController, Couleur.BLANC));
-        jeu.ajouterJoueur(new JoueurOrdi(jeuData, Couleur.NOIR));
+        jeu.ajouterJoueur(new JoueurHumain(boardController, Couleur.NOIR));
+        jeu.ajouterJoueur(new JoueurOrdi(jeuData, Couleur.BLANC));
 
         //Commencer la partie
         jeu.commencer();

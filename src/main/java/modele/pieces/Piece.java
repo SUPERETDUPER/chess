@@ -66,4 +66,9 @@ public abstract class Piece {
      * @return La valeur de la pièce indépendament de la couleur
      */
     public abstract int getValeurPositive();
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "-" + (couleur == Couleur.BLANC ? "b" : "n");
+    }
 }

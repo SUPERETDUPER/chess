@@ -54,7 +54,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "rangee: " + rangee + " colonne: " + colonne;
+        return "r" + rangee + "c" + colonne;
     }
 
 

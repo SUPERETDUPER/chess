@@ -51,7 +51,7 @@ public abstract class Move {
 
     @Override
     public String toString() {
-        return "From: " + depart + " to: " + fin;
+        return depart + " à " + fin;
     }
 
     @Override
