@@ -25,7 +25,7 @@ abstract class OffsetPiece extends Piece {
         Position currentPose = plateau.getPosition(this);
 
         for (Offset offset : getOffsets()) {
-            Position nextPosition = currentPose.offset(offset);
+            Position nextPosition = currentPose.decaler(offset);
 
             //Si la position n'est pas valide passer à la prochaine
             if (!nextPosition.isValid()) continue;
@@ -41,11 +41,11 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public boolean attacksPosition(Plateau plateau, Position position) {
+    public boolean attaquePosition(Plateau plateau, Position position) {
         Position currentPosition = plateau.getPosition(this);
 
         for (Offset offset : getOffsets()) {
-            if (position.equals(currentPosition.offset(offset))) return true;
+            if (position.equals(currentPosition.decaler(offset))) return true;
         }
 
         return false;

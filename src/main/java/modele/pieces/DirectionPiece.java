@@ -25,7 +25,7 @@ abstract class DirectionPiece extends Piece {
         Position startingPosition = plateau.getPosition(this);
 
         for (Offset direction : getDirections()) {
-            Position end = startingPosition.offset(direction);
+            Position end = startingPosition.decaler(direction);
 
             while (end.isValid()) {
                 Piece piece = plateau.getPiece(end);
@@ -39,7 +39,7 @@ abstract class DirectionPiece extends Piece {
                     break;
                 }
 
-                end = end.offset(direction);
+                end = end.decaler(direction);
             }
         }
 
@@ -47,11 +47,11 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    public boolean attacksPosition(Plateau plateau, Position position) {
+    public boolean attaquePosition(Plateau plateau, Position position) {
         Position startingPosition = plateau.getPosition(this);
 
         for (Offset direction : getDirections()) {
-            Position testPosition = startingPosition.offset(direction);
+            Position testPosition = startingPosition.decaler(direction);
 
             while (testPosition.isValid()) {
                 if (testPosition.equals(position)) {
@@ -60,7 +60,7 @@ abstract class DirectionPiece extends Piece {
 
                 if (plateau.getPiece(testPosition) != null) break;
 
-                testPosition = testPosition.offset(direction);
+                testPosition = testPosition.decaler(direction);
             }
         }
         return false;

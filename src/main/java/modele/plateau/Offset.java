@@ -1,5 +1,8 @@
 package modele.plateau;
 
+/**
+ * Un déplacement relatif
+ */
 public class Offset {
     public static final Offset HAUT_GAUGHE = new Offset(-1, -1);
     public static final Offset HAUT_CENTRE = new Offset(-1, 0);
@@ -12,16 +15,20 @@ public class Offset {
 
     private final int[] offset = new int[2];
 
+    /**
+     * @param offsetVertical   montant à se déplacer vers le bas
+     * @param offsetHorizontal montant à se déplacer vers la droite
+     */
     public Offset(int offsetVertical, int offsetHorizontal) {
         offset[0] = offsetVertical;
         offset[1] = offsetHorizontal;
     }
 
-    public int getOffsetVertical() {
+    int getOffsetVertical() {
         return offset[0];
     }
 
-    public int getOffsetHorizontal() {
+    int getOffsetHorizontal() {
         return offset[1];
     }
 }

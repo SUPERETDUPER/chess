@@ -49,7 +49,7 @@ public class Tableau<T> implements Iterable<T> {
      * La liste contenant les données
      */
     @NotNull
-    private final List<T> liste = new ArrayList<>(Position.getLimite() * Position.getLimite());
+    private final List<T> liste = new ArrayList<>(Position.LIMITE * Position.LIMITE);
 
     /**
      * @param position la position de la donnée désirée
@@ -71,7 +71,7 @@ public class Tableau<T> implements Iterable<T> {
 
     @Contract(pure = true)
     private int getIndex(int rangee, int colonne) {
-        return Position.getLimite() * rangee + colonne;
+        return Position.LIMITE * rangee + colonne;
     }
 
     /**

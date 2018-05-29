@@ -1,20 +1,22 @@
 package modele.plateau;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+/**
+ * Une position du plateau
+ */
 public class Position {
-    private static final int LIMITE = 8;
+    public static final int LIMITE = 8;
 
     private final int rangee;
     private final int colonne;
 
-    public Position(int rangee, int indexColonne) {
+    public Position(int rangee, int colonne) {
         this.rangee = rangee;
-        this.colonne = indexColonne;
+        this.colonne = colonne;
     }
 
     public int getColonne() {
@@ -31,7 +33,7 @@ public class Position {
      * @return la nouvelle position
      */
     @NotNull
-    public Position offset(Offset offset) {
+    public Position decaler(Offset offset) {
         return new Position(rangee + offset.getOffsetVertical(), colonne + offset.getOffsetHorizontal());
     }
 
@@ -40,11 +42,6 @@ public class Position {
      */
     public boolean isValid() {
         return 0 <= rangee && rangee < LIMITE && 0 <= colonne && colonne < LIMITE;
-    }
-
-    @Contract(pure = true)
-    public static int getLimite() {
-        return LIMITE;
     }
 
     @Override

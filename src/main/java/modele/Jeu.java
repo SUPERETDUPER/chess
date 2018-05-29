@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.EnumMap;
 import java.util.Set;
 
+/**
+ * Classe qui supervise les joueurs et s'assure de respecter les tours
+ */
 public class Jeu {
     private final JeuData jeuData;
 
@@ -24,24 +27,34 @@ public class Jeu {
         joueurs.put(joueur.getCouleur(), joueur);
     }
 
+    /**
+     * Commencer la partie
+     */
     public void commencer() {
         joueurs.get(tourA).getMouvement(this::jouer);
     }
 
-    public void jouer(Move move) {
-        move.appliquer(jeuData.getPlateau()); //Jouer
+    /**
+     * Appelé par le callback de joueur.getMouvement()
+     *
+     * @param move le mouvement à jouer
+     */
+    private void jouer(@NotNull Move move) {
+        move.appliquer(jeuData.getPlateau()); //Jouer le mouvement
+
         tourA = tourA == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
+        //Vérifier pour échec et mat ou match nul
         Set<Move> moves = jeuData.getAllLegalMoves(tourA);
 
         if (moves.isEmpty()) {
-            if (Helper.roiInCheck(jeuData.getPlateau(), jeuData.getRoi(tourA))) {
+            if (Helper.isPieceAttaquer(jeuData.getPlateau(), jeuData.getRoi(tourA))) {
                 System.out.println("Checkmate");
             } else {
                 System.out.println("Stalemate");
             }
         } else {
-            joueurs.get(tourA).getMouvement(this::jouer); //Notifier l'autre joueur
+            joueurs.get(tourA).getMouvement(this::jouer); //Notifier l'autre joueur qu'il peut joueur
         }
     }
 

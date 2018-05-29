@@ -50,6 +50,10 @@ public class Plateau {
         return board.values();
     }
 
+    /**
+     * @return une nouveau plateau de jeu avec les mêmes pièces et positions
+     */
+    @NotNull
     public Plateau getCopie() {
         return new Plateau(board);
     }

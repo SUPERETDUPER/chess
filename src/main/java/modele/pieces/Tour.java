@@ -17,12 +17,13 @@ public class Tour extends DirectionPiece {
     }
 
     @Override
-    public boolean attacksPosition(Plateau plateau, Position position) {
+    public boolean attaquePosition(Plateau plateau, Position position) {
+        //Si la rangée ou colonne n'est pas identique on sait immédiatement que c'est faux
         Position currentPosition = plateau.getPosition(this);
         if (position.getColonne() != currentPosition.getColonne() && position.getRangee() != currentPosition.getRangee())
             return false;
 
-        return super.attacksPosition(plateau, position);
+        return super.attaquePosition(plateau, position);
     }
 
     @Override

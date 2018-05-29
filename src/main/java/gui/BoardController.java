@@ -27,9 +27,9 @@ public class BoardController {
     static {
         //Créer les constraintes pour les rangées/colonnes
         ROW_CONSTRAINT.setVgrow(Priority.SOMETIMES);
-        ROW_CONSTRAINT.setPercentHeight(100.0F / Position.getLimite());
+        ROW_CONSTRAINT.setPercentHeight(100.0F / Position.LIMITE);
         COLUMN_CONSTRAINTS.setHgrow(Priority.SOMETIMES);
-        COLUMN_CONSTRAINTS.setPercentWidth(100.0F / Position.getLimite());
+        COLUMN_CONSTRAINTS.setPercentWidth(100.0F / Position.LIMITE);
     }
 
 
@@ -82,7 +82,7 @@ public class BoardController {
         }
 
         //Ajouter les constraintes pour chaque rangée/colonne
-        for (int i = 0; i < Position.getLimite(); i++) {
+        for (int i = 0; i < Position.LIMITE; i++) {
             plateau.getRowConstraints().add(ROW_CONSTRAINT);
             plateau.getColumnConstraints().add(COLUMN_CONSTRAINTS);
         }

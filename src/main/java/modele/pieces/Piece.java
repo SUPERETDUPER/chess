@@ -60,7 +60,7 @@ public abstract class Piece {
      * @param position
      * @return vrai si cette pièce attack présentement cette position
      */
-    public abstract boolean attacksPosition(Plateau plateau, Position position);
+    public abstract boolean attaquePosition(Plateau plateau, Position position);
 
     /**
      * @return La valeur de la pièce indépendament de la couleur

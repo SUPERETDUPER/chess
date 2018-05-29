@@ -62,7 +62,7 @@ public class JeuData {
         for (Move move : moves) {
             move.appliquer(tempPlateau);
 
-            if (!Helper.roiInCheck(tempPlateau, getRoi(verifierPour))) {
+            if (!Helper.isPieceAttaquer(tempPlateau, getRoi(verifierPour))) {
                 legalMoves.add(move);
             }
 
