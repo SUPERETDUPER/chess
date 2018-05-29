@@ -7,9 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import modele.JeuData;
-import modele.MoveCallbackWrapper;
 import modele.moves.Move;
-import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;
@@ -17,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -40,20 +37,23 @@ public class BoardController {
     @NotNull
     private final Tableau<CaseController> caseControllers = new Tableau<>();
 
+    //Le grid pane qui représente le plateau
     @FXML
     private GridPane plateau;
 
+    //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
     private final JeuData jeuData;
 
-    @Nullable
-    private HashMap<Position, Move> currentMoves = null;
+    //Controller pour surligner les cases
+    @NotNull
+    private final HighlightController highlightController = new HighlightController(caseControllers);
 
+    //Objet qui spécifie si l'on veut obtenir des mouvements de l'utilisateur
     @Nullable
-    private MoveCallbackWrapper moveCallbackWrapper;
-    private Couleur couleurDuTour;
+    private MoveRequest moveRequest;
 
-    public BoardController(@NotNull JeuData jeuData) {
+    BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
     }
 
@@ -90,76 +90,48 @@ public class BoardController {
         updateBoard(); //Afficher les pièces tels quelles le sont présentement
     }
 
-    public void getMovement(Couleur couleurDuTour, MoveCallbackWrapper moveCallbackWrapper) {
-        this.moveCallbackWrapper = moveCallbackWrapper;
-        this.couleurDuTour = couleurDuTour;
+    public void requestMove(MoveRequest moveRequest) {
+        this.moveRequest = moveRequest;
     }
 
-    private void caseClicked(Position position) {
-        Piece piece = jeuData.getPlateau().getPiece(position);
+    private void caseClicked(Position positionClicked) {
+        //Si aucun moveRequest ne rien faire
+        if (moveRequest == null || moveRequest.isCompleted()) return;
 
-        //Si aucun pièce pré-sélectionné
-        if (currentMoves == null) {
+        Piece pieceClicked = jeuData.getPlateau().getPiece(positionClicked);
+
+        //Si une pièce est déjà sélectionné
+        if (highlightController.isSelected()) {
+            //Si la case est une des options appliquer le movement
+            if (highlightController.isOption(positionClicked)) {
+                moveRequest.apply(highlightController.getMove(positionClicked));
+                updateBoard(); //Afficher les changements
+            }
+
+            highlightController.erase(); //Déselectionner tout
+        } else {
             //Quitter si il n'y a rien a faire
-            if (piece == null || moveCallbackWrapper == null || moveCallbackWrapper.isConsumed() || couleurDuTour != piece.getCouleur())
+            if (pieceClicked == null || moveRequest.getCouleurDuTour() != pieceClicked.getCouleur())
                 return;
 
+            highlightController.select(positionClicked);
+
             //Calculer les mouvements possibles
-            Set<Move> moves = piece.getLegalMoves(jeuData);
+            Set<Move> moves = pieceClicked.getLegalMoves(jeuData);
 
-            currentMoves = new HashMap<>();
-
-            //Ajouter le mouvement à la liste
+            //Highlight chaque mouvement
             for (Move move : moves) {
-                addCurrentMove(move);
+                highlightController.addOption(move);
             }
-
-            //Surligner la position de départ
-            caseControllers.get(position).setCouleur(CaseController.Highlight.ROUGE);
-
-        } else {
-            //Si la case est une des options appliquer le movement
-            if (currentMoves.containsKey(position)) {
-                moveCallbackWrapper.jouer(currentMoves.get(position));
-                updateBoard(); //Affiche changement
-            }
-
-            removeCurrentMoves(); //Déselectionner tout
         }
-    }
-
-    /**
-     * Ajoute un movement à la liste de mouvements possible et surligne cette case
-     *
-     * @param move le movement à montrer
-     */
-    private void addCurrentMove(Move move) {
-        Position positionToDisplay = move.getPositionToDisplay();
-        currentMoves.put(positionToDisplay, move);
-        caseControllers.get(positionToDisplay).setCouleur(CaseController.Highlight.BLUE);
-    }
-
-    /**
-     * Enlève tout les mouvements
-     */
-    private void removeCurrentMoves() {
-        for (CaseController caseController : caseControllers) {
-            caseController.setCouleur(CaseController.Highlight.NORMAL);
-        }
-
-        currentMoves = null;
     }
 
     /**
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        PositionIterator positionIterator = new PositionIterator();
-
-        while (positionIterator.hasNext()) {
-            Position position = positionIterator.next();
-
-            caseControllers.get(position).setPiece(jeuData.getPlateau().getPiece(position));
+        for (CaseController caseController : caseControllers) {
+            caseController.setPiece(jeuData.getPlateau().getPiece(caseController.getPosition()));
         }
     }
 }

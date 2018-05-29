@@ -1,11 +1,11 @@
 package modele.joueur;
 
 import modele.JeuData;
-import modele.MoveCallbackWrapper;
 import modele.moves.Move;
 import modele.pieces.Couleur;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class JoueurOrdi implements Joueur {
     private final Couleur couleur;
@@ -17,7 +17,7 @@ public class JoueurOrdi implements Joueur {
     }
 
     @Override
-    public void getMouvement(MoveCallbackWrapper moveCallbackWrapper) {
+    public void getMouvement(Consumer<Move> callback) {
         Set<Move> moves = jeuData.getAllLegalMoves(couleur);
 
         Move bestMove = moves.iterator().next();
@@ -34,7 +34,7 @@ public class JoueurOrdi implements Joueur {
             }
         }
 
-        moveCallbackWrapper.jouer(bestMove);
+        callback.accept(bestMove);
     }
 
     @Override

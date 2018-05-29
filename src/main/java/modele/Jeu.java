@@ -15,7 +15,7 @@ public class Jeu {
     }
 
     public void commencer() {
-        jeuData.getJoueur(tourA).getMouvement(new MoveCallbackWrapper(this::jouer));
+        jeuData.getJoueur(tourA).getMouvement(this::jouer);
     }
 
     public void jouer(Move move) {
@@ -31,7 +31,7 @@ public class Jeu {
                 System.out.println("Stalemate");
             }
         } else {
-            jeuData.getJoueur(tourA).getMouvement(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
+            jeuData.getJoueur(tourA).getMouvement(this::jouer); //Notifier l'autre joueur
         }
     }
 

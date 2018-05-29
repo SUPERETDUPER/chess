@@ -1,8 +1,11 @@
 package modele.joueur;
 
 import gui.BoardController;
-import modele.MoveCallbackWrapper;
+import gui.MoveRequest;
+import modele.moves.Move;
 import modele.pieces.Couleur;
+
+import java.util.function.Consumer;
 
 public class JoueurHumain implements Joueur {
     private final BoardController boardController;
@@ -14,8 +17,8 @@ public class JoueurHumain implements Joueur {
     }
 
     @Override
-    public void getMouvement(MoveCallbackWrapper moveCallbackWrapper) {
-        boardController.getMovement(couleur, moveCallbackWrapper);
+    public void getMouvement(Consumer<Move> callback) {
+        boardController.requestMove(new MoveRequest(callback, couleur));
     }
 
     @Override

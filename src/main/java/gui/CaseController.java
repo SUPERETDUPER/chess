@@ -91,4 +91,9 @@ class CaseController {
                 return isBlanc ? Color.WHITE : Color.LIGHTGRAY;
         }
     }
+
+    @NotNull
+    public Position getPosition() {
+        return position;
+    }
 }
