@@ -16,6 +16,8 @@ public class JeuData {
     @NotNull
     private final Plateau plateau;
 
+    private Runnable newChangeListener;
+
     @NotNull
     private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
@@ -24,6 +26,14 @@ public class JeuData {
 
         rois.put(premierRoi.getCouleur(), premierRoi);
         rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
+    }
+
+    public void setNewChangeListener(Runnable newChangeListener) {
+        this.newChangeListener = newChangeListener;
+    }
+
+    void notifyListenerOfChange() {
+        newChangeListener.run();
     }
 
     @NotNull

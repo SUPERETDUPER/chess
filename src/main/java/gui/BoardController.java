@@ -55,6 +55,7 @@ public class BoardController {
 
     BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
+        this.jeuData.setNewChangeListener(this::updateBoard);
     }
 
     @FXML
@@ -105,7 +106,6 @@ public class BoardController {
             //Si la case est une des options appliquer le movement
             if (highlightController.isOption(positionClicked)) {
                 moveRequest.apply(highlightController.getMove(positionClicked));
-                updateBoard(); //Afficher les changements
             }
 
             highlightController.enleverHighlight(); //Déselectionner tout

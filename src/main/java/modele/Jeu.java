@@ -42,6 +42,8 @@ public class Jeu {
     private void jouer(@NotNull Move move) {
         move.appliquer(jeuData.getPlateau()); //Jouer le mouvement
 
+        jeuData.notifyListenerOfChange();
+
         tourA = tourA == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
         //Vérifier pour échec et mat ou match nul
