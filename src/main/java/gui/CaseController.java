@@ -84,7 +84,7 @@ class CaseController {
     private Color getCouleur(@NotNull Highlight highlight) {
         switch (highlight) {
             case BLUE:
-                return isBlanc ? Color.LIGHTBLUE : Color.BLUE;
+                return isBlanc ? Color.LIGHTBLUE : Color.CORNFLOWERBLUE;
             case ROUGE:
                 return Color.PALEVIOLETRED;
             default:
