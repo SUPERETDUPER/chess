@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import modele.Jeu;
+import modele.JeuData;
 import modele.board.Board;
 import modele.board.Position;
 import modele.joueur.JoueurHumain;
@@ -21,7 +22,7 @@ public class App extends Application {
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
 
-        jeu = new Jeu(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir);
+        jeu = new Jeu(new JeuData(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir));
 
         launch(args);
     }
@@ -92,8 +93,8 @@ public class App extends Application {
         primaryStage.setMaximized(true);
         primaryStage.show();
 
-        jeu.ajouterJoueur(new JoueurHumain(controller, Couleur.BLANC));
-        jeu.ajouterJoueur(new JoueurOrdi(jeu, Couleur.NOIR));
+        jeu.getJeuData().ajouterJoueur(new JoueurHumain(controller, Couleur.BLANC));
+        jeu.getJeuData().ajouterJoueur(new JoueurOrdi(jeu, Couleur.NOIR));
         jeu.commencer();
     }
 }

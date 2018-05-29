@@ -87,7 +87,7 @@ public class BoardController {
     }
 
     private void caseClicked(Position position) {
-        Piece piece = jeu.getBoard().getPiece(position);
+        Piece piece = jeu.getJeuData().getBoard().getPiece(position);
 
         //Si aucun pièce pré-sélectionné
         if (currentMoves.isEmpty()) {
@@ -149,7 +149,7 @@ public class BoardController {
     private void updateBoard() {
         for (int i = 0; i < Position.getLimite(); i++) {
             for (int j = 0; j < Position.getLimite(); j++) {
-                caseControllers[i][j].setPiece(jeu.getBoard().getPiece(new Position(i, j)));
+                caseControllers[i][j].setPiece(jeu.getJeuData().getBoard().getPiece(new Position(i, j)));
             }
         }
     }

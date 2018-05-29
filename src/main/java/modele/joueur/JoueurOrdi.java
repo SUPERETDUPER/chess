@@ -18,7 +18,7 @@ public class JoueurOrdi implements Joueur {
 
     @Override
     public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
-        Set<Move> moves = Jeu.getAllLegalMoves(jeu, couleur);
+        Set<Move> moves = jeu.getAllLegalMoves(couleur);
 
         Move bestMove = null;
 

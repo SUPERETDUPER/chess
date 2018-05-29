@@ -34,10 +34,10 @@ public abstract class Piece {
     abstract int unicodeForBlack();
 
     public Set<Move> getLegalMoves(Jeu jeu) {
-        Set<Move> moves = generateAllMoves(jeu.getBoard());
+        Set<Move> moves = generateAllMoves(jeu.getJeuData().getBoard());
         Set<Move> legalMoves = new HashSet<>();
 
-        Board tempBoard = jeu.getBoard().getCopie();
+        Board tempBoard = jeu.getJeuData().getBoard().getCopie();
 
         for (Move move : moves) {
             move.apply(tempBoard);
