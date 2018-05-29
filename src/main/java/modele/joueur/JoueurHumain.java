@@ -1,7 +1,7 @@
 package modele.joueur;
 
 import gui.BoardController;
-import gui.MoveRequest;
+import gui.DemandeDeMouvement;
 import modele.moves.Move;
 import modele.pieces.Couleur;
 
@@ -18,7 +18,7 @@ public class JoueurHumain implements Joueur {
 
     @Override
     public void getMouvement(Consumer<Move> callback) {
-        boardController.requestMove(new MoveRequest(callback, couleur));
+        boardController.requestMove(new DemandeDeMouvement(callback, couleur));
     }
 
     @Override

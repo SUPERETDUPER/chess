@@ -9,6 +9,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import modele.pieces.Piece;
 import modele.plateau.Position;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,12 +19,16 @@ import java.util.function.Consumer;
  * Controle une case
  */
 class CaseController {
+    /**
+     * Les différentes couleurs possible pour la case
+     */
     enum Highlight {
         NORMAL,
         ROUGE,
         BLUE
     }
 
+    //La taille du text par rapport à la case
     private static final float FONT_TO_HEIGHT_RATIO = 0.75F;
 
     @FXML
@@ -32,22 +37,26 @@ class CaseController {
     @FXML
     private Text text; //Le text
 
+    //Si la case est blanche ou noir (gris)
     private final boolean isBlanc;
+
+    //La position de la case
     @NotNull
     private final Position position;
 
+    //La méthode à appeler quand la case est appuyée
     @NotNull
-    private final Consumer<Position> caseClickListener;
+    private final Consumer<Position> clickListener;
 
     /**
-     * @param position          la position de la case
-     * @param caseClickListener le listener à appeler quand la case est appuyé
-     * @param isBlanc           si la case est blanche
+     * @param position      la position de la case
+     * @param clickListener le listener à appeler quand la case est appuyé
+     * @param isBlanc       si la case est blanche
      */
-    CaseController(@NotNull Position position, @NotNull Consumer<Position> caseClickListener, boolean isBlanc) {
+    CaseController(@NotNull Position position, @NotNull Consumer<Position> clickListener, boolean isBlanc) {
         this.isBlanc = isBlanc;
         this.position = position;
-        this.caseClickListener = caseClickListener;
+        this.clickListener = clickListener;
     }
 
     @FXML
@@ -63,15 +72,16 @@ class CaseController {
 
     @FXML
     private void handleClick() {
-        caseClickListener.accept(position);
+        clickListener.accept(position);
     }
 
     /**
+     * Change la pièce sur la case
+     *
      * @param piece la piece à montrer
      */
     void setPiece(@Nullable Piece piece) {
-        if (piece == null) text.setText(null);
-        else text.setText(piece.getUnicode());
+        text.setText(piece == null ? null : piece.getUnicode());
     }
 
     /**
@@ -81,14 +91,17 @@ class CaseController {
         root.setBackground(new Background(new BackgroundFill(getCouleur(highlight), null, null)));
     }
 
+    @Contract(pure = true)
     private Color getCouleur(@NotNull Highlight highlight) {
         switch (highlight) {
             case BLUE:
                 return isBlanc ? Color.LIGHTBLUE : Color.CORNFLOWERBLUE;
             case ROUGE:
                 return Color.PALEVIOLETRED;
-            default:
+            case NORMAL:
                 return isBlanc ? Color.WHITE : Color.LIGHTGRAY;
+            default:
+                throw new IllegalArgumentException("Couleur de highlight inconnue");
         }
     }
 

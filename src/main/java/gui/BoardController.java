@@ -51,7 +51,7 @@ public class BoardController {
 
     //Objet qui spécifie si l'on veut obtenir des mouvements de l'utilisateur
     @Nullable
-    private MoveRequest moveRequest;
+    private DemandeDeMouvement moveRequest;
 
     BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
@@ -90,7 +90,7 @@ public class BoardController {
         updateBoard(); //Afficher les pièces tels quelles le sont présentement
     }
 
-    public void requestMove(MoveRequest moveRequest) {
+    public void requestMove(DemandeDeMouvement moveRequest) {
         this.moveRequest = moveRequest;
     }
 
@@ -111,7 +111,7 @@ public class BoardController {
             highlightController.erase(); //Déselectionner tout
         } else {
             //Quitter si il n'y a rien a faire
-            if (pieceClicked == null || moveRequest.getCouleurDuTour() != pieceClicked.getCouleur())
+            if (pieceClicked == null || moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
                 return;
 
             highlightController.select(positionClicked);

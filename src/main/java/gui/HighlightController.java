@@ -7,13 +7,27 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
+/**
+ * Contrôle comment les cases devraient être surlignées
+ */
 class HighlightController {
+    /**
+     * Le controlleur de chaque case
+     */
     @NotNull
     private final Tableau<CaseController> caseControllers;
 
+    /**
+     * La liste d'option pour la case sélectionné
+     * Vide si rien n'est sélectionné
+     */
     @NotNull
     private HashMap<Position, Move> currentOptions = new HashMap<>();
 
+    /**
+     * La case présentement sélectionné
+     * Null si rien n'est sélectionné
+     */
     @Nullable
     private Position selectedPosition;
 
@@ -22,6 +36,7 @@ class HighlightController {
     }
 
     void select(@NotNull Position position) {
+        this.erase();
         this.selectedPosition = position;
 
         //Surligner la position de départ
