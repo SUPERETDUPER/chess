@@ -1,8 +1,9 @@
 package modele.pieces;
 
-import modele.moves.EatMove;
+import modele.moves.MouvementManger;
+import modele.moves.MouvementNormal;
 import modele.moves.Move;
-import modele.moves.NormalMove;
+import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Une pièce qui attack dans une direction (ex. dame, fou, tour)
+ * Une pièce qui attack dans une ligne dans une direction (dame, fou et tour)
  */
 abstract class DirectionPiece extends Piece {
     DirectionPiece(Couleur couleur) {
@@ -23,22 +24,22 @@ abstract class DirectionPiece extends Piece {
 
         Position startingPosition = plateau.getPosition(this);
 
-        for (int[] direction : getDirections()) {
-            Position end = startingPosition.offset(direction[0], direction[1]);
+        for (Offset direction : getDirections()) {
+            Position end = startingPosition.offset(direction);
 
             while (end.isValid()) {
                 Piece piece = plateau.getPiece(end);
 
-                if (piece == null) moves.add(new NormalMove(startingPosition, end));
+                if (piece == null) moves.add(new MouvementNormal(startingPosition, end));
                 else {
                     if (piece.getCouleur() != couleur) {
-                        moves.add(new EatMove(startingPosition, end));
+                        moves.add(new MouvementManger(startingPosition, end));
                     }
 
                     break;
                 }
 
-                end = end.offset(direction[0], direction[1]);
+                end = end.offset(direction);
             }
         }
 
@@ -49,8 +50,8 @@ abstract class DirectionPiece extends Piece {
     public boolean attacksPosition(Plateau plateau, Position position) {
         Position startingPosition = plateau.getPosition(this);
 
-        for (int[] direction : getDirections()) {
-            Position testPosition = startingPosition.offset(direction[0], direction[1]);
+        for (Offset direction : getDirections()) {
+            Position testPosition = startingPosition.offset(direction);
 
             while (testPosition.isValid()) {
                 if (testPosition.equals(position)) {
@@ -59,11 +60,14 @@ abstract class DirectionPiece extends Piece {
 
                 if (plateau.getPiece(testPosition) != null) break;
 
-                testPosition = testPosition.offset(direction[0], direction[1]);
+                testPosition = testPosition.offset(direction);
             }
         }
         return false;
     }
 
-    abstract int[][] getDirections();
+    /**
+     * La liste de direction possible
+     */
+    abstract Offset[] getDirections();
 }

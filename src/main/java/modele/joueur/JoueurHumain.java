@@ -7,22 +7,24 @@ import modele.pieces.Couleur;
 
 import java.util.function.Consumer;
 
-public class JoueurHumain implements Joueur {
+/**
+ * Un joueur qui utilise le plateau de jeu pour soumettre ses mouvements
+ */
+public class JoueurHumain extends Joueur {
     private final BoardController boardController;
-    private final Couleur couleur;
 
     public JoueurHumain(BoardController boardController, Couleur couleur) {
+        super(couleur);
         this.boardController = boardController;
-        this.couleur = couleur;
     }
 
+    /**
+     * Quand l'on a besoin du prochain movement, l'objet crée une demande pour le plateau de jeu
+     *
+     * @param callback la méthode par laquelle l'on soumet son prochain mouvement
+     */
     @Override
     public void getMouvement(Consumer<Move> callback) {
-        boardController.requestMove(new DemandeDeMouvement(callback, couleur));
-    }
-
-    @Override
-    public Couleur getCouleur() {
-        return couleur;
+        boardController.demanderMouvement(new DemandeDeMouvement(callback, this.getCouleur()));
     }
 }

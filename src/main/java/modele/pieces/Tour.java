@@ -1,14 +1,15 @@
 package modele.pieces;
 
+import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
 public class Tour extends DirectionPiece {
-    private static final int[][] OFFSET = {
-            {-1, 0},
-            {0, 1},
-            {1, 0},
-            {0, -1}
+    private static final Offset[] OFFSET = {
+            Offset.HAUT_CENTRE,
+            Offset.MILIEU_GAUCHE,
+            Offset.MILIEU_DROIT,
+            Offset.BAS_CENTRE
     };
 
     public Tour(Couleur couleur) {
@@ -35,12 +36,12 @@ public class Tour extends DirectionPiece {
     }
 
     @Override
-    int[][] getDirections() {
+    Offset[] getDirections() {
         return OFFSET;
     }
 
     @Override
-    public int getValue() {
+    public int getValeurPositive() {
         return 5;
     }
 }

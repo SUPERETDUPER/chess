@@ -81,7 +81,7 @@ class CaseController {
      * @param piece la piece à montrer
      */
     void setPiece(@Nullable Piece piece) {
-        text.setText(piece == null ? null : piece.getUnicode());
+        text.setText(piece == null ? null : Character.toString((char) piece.getNumeroUnicode()));
     }
 
     /**

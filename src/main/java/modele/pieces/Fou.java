@@ -1,11 +1,13 @@
 package modele.pieces;
 
+import modele.plateau.Offset;
+
 public class Fou extends DirectionPiece {
-    private static final int[][] DIRECTIONS = {
-            {-1, -1},
-            {-1, 1},
-            {1, -1},
-            {1, 1}
+    private static final Offset[] DIRECTIONS = {
+            Offset.HAUT_GAUGHE,
+            Offset.HAUT_DROIT,
+            Offset.BAS_GAUCHE,
+            Offset.BAS_DROIT
     };
 
 
@@ -14,7 +16,7 @@ public class Fou extends DirectionPiece {
     }
 
     @Override
-    int[][] getDirections() {
+    Offset[] getDirections() {
         return DIRECTIONS;
     }
 
@@ -29,7 +31,7 @@ public class Fou extends DirectionPiece {
     }
 
     @Override
-    public int getValue() {
+    public int getValeurPositive() {
         return 3;
     }
 }

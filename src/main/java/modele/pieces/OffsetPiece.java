@@ -1,8 +1,9 @@
 package modele.pieces;
 
-import modele.moves.EatMove;
+import modele.moves.MouvementManger;
+import modele.moves.MouvementNormal;
 import modele.moves.Move;
-import modele.moves.NormalMove;
+import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
@@ -23,8 +24,8 @@ abstract class OffsetPiece extends Piece {
 
         Position currentPose = plateau.getPosition(this);
 
-        for (int[] offset : getOffsets()) {
-            Position nextPosition = currentPose.offset(offset[0], offset[1]);
+        for (Offset offset : getOffsets()) {
+            Position nextPosition = currentPose.offset(offset);
 
             //Si la position n'est pas valide passer à la prochaine
             if (!nextPosition.isValid()) continue;
@@ -32,8 +33,8 @@ abstract class OffsetPiece extends Piece {
             Piece piece = plateau.getPiece(nextPosition);
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
-            if (piece == null) moves.add(new NormalMove(currentPose, nextPosition));
-            else if (piece.getCouleur() != couleur) moves.add(new EatMove(currentPose, nextPosition));
+            if (piece == null) moves.add(new MouvementNormal(currentPose, nextPosition));
+            else if (piece.getCouleur() != couleur) moves.add(new MouvementManger(currentPose, nextPosition));
         }
 
         return moves;
@@ -43,12 +44,12 @@ abstract class OffsetPiece extends Piece {
     public boolean attacksPosition(Plateau plateau, Position position) {
         Position currentPosition = plateau.getPosition(this);
 
-        for (int[] offset : getOffsets()) {
-            if (position.equals(currentPosition.offset(offset[0], offset[1]))) return true;
+        for (Offset offset : getOffsets()) {
+            if (position.equals(currentPosition.offset(offset))) return true;
         }
 
         return false;
     }
 
-    abstract int[][] getOffsets();
+    abstract Offset[] getOffsets();
 }

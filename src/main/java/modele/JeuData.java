@@ -1,6 +1,5 @@
 package modele;
 
-import modele.joueur.Joueur;
 import modele.moves.Move;
 import modele.pieces.Couleur;
 import modele.pieces.Piece;
@@ -18,9 +17,6 @@ public class JeuData {
     private final Plateau plateau;
 
     @NotNull
-    private final EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
-
-    @NotNull
     private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
     public JeuData(@NotNull Plateau plateau, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
@@ -36,29 +32,43 @@ public class JeuData {
     }
 
     @NotNull
-    public Joueur getJoueur(Couleur couleur) {
-        return joueurs.get(couleur);
-    }
-
-    @NotNull
-    public Roi getRoi(Couleur couleur) {
+    Roi getRoi(Couleur couleur) {
         return rois.get(couleur);
-    }
-
-    public void ajouterJoueur(Joueur joueur) {
-        joueurs.put(joueur.getCouleur(), joueur);
     }
 
     @NotNull
     public Set<Move> getAllLegalMoves(Couleur couleur) {
+        return filterOnlyLegal(getAllMoves(couleur), couleur);
+    }
+
+    @NotNull
+    private Set<Move> getAllMoves(Couleur couleur) {
         Set<Move> moves = new HashSet<>();
 
-        for (Piece piece : getPlateau().iteratePieces()) {
+        for (Piece piece : plateau.iteratePieces()) {
             if (piece.getCouleur() == couleur) {
-                moves.addAll(piece.getLegalMoves(this));
+                moves.addAll(piece.generateAllMoves(plateau));
             }
         }
-
         return moves;
+    }
+
+    @NotNull
+    public Set<Move> filterOnlyLegal(Set<Move> moves, Couleur verifierPour) {
+        Set<Move> legalMoves = new HashSet<>();
+
+        Plateau tempPlateau = plateau.getCopie();
+
+        for (Move move : moves) {
+            move.appliquer(tempPlateau);
+
+            if (!Helper.roiInCheck(tempPlateau, getRoi(verifierPour))) {
+                legalMoves.add(move);
+            }
+
+            move.undo(tempPlateau);
+        }
+
+        return legalMoves;
     }
 }

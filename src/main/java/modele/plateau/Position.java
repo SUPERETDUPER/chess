@@ -31,8 +31,8 @@ public class Position {
      * @return la nouvelle position
      */
     @NotNull
-    public Position offset(int offsetRangee, int offsetColonne) {
-        return new Position(rangee + offsetRangee, colonne + offsetColonne);
+    public Position offset(Offset offset) {
+        return new Position(rangee + offset.getOffsetVertical(), colonne + offset.getOffsetHorizontal());
     }
 
     /**

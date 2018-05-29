@@ -1,12 +1,9 @@
 package modele.pieces;
 
-import modele.Helper;
-import modele.JeuData;
 import modele.moves.Move;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -19,43 +16,54 @@ public abstract class Piece {
         this.couleur = couleur;
     }
 
+    /**
+     * @return La couleur de la pièce
+     */
     public Couleur getCouleur() {
         return couleur;
     }
 
     /**
-     * @return le code de la pièce en unicode
+     * @return le numéro de la pièce en unicode
      */
-    public String getUnicode() {
-        return Character.toString((char) (couleur == Couleur.BLANC ? unicodeForWhite() : unicodeForBlack()));
+    public int getNumeroUnicode() {
+        return couleur == Couleur.BLANC ? unicodeForWhite() : unicodeForBlack();
     }
 
+    /**
+     * @return la valeur de la pièce (négatif ou positif dépandant de la couleur)
+     */
+    public int getValeur() {
+        return couleur == Couleur.BLANC ? getValeurPositive() : -getValeurPositive();
+    }
+
+    /**
+     * @return le numéro unicode de la pièce blance
+     */
     abstract int unicodeForWhite();
 
+    /**
+     * @return le numéro unicode de la pièce noire
+     */
     abstract int unicodeForBlack();
 
-    public Set<Move> getLegalMoves(JeuData jeuData) {
-        Set<Move> moves = generateAllMoves(jeuData.getPlateau());
-        Set<Move> legalMoves = new HashSet<>();
-
-        Plateau tempPlateau = jeuData.getPlateau().getCopie();
-
-        for (Move move : moves) {
-            move.apply(tempPlateau);
-
-            if (!Helper.roiInCheck(tempPlateau, jeuData.getRoi(couleur))) {
-                legalMoves.add(move);
-            }
-
-            move.undo(tempPlateau);
-        }
-
-        return legalMoves;
-    }
-
+    /**
+     * Calcule tous les mouvements possibles pour cette pièce sans vérifier si le mouvement est legal (ex. roi est en train d'être attacké)
+     *
+     * @param plateau le plateau avec les mouvements présentement
+     * @return tous les mouvements possibles pour cette pièce
+     */
     public abstract Set<Move> generateAllMoves(Plateau plateau);
 
+    /**
+     * @param plateau
+     * @param position
+     * @return vrai si cette pièce attack présentement cette position
+     */
     public abstract boolean attacksPosition(Plateau plateau, Position position);
 
-    public abstract int getValue();
+    /**
+     * @return La valeur de la pièce indépendament de la couleur
+     */
+    public abstract int getValeurPositive();
 }

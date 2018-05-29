@@ -1,15 +1,21 @@
 package modele.pieces;
 
+import modele.plateau.Offset;
+
 public class Cavalier extends OffsetPiece {
-    private static final int[][] OFFSETS = {
-            {-1, -2},
-            {-2, -1},
-            {-2, 1},
-            {-1, 2},
-            {1, 2},
-            {2, 1},
-            {2, -1},
-            {1, -2}
+    /**
+     * Les valeurs où le cavalier peut se déplacer
+     * En forme de L
+     */
+    private static final Offset[] OFFSETS = {
+            new Offset(-1, -2),
+            new Offset(-2, -1),
+            new Offset(-2, 1),
+            new Offset(-1, 2),
+            new Offset(1, 2),
+            new Offset(2, 1),
+            new Offset(2, -1),
+            new Offset(1, -2)
     };
 
     public Cavalier(Couleur couleur) {
@@ -17,7 +23,7 @@ public class Cavalier extends OffsetPiece {
     }
 
     @Override
-    int[][] getOffsets() {
+    Offset[] getOffsets() {
         return OFFSETS;
     }
 
@@ -32,7 +38,7 @@ public class Cavalier extends OffsetPiece {
     }
 
     @Override
-    public int getValue() {
+    public int getValeurPositive() {
         return 3;
     }
 }

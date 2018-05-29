@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Une structure de données pour le plateau de jeu tic tac toe
+ * Une structure de données pour le plateau du jeu d'échec
  * Permet aux autres class de garder un objet dans une position du tableau.
  * Par example le {@link BoardController} garde toutes les boites du plateau de jeu dans cette structure de données
  * <p>
@@ -56,11 +56,11 @@ public class Tableau<T> implements Iterable<T> {
      * @return la donnée désirée
      */
     @NotNull
-    public T get(@NotNull Position position) {
+    T get(@NotNull Position position) {
         return liste.get(getIndex(position));
     }
 
-    public void add(@NotNull Position position, @NotNull T valeur) {
+    void add(@NotNull Position position, @NotNull T valeur) {
         liste.add(getIndex(position), valeur);
     }
 
@@ -84,12 +84,12 @@ public class Tableau<T> implements Iterable<T> {
             private final PositionIterator positionIterator = new PositionIterator();
 
             @Override
-            public synchronized boolean hasNext() {
+            public boolean hasNext() {
                 return positionIterator.hasNext();
             }
 
             @Override
-            public synchronized T next() {
+            public T next() {
                 return Tableau.this.get(positionIterator.next());
             }
         };

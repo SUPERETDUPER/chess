@@ -90,7 +90,7 @@ public class BoardController {
         updateBoard(); //Afficher les pièces tels quelles le sont présentement
     }
 
-    public void requestMove(DemandeDeMouvement moveRequest) {
+    public void demanderMouvement(DemandeDeMouvement moveRequest) {
         this.moveRequest = moveRequest;
     }
 
@@ -108,7 +108,7 @@ public class BoardController {
                 updateBoard(); //Afficher les changements
             }
 
-            highlightController.erase(); //Déselectionner tout
+            highlightController.enleverHighlight(); //Déselectionner tout
         } else {
             //Quitter si il n'y a rien a faire
             if (pieceClicked == null || moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
@@ -117,7 +117,7 @@ public class BoardController {
             highlightController.select(positionClicked);
 
             //Calculer les mouvements possibles
-            Set<Move> moves = pieceClicked.getLegalMoves(jeuData);
+            Set<Move> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
 
             //Highlight chaque mouvement
             for (Move move : moves) {

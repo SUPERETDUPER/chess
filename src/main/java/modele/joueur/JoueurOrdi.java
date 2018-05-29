@@ -7,38 +7,50 @@ import modele.pieces.Couleur;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class JoueurOrdi implements Joueur {
-    private final Couleur couleur;
+//TODO Upgrade algorithm to min/max
+
+/**
+ * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
+ */
+public class JoueurOrdi extends Joueur {
     private JeuData jeuData;
 
     public JoueurOrdi(JeuData jeuData, Couleur couleur) {
+        super(couleur);
         this.jeuData = jeuData;
-        this.couleur = couleur;
     }
 
+    /**
+     * Trouve tous les mouvement possible puis retourne celui qui remporte le plus de points
+     *
+     * @param callback la méthode par laquelle l'on soumet son prochain mouvement
+     */
     @Override
     public void getMouvement(Consumer<Move> callback) {
-        Set<Move> moves = jeuData.getAllLegalMoves(couleur);
+        Set<Move> moves = jeuData.getAllLegalMoves(this.getCouleur());
 
-        Move bestMove = moves.iterator().next();
+        Move meilleurMouvement = null;
 
+        //Analyse chaque mouvement
         for (Move move : moves) {
-            if (couleur == Couleur.BLANC) {
-                if (move.getValue() < bestMove.getValue()) {
-                    bestMove = move;
+            if (meilleurMouvement == null) {
+                meilleurMouvement = move;
+                continue;
+            }
+
+            //Si le mouvement remporte plus de point c'est le nouveau meilleur mouvement
+            if (this.getCouleur() == Couleur.BLANC) {
+                if (move.getValeur() > meilleurMouvement.getValeur()) {
+                    meilleurMouvement = move;
                 }
             } else {
-                if (move.getValue() > bestMove.getValue()) {
-                    bestMove = move;
+                if (move.getValeur() < meilleurMouvement.getValeur()) {
+                    meilleurMouvement = move;
                 }
             }
         }
 
-        callback.accept(bestMove);
-    }
-
-    @Override
-    public Couleur getCouleur() {
-        return couleur;
+        //Appliquer (jouer) le meilleurMouvement
+        callback.accept(meilleurMouvement);
     }
 }

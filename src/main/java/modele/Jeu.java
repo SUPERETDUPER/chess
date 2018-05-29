@@ -1,12 +1,18 @@
 package modele;
 
+import modele.joueur.Joueur;
 import modele.moves.Move;
 import modele.pieces.Couleur;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
 import java.util.Set;
 
 public class Jeu {
     private final JeuData jeuData;
+
+    @NotNull
+    private final EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
 
     private Couleur tourA = Couleur.BLANC;
 
@@ -14,12 +20,16 @@ public class Jeu {
         this.jeuData = jeuData;
     }
 
+    public void ajouterJoueur(Joueur joueur) {
+        joueurs.put(joueur.getCouleur(), joueur);
+    }
+
     public void commencer() {
-        jeuData.getJoueur(tourA).getMouvement(this::jouer);
+        joueurs.get(tourA).getMouvement(this::jouer);
     }
 
     public void jouer(Move move) {
-        move.apply(jeuData.getPlateau()); //Jouer
+        move.appliquer(jeuData.getPlateau()); //Jouer
         tourA = tourA == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
         Set<Move> moves = jeuData.getAllLegalMoves(tourA);
@@ -31,7 +41,7 @@ public class Jeu {
                 System.out.println("Stalemate");
             }
         } else {
-            jeuData.getJoueur(tourA).getMouvement(this::jouer); //Notifier l'autre joueur
+            joueurs.get(tourA).getMouvement(this::jouer); //Notifier l'autre joueur
         }
     }
 

@@ -1,24 +1,28 @@
 package modele.pieces;
 
-public class Dame extends DirectionPiece {
-    private static final int[][] OFFSET = {
-            {-1, -1},
-            {-1, 1},
-            {1, -1},
-            {1, 1},
-            {-1, 0},
-            {0, 1},
-            {1, 0},
-            {0, -1}
-    };
+import modele.plateau.Offset;
 
+/**
+ * La pièce la dame
+ */
+public class Dame extends DirectionPiece {
+    private static final Offset[] OFFSET = {
+            Offset.HAUT_GAUGHE,
+            Offset.HAUT_CENTRE,
+            Offset.HAUT_DROIT,
+            Offset.MILIEU_GAUCHE,
+            Offset.MILIEU_DROIT,
+            Offset.BAS_GAUCHE,
+            Offset.BAS_CENTRE,
+            Offset.BAS_DROIT
+    };
 
     public Dame(Couleur couleur) {
         super(couleur);
     }
 
     @Override
-    int[][] getDirections() {
+    Offset[] getDirections() {
         return OFFSET;
     }
 
@@ -33,7 +37,7 @@ public class Dame extends DirectionPiece {
     }
 
     @Override
-    public int getValue() {
+    public int getValeurPositive() {
         return 8;
     }
 }

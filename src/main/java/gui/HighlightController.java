@@ -35,35 +35,59 @@ class HighlightController {
         this.caseControllers = caseControllers;
     }
 
+    /**
+     * Sélectionner une case
+     *
+     * @param position la position de la case
+     */
     void select(@NotNull Position position) {
-        this.erase();
+        this.enleverHighlight();
         this.selectedPosition = position;
 
         //Surligner la position de départ
         caseControllers.get(position).setCouleur(CaseController.Highlight.ROUGE);
     }
 
+    /**
+     * @return vrai si une case est séléctionné
+     */
     boolean isSelected() {
         return selectedPosition != null;
     }
 
+    /**
+     * Ajouter une option (un mouvement possible)
+     * @param move le mouvement
+     */
     void addOption(Move move) {
         if (selectedPosition != null) {
-            Position positionToDisplay = move.getPositionToDisplay();
+            Position positionToDisplay = move.getFin();
             currentOptions.put(positionToDisplay, move);
             caseControllers.get(positionToDisplay).setCouleur(CaseController.Highlight.BLUE);
         }
     }
 
+    /**
+     *
+     * @param position la position à vérifier
+     * @return vrai si la position est une option
+     */
     boolean isOption(Position position) {
         return currentOptions.containsKey(position);
     }
 
+    /**
+     * @param position
+     * @return le mouvement associé à cette position
+     */
     Move getMove(Position position) {
         return currentOptions.get(position);
     }
 
-    void erase() {
+    /**
+     * Enlève tout le highlight et déselectionne la case séléctionnée
+     */
+    void enleverHighlight() {
         if (selectedPosition != null) {
             for (Position position : currentOptions.keySet()) {
                 caseControllers.get(position).setCouleur(CaseController.Highlight.NORMAL);

@@ -1,16 +1,18 @@
 package modele.pieces;
 
+import modele.plateau.Offset;
+
 //TODO Implement castling
 public class Roi extends OffsetPiece {
-    private static final int[][] OFFSETS = {
-            {-1, -1},
-            {-1, 0},
-            {-1, 1},
-            {0, -1},
-            {0, 1},
-            {1, -1},
-            {1, 0},
-            {1, 1}
+    private static final Offset[] OFFSETS = {
+            Offset.HAUT_GAUGHE,
+            Offset.HAUT_CENTRE,
+            Offset.HAUT_DROIT,
+            Offset.MILIEU_GAUCHE,
+            Offset.MILIEU_DROIT,
+            Offset.BAS_GAUCHE,
+            Offset.BAS_CENTRE,
+            Offset.BAS_DROIT
     };
 
     public Roi(Couleur couleur) {
@@ -28,12 +30,12 @@ public class Roi extends OffsetPiece {
     }
 
     @Override
-    int[][] getOffsets() {
+    Offset[] getOffsets() {
         return OFFSETS;
     }
 
     @Override
-    public int getValue() {
+    public int getValeurPositive() {
         return 1000;
     }
 }

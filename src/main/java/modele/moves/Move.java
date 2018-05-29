@@ -5,40 +5,57 @@ import modele.plateau.Position;
 
 import java.util.Objects;
 
+/**
+ * Un mouvement
+ * Chaque mouvement a une position de départ et de fin
+ */
 public abstract class Move {
-    final Position start;
-    final Position end;
+    final Position depart;
+    final Position fin;
 
-    public Move(Position start, Position end) {
-        this.start = start;
-        this.end = end;
+    public Move(Position depart, Position fin) {
+        this.depart = depart;
+        this.fin = fin;
     }
 
-    public Position getPositionToDisplay() {
-        return end;
+    public Position getFin() {
+        return fin;
     }
 
-    public abstract void apply(Plateau plateau);
+    /**
+     * Appelé pour appliquer le mouvement sur un plateau de jeu
+     *
+     * @param plateau le plateau de jeu sur lequel on applique le mouvement
+     */
+    public abstract void appliquer(Plateau plateau);
 
+    /**
+     * Appelé pour défaire un mouvement qui vient d'être appliqué sur le plateau de jeu
+     */
     public abstract void undo(Plateau plateau);
 
-    public abstract int getValue();
+    /**
+     * La valeur du mouvement. Une valeur négative signifie qu'une pièce blanche a été mangé
+     *
+     * @return la valeur du mouvement
+     */
+    public abstract int getValeur();
 
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof NormalMove)) return false;
-        if (!this.start.equals(((NormalMove) obj).start)) return false;
-        return this.end.equals(((NormalMove) obj).end);
+        if (!(obj instanceof MouvementNormal)) return false;
+        if (!this.depart.equals(((MouvementNormal) obj).depart)) return false;
+        return this.fin.equals(((MouvementNormal) obj).fin);
     }
 
     @Override
     public String toString() {
-        return "From: " + start + " to: " + end;
+        return "From: " + depart + " to: " + fin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.start, this.end);
+        return Objects.hash(this.depart, this.fin);
     }
 }

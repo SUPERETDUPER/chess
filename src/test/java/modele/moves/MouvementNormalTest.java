@@ -4,13 +4,13 @@ import modele.plateau.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class NormalMoveTest {
+class MouvementNormalTest {
 
     @Test
     void equals() {
         Assertions.assertEquals(
-                new NormalMove(new Position(0, 0), new Position(0, 1)),
-                new NormalMove(new Position(0, 0), new Position(0, 1))
+                new MouvementNormal(new Position(0, 0), new Position(0, 1)),
+                new MouvementNormal(new Position(0, 0), new Position(0, 1))
         );
     }
 }
