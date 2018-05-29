@@ -1,6 +1,6 @@
 package modele.joueur;
 
-import modele.Jeu;
+import modele.JeuData;
 import modele.MoveCallbackWrapper;
 import modele.moves.Move;
 import modele.pieces.Couleur;
@@ -8,26 +8,21 @@ import modele.pieces.Couleur;
 import java.util.Set;
 
 public class JoueurOrdi implements Joueur {
-    private final Jeu jeu;
     private final Couleur couleur;
+    private JeuData jeuData;
 
-    public JoueurOrdi(Jeu jeu, Couleur couleur) {
-        this.jeu = jeu;
+    public JoueurOrdi(JeuData jeuData, Couleur couleur) {
+        this.jeuData = jeuData;
         this.couleur = couleur;
     }
 
     @Override
     public void notifierTour(MoveCallbackWrapper moveCallbackWrapper) {
-        Set<Move> moves = jeu.getAllLegalMoves(couleur);
+        Set<Move> moves = jeuData.getAllLegalMoves(couleur);
 
-        Move bestMove = null;
+        Move bestMove = moves.iterator().next();
 
         for (Move move : moves) {
-            if (bestMove == null) {
-                bestMove = move;
-                continue;
-            }
-
             if (couleur == Couleur.BLANC) {
                 if (move.getValue() < bestMove.getValue()) {
                     bestMove = move;

@@ -1,6 +1,6 @@
 package modele.pieces;
 
-import modele.Jeu;
+import modele.JeuData;
 import modele.board.Board;
 import modele.board.Position;
 import modele.moves.Move;
@@ -33,16 +33,16 @@ public abstract class Piece {
 
     abstract int unicodeForBlack();
 
-    public Set<Move> getLegalMoves(Jeu jeu) {
-        Set<Move> moves = generateAllMoves(jeu.getJeuData().getBoard());
+    public Set<Move> getLegalMoves(JeuData jeuData) {
+        Set<Move> moves = generateAllMoves(jeuData.getBoard());
         Set<Move> legalMoves = new HashSet<>();
 
-        Board tempBoard = jeu.getJeuData().getBoard().getCopie();
+        Board tempBoard = jeuData.getBoard().getCopie();
 
         for (Move move : moves) {
             move.apply(tempBoard);
 
-            if (jeu.roiInCheck(couleur)) {
+            if (!jeuData.roiInCheck(couleur, tempBoard)) {
                 legalMoves.add(move);
             }
 

@@ -2,10 +2,7 @@ package modele;
 
 import modele.moves.Move;
 import modele.pieces.Couleur;
-import modele.pieces.Piece;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class Jeu {
@@ -17,29 +14,6 @@ public class Jeu {
         this.jeuData = jeuData;
     }
 
-    public boolean roiInCheck(Couleur couleurDuRoi) {
-        for (Piece piece : jeuData.getBoard().iteratePieces()) {
-            if (piece.getCouleur() != couleurDuRoi && piece.attacksPosition(jeuData.getBoard(), jeuData.getBoard().getPosition(jeuData.getRoi(couleurDuRoi)))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @NotNull
-    public Set<Move> getAllLegalMoves(Couleur couleur) {
-        Set<Move> moves = new HashSet<>();
-
-        for (Piece piece : jeuData.getBoard().iteratePieces()) {
-            if (piece.getCouleur() == couleur) {
-                moves.addAll(piece.getLegalMoves(this));
-            }
-        }
-
-        return moves;
-    }
-
     public void commencer() {
         jeuData.getJoueur(tourA).notifierTour(new MoveCallbackWrapper(this::jouer));
     }
@@ -48,17 +22,17 @@ public class Jeu {
         move.apply(jeuData.getBoard()); //Jouer
         tourA = tourA == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
-        Set<Move> moves = getAllLegalMoves(tourA);
+        Set<Move> moves = jeuData.getAllLegalMoves(tourA);
 
         if (moves.isEmpty()) {
-            if (roiInCheck(tourA)) {
+            if (jeuData.roiInCheck(tourA)) {
                 System.out.println("Checkmate");
             } else {
                 System.out.println("Stalemate");
             }
+        } else {
+            jeuData.getJoueur(tourA).notifierTour(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
         }
-
-        jeuData.getJoueur(tourA).notifierTour(new MoveCallbackWrapper(this::jouer)); //Notifier l'autre joueur
     }
 
     public JeuData getJeuData() {

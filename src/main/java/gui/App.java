@@ -16,13 +16,13 @@ import org.jetbrains.annotations.NotNull;
 public class App extends Application {
     private static final String TITRE = "Échec et Mat";
 
-    private static Jeu jeu;
+    private static JeuData jeuData;
 
     public static void main(String[] args) {
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
 
-        jeu = new Jeu(new JeuData(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir));
+        jeuData = new JeuData(getBoard(roiNoir, roiBlanc), roiBlanc, roiNoir);
 
         launch(args);
     }
@@ -79,7 +79,7 @@ public class App extends Application {
         //Load l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board.fxml"));
 
-        BoardController controller = new BoardController(jeu);
+        BoardController controller = new BoardController(jeuData);
 
         fxmlLoader.setController(controller);
 
@@ -93,8 +93,8 @@ public class App extends Application {
         primaryStage.setMaximized(true);
         primaryStage.show();
 
-        jeu.getJeuData().ajouterJoueur(new JoueurHumain(controller, Couleur.BLANC));
-        jeu.getJeuData().ajouterJoueur(new JoueurOrdi(jeu, Couleur.NOIR));
-        jeu.commencer();
+        jeuData.ajouterJoueur(new JoueurHumain(controller, Couleur.BLANC));
+        jeuData.ajouterJoueur(new JoueurOrdi(jeuData, Couleur.NOIR));
+        new Jeu(jeuData).commencer();
     }
 }

@@ -6,7 +6,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import modele.Jeu;
+import modele.JeuData;
 import modele.MoveCallbackWrapper;
 import modele.board.Position;
 import modele.moves.Move;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Controle le plateau de jeu
+ * Controle le plateau de jeuData
  */
 public class BoardController {
     //La liste de cases
@@ -31,7 +31,7 @@ public class BoardController {
     private GridPane plateau;
 
     @NotNull
-    private final Jeu jeu;
+    private final JeuData jeuData;
 
     @NotNull
     private final HashMap<Position, Move> currentMoves = new HashMap<>();
@@ -40,8 +40,8 @@ public class BoardController {
     private MoveCallbackWrapper moveCallbackWrapper;
     private Couleur couleurDuTour;
 
-    public BoardController(@NotNull Jeu jeu) {
-        this.jeu = jeu;
+    public BoardController(@NotNull JeuData jeuData) {
+        this.jeuData = jeuData;
     }
 
     @FXML
@@ -87,7 +87,7 @@ public class BoardController {
     }
 
     private void caseClicked(Position position) {
-        Piece piece = jeu.getJeuData().getBoard().getPiece(position);
+        Piece piece = jeuData.getBoard().getPiece(position);
 
         //Si aucun pièce pré-sélectionné
         if (currentMoves.isEmpty()) {
@@ -98,7 +98,7 @@ public class BoardController {
             removeCurrentMoves();
 
             //Calculer les mouvements possibles
-            Set<Move> moves = piece.getLegalMoves(jeu);
+            Set<Move> moves = piece.getLegalMoves(jeuData);
 
             //Ajouter le mouvement à la liste
             for (Move move : moves) {
@@ -149,7 +149,7 @@ public class BoardController {
     private void updateBoard() {
         for (int i = 0; i < Position.getLimite(); i++) {
             for (int j = 0; j < Position.getLimite(); j++) {
-                caseControllers[i][j].setPiece(jeu.getJeuData().getBoard().getPiece(new Position(i, j)));
+                caseControllers[i][j].setPiece(jeuData.getBoard().getPiece(new Position(i, j)));
             }
         }
     }

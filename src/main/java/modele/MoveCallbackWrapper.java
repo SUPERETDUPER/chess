@@ -1,6 +1,7 @@
 package modele;
 
 import modele.moves.Move;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -12,7 +13,7 @@ public class MoveCallbackWrapper {
         this.moveCallback = moveCallback;
     }
 
-    public void jouer(Move move) {
+    public void jouer(@NotNull Move move) {
         isConsumed = true;
         moveCallback.accept(move);
     }
