@@ -1,5 +1,6 @@
 package gui;
 
+import gui.view.Case;
 import modele.moves.Mouvement;
 import modele.plateau.Position;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ class HighlightController {
      * Le controlleur de chaque case
      */
     @NotNull
-    private final Tableau<CaseController> caseControllers;
+    private final Tableau<Case> caseControllers;
 
     /**
      * La liste d'option pour la case sélectionné
@@ -31,7 +32,7 @@ class HighlightController {
     @Nullable
     private Position selectedPosition;
 
-    HighlightController(@NotNull Tableau<CaseController> caseControllers) {
+    HighlightController(@NotNull Tableau<Case> caseControllers) {
         this.caseControllers = caseControllers;
     }
 
@@ -45,7 +46,7 @@ class HighlightController {
         this.selectedPosition = position;
 
         //Surligner la position de départ
-        caseControllers.get(position).setCouleur(CaseController.Highlight.ROUGE);
+        caseControllers.get(position).setCouleur(Case.Highlight.ROUGE);
     }
 
     /**
@@ -63,7 +64,7 @@ class HighlightController {
         if (selectedPosition != null) {
             Position positionToDisplay = mouvement.getFin();
             currentOptions.put(positionToDisplay, mouvement);
-            caseControllers.get(positionToDisplay).setCouleur(CaseController.Highlight.BLUE);
+            caseControllers.get(positionToDisplay).setCouleur(Case.Highlight.BLUE);
         }
     }
 
@@ -90,10 +91,10 @@ class HighlightController {
     void enleverHighlight() {
         if (selectedPosition != null) {
             for (Position position : currentOptions.keySet()) {
-                caseControllers.get(position).setCouleur(CaseController.Highlight.NORMAL);
+                caseControllers.get(position).setCouleur(Case.Highlight.NORMAL);
             }
 
-            caseControllers.get(selectedPosition).setCouleur(CaseController.Highlight.NORMAL);
+            caseControllers.get(selectedPosition).setCouleur(Case.Highlight.NORMAL);
 
             currentOptions.clear();
             selectedPosition = null;

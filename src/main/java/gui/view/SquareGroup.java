@@ -1,12 +1,12 @@
 package gui.view;
 
 import javafx.geometry.Orientation;
-import javafx.scene.layout.GridPane;
+import javafx.scene.Group;
 
 /**
  * Un grid pane qui aura toujours la même largeur que hauteur
  */
-public class SquareGridPane extends GridPane {
+public class SquareGroup extends Group {
     @Override
     public Orientation getContentBias() {
         return Orientation.VERTICAL;

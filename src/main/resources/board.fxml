@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import gui.view.SquareGridPane?>
+<?import gui.view.SquareGroup?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       prefHeight="400.0" prefWidth="600.0"
       alignment="CENTER" fillWidth="false" fx:id="root">
-    <SquareGridPane fx:id="plateau" VBox.vgrow="SOMETIMES" style="-fx-background-color: green"/>
+    <SquareGroup VBox.vgrow="SOMETIMES" fx:id="plateau"/>
 </VBox>

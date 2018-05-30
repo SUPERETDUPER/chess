@@ -6,7 +6,7 @@
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="gui.*" />
+        <option name="PATTERN" value="gui.view.BoardController" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

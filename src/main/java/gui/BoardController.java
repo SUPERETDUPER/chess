@@ -1,9 +1,9 @@
 package gui;
 
+import gui.view.Case;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import modele.JeuData;
@@ -14,7 +14,6 @@ import modele.plateau.PositionIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -35,11 +34,11 @@ public class BoardController {
 
     //La liste de controllers de case
     @NotNull
-    private final Tableau<CaseController> caseControllers = new Tableau<>();
+    private final Tableau<Case> caseControllers = new Tableau<>();
 
     //Le grid pane qui représente le plateau
     @FXML
-    private GridPane plateau;
+    private Group plateau;
 
     //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
@@ -59,7 +58,15 @@ public class BoardController {
     }
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() {
+        double largeur = plateau.getBoundsInParent().getWidth() / Position.LIMITE;
+        double hauteur = plateau.getBoundsInParent().getHeight() / Position.LIMITE;
+        double x = 0;
+        double y = 0;
+
+
+        System.out.println(largeur + " " + hauteur);
+
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
 
@@ -67,25 +74,18 @@ public class BoardController {
             Position position = positionIterator.next();
 
             //Créer un controleur
-            CaseController caseController = new CaseController(
-                    position,
-                    this::caseClicked,
-                    (position.getColonne() + position.getRangee()) % 2 == 0 //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
+            Case aCase = new Case(
+                    x, y, largeur, hauteur,
+                    (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
+                    position
             );
 
-            //Créer une case avec le controlleur
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/case.fxml"));
-            fxmlLoader.setController(caseController);
+            x += largeur;
+            y += hauteur;
 
             //Ajouter la case au plateau et à la liste
-            plateau.add(fxmlLoader.load(), position.getColonne(), position.getRangee());
-            caseControllers.add(position, caseController);
-        }
-
-        //Ajouter les constraintes pour chaque rangée/colonne
-        for (int i = 0; i < Position.LIMITE; i++) {
-            plateau.getRowConstraints().add(ROW_CONSTRAINT);
-            plateau.getColumnConstraints().add(COLUMN_CONSTRAINTS);
+            plateau.getChildren().add(aCase);
+            caseControllers.add(position, aCase);
         }
 
         updateBoard(); //Afficher les pièces tels quelles le sont présentement
@@ -130,8 +130,13 @@ public class BoardController {
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        for (CaseController caseController : caseControllers) {
-            caseController.setPiece(jeuData.getPlateau().getPiece(caseController.getPosition()));
+        for (Case caseController : caseControllers) {
+//            Piece piece = jeuData.getPlateau().getPiece(caseController.getPosition());
+//
+//            if (piece != null) {
+////                plateau
+//            }
+//            caseController.setPiece(jeuData.getPlateau().getPiece(caseController.getPosition()));
         }
     }
 }
