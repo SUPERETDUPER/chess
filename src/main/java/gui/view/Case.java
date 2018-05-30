@@ -1,12 +1,14 @@
 package gui.view;
 
-import javafx.fxml.FXML;
+import javafx.beans.binding.NumberBinding;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import modele.plateau.Position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
  * Controle une case
@@ -28,14 +30,21 @@ public class Case extends Rectangle {
     @NotNull
     private final Position position;
 
-    public Case(double x, double y, double width, double height, boolean isBlanc, @NotNull Position position) {
-        super(x, y, width, height);
+    /**
+     * @param taille        la taille de la case
+     * @param clickListener la méthode à appeler quand la case est appuyé
+     * @param isBlanc       si la case est blanche
+     * @param position      la position de la case
+     */
+    public Case(NumberBinding taille, @NotNull Consumer<Position> clickListener, boolean isBlanc, @NotNull Position position) {
+        super();
         this.isBlanc = isBlanc;
         this.position = position;
-    }
 
-    @FXML
-    private void initialize() {
+        this.widthProperty().bind(taille);
+        this.heightProperty().bind(taille);
+        this.setOnMouseClicked(event -> clickListener.accept(position));
+
         setCouleur(Highlight.NORMAL);  //Met la couleur de l'arrière plan de la case
     }
 

@@ -1,11 +1,11 @@
 package gui;
 
 import gui.view.Case;
+import gui.view.PieceDisplay;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Piece;
@@ -14,6 +14,8 @@ import modele.plateau.PositionIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,11 +36,16 @@ public class BoardController {
 
     //La liste de controllers de case
     @NotNull
-    private final Tableau<Case> caseControllers = new Tableau<>();
+    private final Tableau<Case> cases = new Tableau<>();
+
+    private final List<PieceDisplay> pieceDisplays = new ArrayList<>();
 
     //Le grid pane qui représente le plateau
     @FXML
-    private Group plateau;
+    private Pane plateau;
+
+    @FXML
+    private StackPane plateauContainer;
 
     //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
@@ -46,11 +53,12 @@ public class BoardController {
 
     //Controller pour surligner les cases
     @NotNull
-    private final HighlightController highlightController = new HighlightController(caseControllers);
+    private final HighlightController highlightController = new HighlightController(cases);
 
     //Objet qui spécifie si l'on veut obtenir des mouvements de l'utilisateur
     @Nullable
     private DemandeDeMouvement moveRequest;
+    private NumberBinding taille;
 
     BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
@@ -59,13 +67,7 @@ public class BoardController {
 
     @FXML
     private void initialize() {
-        double largeur = plateau.getBoundsInParent().getWidth() / Position.LIMITE;
-        double hauteur = plateau.getBoundsInParent().getHeight() / Position.LIMITE;
-        double x = 0;
-        double y = 0;
-
-
-        System.out.println(largeur + " " + hauteur);
+        taille = Bindings.divide(plateau.heightProperty(), Position.LIMITE);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -74,21 +76,30 @@ public class BoardController {
             Position position = positionIterator.next();
 
             //Créer un controleur
-            Case aCase = new Case(
-                    x, y, largeur, hauteur,
+            Case aCase = new Case(taille,
+                    this::caseClicked,
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     position
             );
 
-            x += largeur;
-            y += hauteur;
+            aCase.xProperty().bind(taille.multiply(position.getColonne()));
+            aCase.yProperty().bind(taille.multiply(position.getRangee()));
 
             //Ajouter la case au plateau et à la liste
             plateau.getChildren().add(aCase);
-            caseControllers.add(position, aCase);
-        }
+            cases.add(position, aCase);
 
-        updateBoard(); //Afficher les pièces tels quelles le sont présentement
+            //Afficher les pièces
+            Piece piece = jeuData.getPlateau().getPiece(position);
+
+            if (piece != null) {
+                PieceDisplay pieceDisplay = new PieceDisplay(piece, taille, piece1 -> caseClicked(jeuData.getPlateau().getPosition(piece1)));
+                pieceDisplay.setPosition(position);
+
+                plateau.getChildren().add(pieceDisplay);
+                pieceDisplays.add(pieceDisplay);
+            }
+        }
     }
 
     public void demanderMouvement(DemandeDeMouvement moveRequest) {
@@ -96,6 +107,8 @@ public class BoardController {
     }
 
     private void caseClicked(Position positionClicked) {
+        System.out.println("Case clicked: " + positionClicked);
+
         //Si aucun moveRequest ne rien faire
         if (moveRequest == null || moveRequest.isCompleted()) return;
 
@@ -130,13 +143,8 @@ public class BoardController {
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        for (Case caseController : caseControllers) {
-//            Piece piece = jeuData.getPlateau().getPiece(caseController.getPosition());
-//
-//            if (piece != null) {
-////                plateau
-//            }
-//            caseController.setPiece(jeuData.getPlateau().getPiece(caseController.getPosition()));
+        for (PieceDisplay pieceDisplay : pieceDisplays) {
+//            pieceDisplay.setPosition(jeuData.getPlateau().getPosition(pieceDisplay.getPiece()));
         }
     }
 }

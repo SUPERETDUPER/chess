@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import gui.view.SquareGroup?>
+<?import gui.view.SquareStackPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      prefHeight="400.0" prefWidth="600.0"
+      prefHeight="600.0" prefWidth="600.0"
       alignment="CENTER" fillWidth="false" fx:id="root">
-    <SquareGroup VBox.vgrow="SOMETIMES" fx:id="plateau"/>
+    <SquareStackPane VBox.vgrow="SOMETIMES" fx:id="plateauContainer">
+        <Pane fx:id="plateau" style="-fx-border-color: blue"/>
+    </SquareStackPane>
 </VBox>
