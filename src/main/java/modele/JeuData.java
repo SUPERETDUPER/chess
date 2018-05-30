@@ -11,7 +11,6 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 
-//TODO Move joueur to jeu
 public class JeuData {
     @NotNull
     private final Plateau plateau;
