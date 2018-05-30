@@ -18,7 +18,8 @@ public class Case extends Rectangle {
     public enum Highlight {
         NORMAL,
         ROUGE,
-        BLUE
+        BLUE,
+        BLUE_BORDURE
     }
 
     //Si la case est blanche ou noir (gris)
@@ -49,12 +50,19 @@ public class Case extends Rectangle {
      */
     public void setCouleur(@NotNull Highlight highlight) {
         this.setFill(getCouleur(highlight));
+
+        if (highlight == Highlight.BLUE_BORDURE) {
+            this.setStroke(Color.BLUE);
+        } else {
+            this.setStroke(null);
+        }
     }
 
     @Contract(pure = true)
     private Paint getCouleur(@NotNull Highlight highlight) {
         switch (highlight) {
             case BLUE:
+            case BLUE_BORDURE:
                 return isBlanc ? Color.LIGHTBLUE : Color.CORNFLOWERBLUE;
             case ROUGE:
                 return Color.PALEVIOLETRED;

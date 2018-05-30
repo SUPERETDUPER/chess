@@ -5,6 +5,7 @@ import gui.view.PieceDisplay;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import modele.JeuData;
 import modele.moves.Mouvement;
@@ -33,14 +34,13 @@ public class BoardController {
         COLUMN_CONSTRAINTS.setPercentWidth(100.0F / Position.LIMITE);
     }
 
-
-    //La liste de controllers de case
+    //La liste de case
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
 
     private final List<PieceDisplay> pieceDisplays = new ArrayList<>();
 
-    //Le grid pane qui représente le plateau
+    //Le plateau
     @FXML
     private Pane plateau;
 
@@ -98,8 +98,11 @@ public class BoardController {
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PieceDisplay pieceDisplay = new PieceDisplay(piece, taille, piece1 -> caseClicked(jeuData.getPlateau().getPosition(piece1)));
+                PieceDisplay pieceDisplay = new PieceDisplay(piece, taille);
                 pieceDisplay.setPosition(position);
+                pieceDisplay.setOnMousePressed(event -> piecePressed(event, pieceDisplay));
+                pieceDisplay.setOnMouseDragged(event -> pieceDragged(event, pieceDisplay));
+                pieceDisplay.setOnMouseReleased(event -> pieceDropped(event, pieceDisplay));
 
                 plateau.getChildren().add(pieceDisplay);
                 pieceDisplays.add(pieceDisplay);
@@ -111,44 +114,111 @@ public class BoardController {
         this.moveRequest = moveRequest;
     }
 
-    private void caseClicked(Position positionClicked) {
-
+    private void piecePressed(MouseEvent mouseEvent, PieceDisplay pieceDisplay) {
         //Si aucun moveRequest ne rien faire
         if (moveRequest == null || moveRequest.isCompleted()) return;
 
-        Piece pieceClicked = jeuData.getPlateau().getPiece(positionClicked);
+        Piece pieceClicked = pieceDisplay.getPiece();
 
-        //Si une pièce est déjà sélectionné
+        //Si le moveRequest pour l'autre couleur ne rien faire
+        if (moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
+            return;
+
+        highlightController.select(jeuData.getPlateau().getPosition(pieceClicked));
+
+        //Calculer les mouvements possibles
+        Set<Mouvement> mouvements = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
+
+        //Highlight chaque mouvement
+        for (Mouvement mouvement : mouvements) {
+            highlightController.addOption(mouvement);
+        }
+
+        pieceDisplay.layoutXProperty().unbind();
+        pieceDisplay.layoutYProperty().unbind();
+
+//        //Si une pièce est déjà sélectionné
+//        if (highlightController.isSelected()) {
+//            //Si la case est une des options appliquer le movement
+//            if (highlightController.isOption(pieceDisplay)) {
+//                moveRequest.apply(highlightController.getMove(pieceDisplay));
+//            }
+//
+//            highlightController.enleverHighlight(); //Déselectionner tout
+//        } else {
+//
+//        }
+    }
+
+    private void pieceDragged(MouseEvent mouseEvent, PieceDisplay pieceDisplay) {
         if (highlightController.isSelected()) {
-            //Si la case est une des options appliquer le movement
-            if (highlightController.isOption(positionClicked)) {
-                moveRequest.apply(highlightController.getMove(positionClicked));
-            }
+            double positionX = mouseEvent.getX() + (pieceDisplay.getLayoutX());
+            double positionY = mouseEvent.getY() + (pieceDisplay.getLayoutY());
 
-            highlightController.enleverHighlight(); //Déselectionner tout
-        } else {
-            //Quitter si il n'y a rien a faire
-            if (pieceClicked == null || moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
-                return;
+            pieceDisplay.relocate(positionX - (pieceDisplay.getWidth() / 2),
+                    positionY - (pieceDisplay.getHeight() / 2)
+            );
 
-            highlightController.select(positionClicked);
+            Position position = getPosition(positionX, positionY);
 
-            //Calculer les mouvements possibles
-            Set<Mouvement> mouvements = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
-
-            //Highlight chaque mouvement
-            for (Mouvement mouvement : mouvements) {
-                highlightController.addOption(mouvement);
+            if (highlightController.isOption(position)) {
+                highlightController.setBordure(position);
             }
         }
+    }
+
+    private void pieceDropped(MouseEvent mouseEvent, PieceDisplay pieceDisplay) {
+        double positionX = mouseEvent.getX() + (pieceDisplay.getLayoutX());
+        double positionY = mouseEvent.getY() + (pieceDisplay.getLayoutY());
+
+        Position position = getPosition(positionX, positionY);
+
+        if (highlightController.isOption(position)) {
+            moveRequest.apply(highlightController.getMove(position));
+        } else {
+            pieceDisplay.setPosition(jeuData.getPlateau().getPosition(pieceDisplay.getPiece()));
+        }
+
+        highlightController.enleverHighlight();
+    }
+
+    private Position getPosition(double x, double y) {
+        int colonne = Position.LIMITE - 1;
+        int rangee = Position.LIMITE - 1;
+
+        for (int i = 0; i < Position.LIMITE; i++) {
+            if (cases.get(new Position(0, i)).getX() > x) {
+                colonne = i - 1;
+                break;
+            }
+        }
+
+        for (int i = 0; i < Position.LIMITE; i++) {
+            if (cases.get(new Position(i, 0)).getY() > y) {
+                rangee = i - 1;
+                break;
+            }
+        }
+
+        return new Position(rangee, colonne);
     }
 
     /**
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
+        PieceDisplay pieceToRemove = null;
         for (PieceDisplay pieceDisplay : pieceDisplays) {
-//            pieceDisplay.setPosition(jeuData.getPlateau().getPosition(pieceDisplay.getPiece()));
+            Position position = jeuData.getPlateau().getPosition(pieceDisplay.getPiece());
+
+            if (position != null) {
+                pieceDisplay.setPosition(position);
+            } else {
+                plateau.getChildren().remove(pieceDisplay);
+                pieceToRemove = pieceDisplay;
+            }
         }
+
+        if (pieceToRemove != null) pieceDisplays.remove(pieceToRemove);
     }
 }

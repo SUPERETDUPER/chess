@@ -32,6 +32,9 @@ class HighlightController {
     @Nullable
     private Position selectedPosition;
 
+    @Nullable
+    private Position avecBordure;
+
     HighlightController(@NotNull Tableau<Case> caseControllers) {
         this.caseControllers = caseControllers;
     }
@@ -54,6 +57,15 @@ class HighlightController {
      */
     boolean isSelected() {
         return selectedPosition != null;
+    }
+
+    public void setBordure(@Nullable Position position) {
+        if (avecBordure != null) {
+            caseControllers.get(avecBordure).setCouleur(Case.Highlight.BLUE);
+        }
+
+        this.avecBordure = position;
+        caseControllers.get(position).setCouleur(Case.Highlight.BLUE_BORDURE);
     }
 
     /**
@@ -98,6 +110,7 @@ class HighlightController {
 
             currentOptions.clear();
             selectedPosition = null;
+            avecBordure = null;
         }
     }
 }
