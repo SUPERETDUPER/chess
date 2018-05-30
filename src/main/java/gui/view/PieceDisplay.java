@@ -10,6 +10,8 @@ import modele.plateau.Position;
 import java.util.function.Consumer;
 
 public class PieceDisplay extends StackPane {
+    private static final float HEIGHT_TO_FONT_RATIO = 0.75F;
+
     private final Piece piece;
     private final NumberBinding taille;
 
@@ -23,7 +25,7 @@ public class PieceDisplay extends StackPane {
         this.setOnMouseClicked(event -> onClickListener.accept(this.piece));
 
         Text text = new Text(Character.toString((char) piece.getNumeroUnicode()));
-        text.setFont(new Font(taille.doubleValue()));
+        taille.addListener((observable, oldValue, newValue) -> text.setFont(new Font(newValue.doubleValue() * HEIGHT_TO_FONT_RATIO)));
 
         this.getChildren().add(text);
     }

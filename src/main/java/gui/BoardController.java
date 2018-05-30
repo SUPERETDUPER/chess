@@ -77,7 +77,6 @@ public class BoardController {
 
             //Créer un controleur
             Case aCase = new Case(taille,
-                    this::caseClicked,
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     position
             );
@@ -88,6 +87,12 @@ public class BoardController {
             //Ajouter la case au plateau et à la liste
             plateau.getChildren().add(aCase);
             cases.add(position, aCase);
+        }
+
+        positionIterator = new PositionIterator();
+
+        while (positionIterator.hasNext()) {
+            Position position = positionIterator.next();
 
             //Afficher les pièces
             Piece piece = jeuData.getPlateau().getPiece(position);
@@ -107,7 +112,6 @@ public class BoardController {
     }
 
     private void caseClicked(Position positionClicked) {
-        System.out.println("Case clicked: " + positionClicked);
 
         //Si aucun moveRequest ne rien faire
         if (moveRequest == null || moveRequest.isCompleted()) return;
