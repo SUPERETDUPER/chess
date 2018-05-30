@@ -36,7 +36,13 @@ public class JoueurOrdi extends Joueur {
     private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
         if (pastSequence.getLength() == MAX_DEPTH) return pastSequence;
 
-        Set<Mouvement> mouvements = jeuData.getAllMoves(couleur);
+        Set<Mouvement> mouvements;
+
+        if (pastSequence.getLength() == 0) {
+            mouvements = jeuData.getAllLegalMoves(couleur);
+        } else {
+            mouvements = jeuData.getAllMoves(couleur);
+        }
 
         MoveSequence bestMove = null;
 
