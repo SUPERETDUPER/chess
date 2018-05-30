@@ -1,6 +1,6 @@
 package gui;
 
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.plateau.Position;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,7 @@ class HighlightController {
      * Vide si rien n'est sélectionné
      */
     @NotNull
-    private HashMap<Position, Move> currentOptions = new HashMap<>();
+    private HashMap<Position, Mouvement> currentOptions = new HashMap<>();
 
     /**
      * La case présentement sélectionné
@@ -57,12 +57,12 @@ class HighlightController {
 
     /**
      * Ajouter une option (un mouvement possible)
-     * @param move le mouvement
+     * @param mouvement le mouvement
      */
-    void addOption(Move move) {
+    void addOption(Mouvement mouvement) {
         if (selectedPosition != null) {
-            Position positionToDisplay = move.getFin();
-            currentOptions.put(positionToDisplay, move);
+            Position positionToDisplay = mouvement.getFin();
+            currentOptions.put(positionToDisplay, mouvement);
             caseControllers.get(positionToDisplay).setCouleur(CaseController.Highlight.BLUE);
         }
     }
@@ -80,7 +80,7 @@ class HighlightController {
      * @param position
      * @return le mouvement associé à cette position
      */
-    Move getMove(Position position) {
+    Mouvement getMove(Position position) {
         return currentOptions.get(position);
     }
 

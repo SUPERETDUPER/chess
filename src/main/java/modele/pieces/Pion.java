@@ -1,9 +1,9 @@
 package modele.pieces;
 
+import modele.moves.Mouvement;
 import modele.moves.MouvementManger;
 import modele.moves.MouvementNormal;
 import modele.moves.MouvementNotifyWrapper;
-import modele.moves.Move;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -26,8 +26,8 @@ public class Pion extends Piece {
     }
 
     @Override
-    public Set<Move> generateAllMoves(Plateau plateau) {
-        Set<Move> moves = new HashSet<>();
+    public Set<Mouvement> generateAllMoves(Plateau plateau) {
+        Set<Mouvement> mouvements = new HashSet<>();
 
         Position currentPosition = plateau.getPosition(this);
 
@@ -39,7 +39,7 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             //Si il y a personne on peut avancer
             if (plateau.getPiece(fin) == null) {
-                moves.add(createMove(new MouvementNormal(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementNormal(currentPosition, fin)));
             }
             //Sinon on est bloqué
             else blocked = true;
@@ -51,7 +51,7 @@ public class Pion extends Piece {
 
             //Si la position et valide et la postion est vide on peut
             if (fin.isValid() && plateau.getPiece(fin) == null) {
-                moves.add(createMove(new MouvementNormal(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementNormal(currentPosition, fin)));
             }
         }
 
@@ -61,7 +61,7 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             Piece piece = plateau.getPiece(fin);
             if (piece != null && piece.getCouleur() != couleur)
-                moves.add(createMove(new MouvementManger(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementManger(currentPosition, fin)));
         }
 
         fin = currentPosition.decaler(ATTAQUE_DROITE);
@@ -69,10 +69,10 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             Piece piece = plateau.getPiece(fin);
             if (piece != null && piece.getCouleur() != couleur)
-                moves.add(createMove(new MouvementManger(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementManger(currentPosition, fin)));
         }
 
-        return moves;
+        return mouvements;
     }
 
     @Override
@@ -84,9 +84,9 @@ public class Pion extends Piece {
     }
 
     @NotNull
-    private MouvementNotifyWrapper<Boolean> createMove(Move move) {
+    private MouvementNotifyWrapper<Boolean> createMove(Mouvement mouvement) {
         return new MouvementNotifyWrapper<>(
-                move,
+                mouvement,
                 this::onMoveApply,
                 this::onMoveUndo
         );

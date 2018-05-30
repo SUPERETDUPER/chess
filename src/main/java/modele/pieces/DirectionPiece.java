@@ -1,8 +1,8 @@
 package modele.pieces;
 
+import modele.moves.Mouvement;
 import modele.moves.MouvementManger;
 import modele.moves.MouvementNormal;
-import modele.moves.Move;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -19,8 +19,8 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    public Set<Move> generateAllMoves(Plateau plateau) {
-        Set<Move> moves = new HashSet<>();
+    public Set<Mouvement> generateAllMoves(Plateau plateau) {
+        Set<Mouvement> mouvements = new HashSet<>();
 
         Position startingPosition = plateau.getPosition(this);
 
@@ -30,10 +30,10 @@ abstract class DirectionPiece extends Piece {
             while (end.isValid()) {
                 Piece piece = plateau.getPiece(end);
 
-                if (piece == null) moves.add(new MouvementNormal(startingPosition, end));
+                if (piece == null) mouvements.add(new MouvementNormal(startingPosition, end));
                 else {
                     if (piece.getCouleur() != couleur) {
-                        moves.add(new MouvementManger(startingPosition, end));
+                        mouvements.add(new MouvementManger(startingPosition, end));
                     }
 
                     break;
@@ -43,7 +43,7 @@ abstract class DirectionPiece extends Piece {
             }
         }
 
-        return moves;
+        return mouvements;
     }
 
     @Override

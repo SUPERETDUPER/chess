@@ -1,6 +1,6 @@
 package modele.pieces;
 
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
@@ -53,7 +53,7 @@ public abstract class Piece {
      * @param plateau le plateau avec les mouvements présentement
      * @return tous les mouvements possibles pour cette pièce
      */
-    public abstract Set<Move> generateAllMoves(Plateau plateau);
+    public abstract Set<Mouvement> generateAllMoves(Plateau plateau);
 
     /**
      * @param plateau

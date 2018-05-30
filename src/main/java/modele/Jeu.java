@@ -1,7 +1,7 @@
 package modele;
 
 import modele.joueur.Joueur;
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,19 +37,19 @@ public class Jeu {
     /**
      * Appelé par le callback de joueur.getMouvement()
      *
-     * @param move le mouvement à jouer
+     * @param mouvement le mouvement à jouer
      */
-    private void jouer(@NotNull Move move) {
-        move.appliquer(jeuData.getPlateau()); //Jouer le mouvement
+    private void jouer(@NotNull Mouvement mouvement) {
+        mouvement.appliquer(jeuData.getPlateau()); //Jouer le mouvement
 
         jeuData.notifyListenerOfChange();
 
         tourA = tourA == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
         //Vérifier pour échec et mat ou match nul
-        Set<Move> moves = jeuData.getAllLegalMoves(tourA);
+        Set<Mouvement> mouvements = jeuData.getAllLegalMoves(tourA);
 
-        if (moves.isEmpty()) {
+        if (mouvements.isEmpty()) {
             if (Helper.isPieceAttaquer(jeuData.getPlateau(), jeuData.getRoi(tourA))) {
                 System.out.println("Checkmate");
             } else {

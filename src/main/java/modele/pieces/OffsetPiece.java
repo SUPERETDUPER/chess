@@ -1,8 +1,8 @@
 package modele.pieces;
 
+import modele.moves.Mouvement;
 import modele.moves.MouvementManger;
 import modele.moves.MouvementNormal;
-import modele.moves.Move;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -19,8 +19,8 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public Set<Move> generateAllMoves(Plateau plateau) {
-        Set<Move> moves = new HashSet<>();
+    public Set<Mouvement> generateAllMoves(Plateau plateau) {
+        Set<Mouvement> mouvements = new HashSet<>();
 
         Position currentPose = plateau.getPosition(this);
 
@@ -33,11 +33,11 @@ abstract class OffsetPiece extends Piece {
             Piece piece = plateau.getPiece(nextPosition);
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
-            if (piece == null) moves.add(new MouvementNormal(currentPose, nextPosition));
-            else if (piece.getCouleur() != couleur) moves.add(new MouvementManger(currentPose, nextPosition));
+            if (piece == null) mouvements.add(new MouvementNormal(currentPose, nextPosition));
+            else if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(currentPose, nextPosition));
         }
 
-        return moves;
+        return mouvements;
     }
 
     @Override

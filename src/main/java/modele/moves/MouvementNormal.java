@@ -4,7 +4,7 @@ import modele.pieces.Piece;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
-public class MouvementNormal extends Move {
+public class MouvementNormal extends Mouvement {
     public MouvementNormal(Position start, Position end) {
         super(start, end);
     }

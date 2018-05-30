@@ -7,7 +7,7 @@ import modele.plateau.Position;
 /**
  * Un mouvement qui mange une pièce
  */
-public class MouvementManger extends Move {
+public class MouvementManger extends Mouvement {
     private Piece morceauPris;
 
     public MouvementManger(Position start, Position end) {

@@ -1,7 +1,7 @@
 package modele.joueur;
 
 import modele.JeuData;
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 
 import java.util.ArrayList;
@@ -29,20 +29,20 @@ public class JoueurOrdi extends Joueur {
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */
     @Override
-    public void getMouvement(Consumer<Move> callback) {
+    public void getMouvement(Consumer<Mouvement> callback) {
         callback.accept(calculerMeilleurMouvement(new MoveSequence(), getCouleur()).getFirst());
     }
 
     private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
         if (pastSequence.getLength() == MAX_DEPTH) return pastSequence;
 
-        Set<Move> moves = jeuData.getAllMoves(couleur);
+        Set<Mouvement> mouvements = jeuData.getAllMoves(couleur);
 
         MoveSequence bestMove = null;
 
-        for (Move move : moves) {
-            move.appliquer(jeuData.getPlateau());
-            MoveSequence moveSequence = calculerMeilleurMouvement(pastSequence.addAndReturn(move), oppose(couleur));
+        for (Mouvement mouvement : mouvements) {
+            mouvement.appliquer(jeuData.getPlateau());
+            MoveSequence moveSequence = calculerMeilleurMouvement(pastSequence.addAndReturn(mouvement), oppose(couleur));
 
             if (bestMove == null) {
                 bestMove = moveSequence;
@@ -56,7 +56,7 @@ public class JoueurOrdi extends Joueur {
                 }
             }
 
-            move.undo(jeuData.getPlateau());
+            mouvement.undo(jeuData.getPlateau());
         }
 
         return bestMove == null ? pastSequence : bestMove;
@@ -67,24 +67,24 @@ public class JoueurOrdi extends Joueur {
     }
 
     private class MoveSequence {
-        private final List<Move> moves;
+        private final List<Mouvement> mouvements;
         private final int value;
 
         MoveSequence() {
             this.value = 0;
-            this.moves = new ArrayList<>();
+            this.mouvements = new ArrayList<>();
 
         }
 
-        private MoveSequence(List<Move> moves, int value) {
-            this.moves = moves;
+        private MoveSequence(List<Mouvement> mouvements, int value) {
+            this.mouvements = mouvements;
             this.value = value;
         }
 
-        MoveSequence addAndReturn(Move move) {
-            List<Move> newList = new ArrayList<>(moves);
-            newList.add(move);
-            return new MoveSequence(newList, value + move.getValeur());
+        MoveSequence addAndReturn(Mouvement mouvement) {
+            List<Mouvement> newList = new ArrayList<>(mouvements);
+            newList.add(mouvement);
+            return new MoveSequence(newList, value + mouvement.getValeur());
         }
 
         int getValue() {
@@ -92,11 +92,11 @@ public class JoueurOrdi extends Joueur {
         }
 
         int getLength() {
-            return moves.size();
+            return mouvements.size();
         }
 
-        Move getFirst() {
-            return moves.get(0);
+        Mouvement getFirst() {
+            return mouvements.get(0);
         }
     }
 }

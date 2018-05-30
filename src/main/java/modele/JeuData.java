@@ -1,6 +1,6 @@
 package modele;
 
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import modele.pieces.Roi;
@@ -46,38 +46,38 @@ public class JeuData {
     }
 
     @NotNull
-    public Set<Move> getAllLegalMoves(Couleur couleur) {
+    public Set<Mouvement> getAllLegalMoves(Couleur couleur) {
         return filterOnlyLegal(getAllMoves(couleur), couleur);
     }
 
     @NotNull
-    public Set<Move> getAllMoves(Couleur couleur) {
-        Set<Move> moves = new HashSet<>();
+    public Set<Mouvement> getAllMoves(Couleur couleur) {
+        Set<Mouvement> mouvements = new HashSet<>();
 
         for (Piece piece : plateau.iteratePieces()) {
             if (piece.getCouleur() == couleur) {
-                moves.addAll(piece.generateAllMoves(plateau));
+                mouvements.addAll(piece.generateAllMoves(plateau));
             }
         }
-        return moves;
+        return mouvements;
     }
 
     @NotNull
-    public Set<Move> filterOnlyLegal(Set<Move> moves, Couleur verifierPour) {
-        Set<Move> legalMoves = new HashSet<>();
+    public Set<Mouvement> filterOnlyLegal(Set<Mouvement> mouvements, Couleur verifierPour) {
+        Set<Mouvement> legalMouvements = new HashSet<>();
 
         Plateau tempPlateau = plateau.getCopie();
 
-        for (Move move : moves) {
-            move.appliquer(tempPlateau);
+        for (Mouvement mouvement : mouvements) {
+            mouvement.appliquer(tempPlateau);
 
             if (!Helper.isPieceAttaquer(tempPlateau, getRoi(verifierPour))) {
-                legalMoves.add(move);
+                legalMouvements.add(mouvement);
             }
 
-            move.undo(tempPlateau);
+            mouvement.undo(tempPlateau);
         }
 
-        return legalMoves;
+        return legalMouvements;
     }
 }

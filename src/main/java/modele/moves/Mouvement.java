@@ -9,11 +9,11 @@ import java.util.Objects;
  * Un mouvement
  * Chaque mouvement a une position de départ et de fin
  */
-public abstract class Move {
+public abstract class Mouvement {
     final Position depart;
     final Position fin;
 
-    public Move(Position depart, Position fin) {
+    public Mouvement(Position depart, Position fin) {
         this.depart = depart;
         this.fin = fin;
     }

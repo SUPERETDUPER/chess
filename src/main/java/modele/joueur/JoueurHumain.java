@@ -2,7 +2,7 @@ package modele.joueur;
 
 import gui.BoardController;
 import gui.DemandeDeMouvement;
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 
 import java.util.function.Consumer;
@@ -24,7 +24,7 @@ public class JoueurHumain extends Joueur {
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */
     @Override
-    public void getMouvement(Consumer<Move> callback) {
+    public void getMouvement(Consumer<Mouvement> callback) {
         boardController.demanderMouvement(new DemandeDeMouvement(callback, this.getCouleur()));
     }
 }

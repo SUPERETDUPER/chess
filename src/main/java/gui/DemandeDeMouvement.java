@@ -1,6 +1,6 @@
 package gui;
 
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +14,7 @@ public class DemandeDeMouvement {
      * La méthode à appeler quand le movement est décidé
      */
     @NotNull
-    private final Consumer<Move> moveCallback;
+    private final Consumer<Mouvement> moveCallback;
 
     /**
      * la couleur du joueur
@@ -27,14 +27,14 @@ public class DemandeDeMouvement {
      */
     private boolean isConsumed = false;
 
-    public DemandeDeMouvement(@NotNull Consumer<Move> callback, @NotNull Couleur couleurDuTour) {
+    public DemandeDeMouvement(@NotNull Consumer<Mouvement> callback, @NotNull Couleur couleurDuTour) {
         this.moveCallback = callback;
         this.couleurDeLaDemande = couleurDuTour;
     }
 
-    void apply(Move move) {
+    void apply(Mouvement mouvement) {
         isConsumed = true;
-        moveCallback.accept(move);
+        moveCallback.accept(mouvement);
     }
 
     boolean isCompleted() {

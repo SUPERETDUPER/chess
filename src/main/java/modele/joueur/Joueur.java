@@ -1,6 +1,6 @@
 package modele.joueur;
 
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 
 import java.util.function.Consumer;
@@ -27,5 +27,5 @@ public abstract class Joueur {
      *
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */
-    public abstract void getMouvement(Consumer<Move> callback);
+    public abstract void getMouvement(Consumer<Mouvement> callback);
 }

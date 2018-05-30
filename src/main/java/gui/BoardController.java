@@ -7,7 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import modele.JeuData;
-import modele.moves.Move;
+import modele.moves.Mouvement;
 import modele.pieces.Piece;
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;
@@ -117,11 +117,11 @@ public class BoardController {
             highlightController.select(positionClicked);
 
             //Calculer les mouvements possibles
-            Set<Move> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
+            Set<Mouvement> mouvements = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
 
             //Highlight chaque mouvement
-            for (Move move : moves) {
-                highlightController.addOption(move);
+            for (Mouvement mouvement : mouvements) {
+                highlightController.addOption(mouvement);
             }
         }
     }

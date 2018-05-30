@@ -16,11 +16,11 @@ import java.util.function.Supplier;
  *
  * @param <T> le type d'objet transféré entre le apply et undo
  */
-public class MouvementNotifyWrapper<T> extends Move {
+public class MouvementNotifyWrapper<T> extends Mouvement {
     /**
      * Le mouvement que l'objet contient
      */
-    private final Move move;
+    private final Mouvement mouvement;
 
     /**
      * La méthode qui est appelé quand le mouvement est appliqué.
@@ -38,27 +38,27 @@ public class MouvementNotifyWrapper<T> extends Move {
      */
     private T result;
 
-    public MouvementNotifyWrapper(Move move, Supplier<T> applyNotify, Consumer<T> undoNotify) {
-        super(move.depart, move.fin);
-        this.move = move;
+    public MouvementNotifyWrapper(Mouvement mouvement, Supplier<T> applyNotify, Consumer<T> undoNotify) {
+        super(mouvement.depart, mouvement.fin);
+        this.mouvement = mouvement;
         this.applyNotify = applyNotify;
         this.undoNotify = undoNotify;
     }
 
     @Override
     public void appliquer(Plateau plateau) {
-        move.appliquer(plateau);
+        mouvement.appliquer(plateau);
         result = applyNotify.get();
     }
 
     @Override
     public void undo(Plateau plateau) {
-        move.undo(plateau);
+        mouvement.undo(plateau);
         undoNotify.accept(result);
     }
 
     @Override
     public int getValeur() {
-        return move.getValeur();
+        return mouvement.getValeur();
     }
 }
