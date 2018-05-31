@@ -1,7 +1,7 @@
 package gui;
 
 import gui.view.Case;
-import gui.view.Piece;
+import gui.view.PiecePane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import modele.JeuData;
 import modele.moves.Mouvement;
+import modele.pieces.Piece;
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ public class BoardController {
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
 
-    private final List<Piece> pieces = new ArrayList<>();
+    private final List<PiecePane> piecePanes = new ArrayList<>();
 
     //Le plateau
     @FXML
@@ -85,30 +86,31 @@ public class BoardController {
 
             aCase.xProperty().bind(taille.multiply(position.getColonne()));
             aCase.yProperty().bind(taille.multiply(position.getRangee()));
+            aCase.setOnMouseClicked(event -> highlightController.deSelectionner());
 
             //Ajouter la case au plateau et à la liste
             cases.add(position, aCase);
             plateau.getChildren().addAll(aCase);
 
             //Si il y a une pièce à cette position créer une pièce
-            modele.pieces.Piece piece = jeuData.getPlateau().getPiece(position);
+            Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                Piece pieceDisplay = new Piece(piece, taille);
-                bougerPiece(pieceDisplay, position);
+                PiecePane piecePaneDisplay = new PiecePane(piece, taille);
+                placerPiece(piecePaneDisplay, position);
 
                 //Ajouter les listeners
-                pieceDisplay.setOnMousePressed(event -> piecePressed(event, pieceDisplay));
-                pieceDisplay.setOnMouseDragged(event -> pieceDragged(event, pieceDisplay));
-                pieceDisplay.setOnMouseReleased(event -> pieceDropped(event, pieceDisplay));
+                piecePaneDisplay.setOnMousePressed(event -> piecePressed(event, piecePaneDisplay));
+                piecePaneDisplay.setOnMouseDragged(event -> pieceDragged(event, piecePaneDisplay));
+                piecePaneDisplay.setOnMouseReleased(event -> pieceDropped(event, piecePaneDisplay));
 
                 //Ajouter la pièce à la liste de pièce
-                pieces.add(pieceDisplay);
+                piecePanes.add(piecePaneDisplay);
             }
         }
 
         //Ajouter toutes les cases et pièces au plateau
-        plateau.getChildren().addAll(pieces);
+        plateau.getChildren().addAll(piecePanes);
     }
 
     /**
@@ -120,11 +122,11 @@ public class BoardController {
         this.moveRequest = moveRequest;
     }
 
-    private void piecePressed(MouseEvent mouseEvent, Piece piece) {
+    private void piecePressed(MouseEvent mouseEvent, PiecePane piecePane) {
         //Si aucun moveRequest ne rien faire
         if (moveRequest == null || moveRequest.isCompleted()) return;
 
-        modele.pieces.Piece pieceClicked = piece.getPiece();
+        Piece pieceClicked = piecePane.getPiece();
 
         //Si le moveRequest pour l'autre couleur ne rien faire
         if (moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
@@ -137,21 +139,21 @@ public class BoardController {
         highlightController.selectionner(jeuData.getPlateau().getPosition(pieceClicked), mouvements);
 
         //Permettre la pièce de se déplacer
-        piece.layoutXProperty().unbind();
-        piece.layoutYProperty().unbind();
+        piecePane.layoutXProperty().unbind();
+        piecePane.layoutYProperty().unbind();
     }
 
-    private void pieceDragged(MouseEvent mouseEvent, Piece piece) {
+    private void pieceDragged(MouseEvent mouseEvent, PiecePane piecePane) {
         //Si la pièce est entrain d'être dragged
-        if (!piece.layoutXProperty().isBound()) {
+        if (!piecePane.layoutXProperty().isBound()) {
             //Obtenir sa position selon la souris
-            double positionX = mouseEvent.getX() + (piece.getLayoutX());
-            double positionY = mouseEvent.getY() + (piece.getLayoutY());
+            double positionX = mouseEvent.getX() + (piecePane.getLayoutX());
+            double positionY = mouseEvent.getY() + (piecePane.getLayoutY());
 
             //Déplacer à cette position
             double offset = taille.getValue().doubleValue() / 2.0;
 
-            piece.relocate(
+            piecePane.relocate(
                     positionX - offset,
                     positionY - offset
             );
@@ -167,16 +169,18 @@ public class BoardController {
         }
     }
 
-    private void pieceDropped(MouseEvent mouseEvent, Piece piece) {
-        double positionX = mouseEvent.getX() + (piece.getLayoutX());
-        double positionY = mouseEvent.getY() + (piece.getLayoutY());
+    private void pieceDropped(@NotNull MouseEvent mouseEvent, @NotNull PiecePane piecePane) {
+        double positionX = mouseEvent.getX() + (piecePane.getLayoutX());
+        double positionY = mouseEvent.getY() + (piecePane.getLayoutY());
 
         Position position = getPosition(positionX, positionY);
 
         if (highlightController.isOption(position)) {
-            moveRequest.apply(highlightController.getMouvement(position));
+            Mouvement mouvement = highlightController.getMouvement(position);
+            highlightController.deSelectionner();
+            moveRequest.apply(mouvement);
         } else {
-            bougerPiece(piece, jeuData.getPlateau().getPosition(piece.getPiece()));
+            placerPiece(piecePane, jeuData.getPlateau().getPosition(piecePane.getPiece()));
         }
     }
 
@@ -205,25 +209,26 @@ public class BoardController {
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        Piece pieceToRemove = null;
-        for (Piece piece : pieces) {
-            Position position = jeuData.getPlateau().getPosition(piece.getPiece());
+        PiecePane piecePaneToRemove = null;
+        for (PiecePane piecePane : piecePanes) {
+            Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
             if (position != null) {
-                bougerPiece(piece, position);
+                placerPiece(piecePane, position);
             } else {
-                plateau.getChildren().remove(piece);
-                pieceToRemove = piece;
+                plateau.getChildren().remove(piecePane);
+                piecePaneToRemove = piecePane;
             }
         }
 
-        if (pieceToRemove != null) pieces.remove(pieceToRemove);
-
-        highlightController.deSelectionner();
+        if (piecePaneToRemove != null) piecePanes.remove(piecePaneToRemove);
     }
 
-    private void bougerPiece(Piece piece, Position position) {
-        piece.layoutXProperty().bind(taille.multiply(position.getColonne()));
-        piece.layoutYProperty().bind(taille.multiply(position.getRangee()));
+    /**
+     * Place la pièce à la position
+     */
+    private void placerPiece(PiecePane piecePane, Position position) {
+        piecePane.layoutXProperty().bind(taille.multiply(position.getColonne()));
+        piecePane.layoutYProperty().bind(taille.multiply(position.getRangee()));
     }
 }

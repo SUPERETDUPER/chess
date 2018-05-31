@@ -4,23 +4,24 @@ import javafx.beans.binding.NumberBinding;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import modele.pieces.Piece;
 
 /**
  * Une pièce afficher sur l'écran
  */
-public class Piece extends StackPane {
+public class PiecePane extends StackPane {
     private static final float RAPPORT_TAILLE_FONT_SIZE = 0.75F;
 
     /**
      * La pièce qui se fait afficher
      */
-    private final modele.pieces.Piece piece;
+    private final Piece piece;
 
     /**
      * @param piece  la pièce à afficher
      * @param taille la taille de la boite
      */
-    public Piece(modele.pieces.Piece piece, NumberBinding taille) {
+    public PiecePane(Piece piece, NumberBinding taille) {
         super();
 
         this.piece = piece;
@@ -40,7 +41,7 @@ public class Piece extends StackPane {
         );
     }
 
-    public modele.pieces.Piece getPiece() {
+    public Piece getPiece() {
         return piece;
     }
 }
