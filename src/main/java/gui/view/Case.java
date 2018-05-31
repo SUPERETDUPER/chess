@@ -4,54 +4,50 @@ import javafx.beans.binding.NumberBinding;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import modele.plateau.Position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Controle une case
+ * Controle une case. Une case à différents stylestyles (couleur et bordure)
  */
 public class Case extends Rectangle {
     /**
-     * Les différentes couleurs possible pour la case
+     * Les différentes couleurs et bordure possible pour la case
      */
-    public enum Highlight {
+    public enum Style {
         NORMAL,
         ROUGE,
         BLUE,
         BLUE_BORDURE
     }
 
-    //Si la case est blanche ou noir (gris)
+    /**
+     * Si la case est une case blanche ou noir (grise)
+     */
     private final boolean isBlanc;
-
-    //La position de la case
-    @NotNull
-    private final Position position;
 
     /**
      * @param taille        la taille de la case
      * @param isBlanc       si la case est blanche
-     * @param position      la position de la case
      */
-    public Case(NumberBinding taille, boolean isBlanc, @NotNull Position position) {
+    public Case(NumberBinding taille, boolean isBlanc) {
         super();
         this.isBlanc = isBlanc;
-        this.position = position;
 
         this.widthProperty().bind(taille);
         this.heightProperty().bind(taille);
+        this.setStrokeWidth(3);
 
-        setCouleur(Highlight.NORMAL);  //Met la couleur de l'arrière plan de la case
+        setStyle(Style.NORMAL);  //Met la couleur de l'arrière plan de la case
     }
 
     /**
-     * @param highlight la nouvelle couleur de l'arrière plan de l'arrière plan
+     * @param style la nouvelle couleur de l'arrière plan de l'arrière plan
      */
-    public void setCouleur(@NotNull Highlight highlight) {
-        this.setFill(getCouleur(highlight));
+    public void setStyle(@NotNull Style style) {
+        this.setFill(getCouleurFill(style));
 
-        if (highlight == Highlight.BLUE_BORDURE) {
+        if (style == Style.BLUE_BORDURE) {
             this.setStroke(Color.BLUE);
         } else {
             this.setStroke(null);
@@ -59,8 +55,8 @@ public class Case extends Rectangle {
     }
 
     @Contract(pure = true)
-    private Paint getCouleur(@NotNull Highlight highlight) {
-        switch (highlight) {
+    private Paint getCouleurFill(@NotNull Style style) {
+        switch (style) {
             case BLUE:
             case BLUE_BORDURE:
                 return isBlanc ? Color.LIGHTBLUE : Color.CORNFLOWERBLUE;
@@ -69,12 +65,7 @@ public class Case extends Rectangle {
             case NORMAL:
                 return isBlanc ? Color.WHITE : Color.LIGHTGRAY;
             default:
-                throw new IllegalArgumentException("Couleur de highlight inconnue");
+                throw new IllegalArgumentException("Couleur de style inconnue");
         }
-    }
-
-    @NotNull
-    public Position getPosition() {
-        return position;
     }
 }

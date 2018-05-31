@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Contrôle comment les cases devraient être surlignées
@@ -16,14 +17,14 @@ class HighlightController {
      * Le controlleur de chaque case
      */
     @NotNull
-    private final Tableau<Case> caseControllers;
+    private final Tableau<Case> cases;
 
     /**
      * La liste d'option pour la case sélectionné
      * Vide si rien n'est sélectionné
      */
     @NotNull
-    private HashMap<Position, Mouvement> currentOptions = new HashMap<>();
+    private HashMap<Position, Mouvement> options = new HashMap<>();
 
     /**
      * La case présentement sélectionné
@@ -33,84 +34,79 @@ class HighlightController {
     private Position selectedPosition;
 
     @Nullable
-    private Position avecBordure;
+    private Position caseAvecBordure;
 
-    HighlightController(@NotNull Tableau<Case> caseControllers) {
-        this.caseControllers = caseControllers;
+    HighlightController(@NotNull Tableau<Case> cases) {
+        this.cases = cases;
     }
 
     /**
-     * Sélectionner une case
+     * Sélectionner une case et les positions possibles
      *
      * @param position la position de la case
+     * @param options les options de mouvement possible
      */
-    void select(@NotNull Position position) {
-        this.enleverHighlight();
-        this.selectedPosition = position;
+    void selectionner(@NotNull Position position, Set<Mouvement> options) {
+        this.deSelectionner();
 
         //Surligner la position de départ
-        caseControllers.get(position).setCouleur(Case.Highlight.ROUGE);
-    }
+        this.selectedPosition = position;
+        cases.get(position).setStyle(Case.Style.ROUGE);
 
-    /**
-     * @return vrai si une case est séléctionné
-     */
-    boolean isSelected() {
-        return selectedPosition != null;
-    }
-
-    public void setBordure(@Nullable Position position) {
-        if (avecBordure != null) {
-            caseControllers.get(avecBordure).setCouleur(Case.Highlight.BLUE);
-        }
-
-        this.avecBordure = position;
-        caseControllers.get(position).setCouleur(Case.Highlight.BLUE_BORDURE);
-    }
-
-    /**
-     * Ajouter une option (un mouvement possible)
-     * @param mouvement le mouvement
-     */
-    void addOption(Mouvement mouvement) {
-        if (selectedPosition != null) {
+        //Surligner toutes les options
+        for (Mouvement mouvement : options) {
             Position positionToDisplay = mouvement.getFin();
-            currentOptions.put(positionToDisplay, mouvement);
-            caseControllers.get(positionToDisplay).setCouleur(Case.Highlight.BLUE);
+
+            this.options.put(positionToDisplay, mouvement);
+            cases.get(positionToDisplay).setStyle(Case.Style.BLUE);
         }
-    }
-
-    /**
-     *
-     * @param position la position à vérifier
-     * @return vrai si la position est une option
-     */
-    boolean isOption(Position position) {
-        return currentOptions.containsKey(position);
-    }
-
-    /**
-     * @param position
-     * @return le mouvement associé à cette position
-     */
-    Mouvement getMove(Position position) {
-        return currentOptions.get(position);
     }
 
     /**
      * Enlève tout le highlight et déselectionne la case séléctionnée
      */
-    void enleverHighlight() {
+    void deSelectionner() {
         if (selectedPosition != null) {
-            for (Position position : currentOptions.keySet()) {
-                caseControllers.get(position).setCouleur(Case.Highlight.NORMAL);
+            cases.get(selectedPosition).setStyle(Case.Style.NORMAL);
+
+            for (Position position : options.keySet()) {
+                cases.get(position).setStyle(Case.Style.NORMAL);
             }
 
-            caseControllers.get(selectedPosition).setCouleur(Case.Highlight.NORMAL);
-
-            currentOptions.clear();
+            options.clear();
             selectedPosition = null;
-            avecBordure = null;
+            caseAvecBordure = null;
         }
+    }
+
+    void setBordure(@NotNull Position position) {
+        if (caseAvecBordure != position) {
+            enleverBordure();
+
+            this.caseAvecBordure = position;
+            cases.get(position).setStyle(Case.Style.BLUE_BORDURE);
+        }
+    }
+
+    void enleverBordure() {
+        if (caseAvecBordure != null) {
+            cases.get(caseAvecBordure).setStyle(Case.Style.BLUE);
+        }
+    }
+
+    /**
+     * @param position la position à vérifier
+     * @return vrai si la position est une option
+     */
+    boolean isOption(Position position) {
+        return options.containsKey(position);
+    }
+
+    /**
+     * @param position la position de fin du mouvement
+     * @return le mouvement associé à cette position
+     */
+    Mouvement getMouvement(Position position) {
+        return options.get(position);
     }
 }
