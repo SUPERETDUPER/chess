@@ -2,15 +2,11 @@ package gui;
 
 import gui.view.Case;
 import gui.view.PiecePane;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Piece;
@@ -100,7 +96,7 @@ public class BoardController {
 
             if (piece != null) {
                 PiecePane piecePane = new PiecePane(piece, taille);
-                placerPiece(piecePane, position);
+                piecePane.fixer(taille.multiply(position.getColonne()), taille.multiply(position.getRangee()));
 
                 //Ajouter les listeners
                 piecePane.setOnMousePressed(event -> piecePressed(event, piecePane));
@@ -187,7 +183,8 @@ public class BoardController {
             highlightController.deSelectionner();
             moveRequest.apply(mouvement);
         } else {
-            bougerPiece(piecePane, jeuData.getPlateau().getPosition(piecePane.getPiece()));
+            Position positionDepart = jeuData.getPlateau().getPosition(piecePane.getPiece());
+            piecePane.bouger(taille.multiply(positionDepart.getColonne()), taille.multiply(positionDepart.getRangee()));
         }
     }
 
@@ -217,13 +214,15 @@ public class BoardController {
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        System.out.println("Update board called");
         PiecePane piecePaneToRemove = null;
         for (PiecePane piecePane : piecePanes) {
             Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
             if (position != null) {
-                bougerPiece(piecePane, position);
+                piecePane.bouger(
+                        taille.multiply(position.getColonne()),
+                        taille.multiply(position.getRangee())
+                );
             } else {
                 plateau.getChildren().remove(piecePane);
                 piecePaneToRemove = piecePane;
@@ -231,40 +230,5 @@ public class BoardController {
         }
 
         if (piecePaneToRemove != null) piecePanes.remove(piecePaneToRemove);
-    }
-
-    /**
-     * Place la pièce à la position
-     */
-    private synchronized void bougerPiece(PiecePane piecePane, Position position) {
-        piecePane.layoutXProperty().unbind();
-        piecePane.layoutYProperty().unbind();
-
-        Timeline timeline = new Timeline(
-                new KeyFrame(
-                        new Duration(100),
-                        new KeyValue(
-                                piecePane.layoutXProperty(),
-                                taille.multiply(position.getColonne()).doubleValue()
-                        ),
-                        new KeyValue(
-                                piecePane.layoutYProperty(),
-                                taille.multiply(position.getRangee()).doubleValue()
-                        )
-                )
-        );
-
-        timeline.setOnFinished(event -> placerPiece(piecePane, position));
-
-        timeline.play();
-    }
-
-    /**
-     * Place la pièce à la position
-     */
-    private synchronized void placerPiece(PiecePane piecePane, Position position) {
-        System.out.println("palcer piece");
-        piecePane.layoutXProperty().bind(taille.multiply(position.getColonne()));
-        piecePane.layoutYProperty().bind(taille.multiply(position.getRangee()));
     }
 }
