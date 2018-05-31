@@ -39,7 +39,7 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             //Si il y a personne on peut avancer
             if (plateau.getPiece(fin) == null) {
-                mouvements.add(createMove(new MouvementNormal(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementNormal(this, fin)));
             }
             //Sinon on est bloqué
             else blocked = true;
@@ -51,7 +51,7 @@ public class Pion extends Piece {
 
             //Si la position et valide et la postion est vide on peut
             if (fin.isValid() && plateau.getPiece(fin) == null) {
-                mouvements.add(createMove(new MouvementNormal(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementNormal(this, fin)));
             }
         }
 
@@ -61,7 +61,7 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             Piece piece = plateau.getPiece(fin);
             if (piece != null && piece.getCouleur() != couleur)
-                mouvements.add(createMove(new MouvementManger(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementManger(this, fin)));
         }
 
         fin = currentPosition.decaler(ATTAQUE_DROITE);
@@ -69,7 +69,7 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             Piece piece = plateau.getPiece(fin);
             if (piece != null && piece.getCouleur() != couleur)
-                mouvements.add(createMove(new MouvementManger(currentPosition, fin)));
+                mouvements.add(createMove(new MouvementManger(this, fin)));
         }
 
         return mouvements;

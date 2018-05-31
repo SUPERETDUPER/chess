@@ -33,8 +33,8 @@ abstract class OffsetPiece extends Piece {
             Piece piece = plateau.getPiece(nextPosition);
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
-            if (piece == null) mouvements.add(new MouvementNormal(currentPose, nextPosition));
-            else if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(currentPose, nextPosition));
+            if (piece == null) mouvements.add(new MouvementNormal(this, nextPosition));
+            else if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(this, nextPosition));
         }
 
         return mouvements;

@@ -34,8 +34,18 @@ public class Plateau {
         return board.inverse().get(piece);
     }
 
-    public void ajouter(@NotNull Position position, @NotNull Piece piece) {
-        board.put(position, piece);
+    /**
+     * @return la pièce qui était à position
+     */
+    public Piece ajouter(@NotNull Position position, @NotNull Piece piece) {
+        return board.put(position, piece);
+    }
+
+    /**
+     * @param piece la pièce qui était à position
+     */
+    public Piece bougerPiece(@NotNull Position position, @NotNull Piece piece) {
+        return board.forcePut(position, piece);
     }
 
     @NotNull
@@ -43,6 +53,13 @@ public class Plateau {
         Piece remove = board.remove(position);
         if (remove == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
         return remove;
+    }
+
+    @NotNull
+    public Position removePiece(@NotNull Piece piece) {
+        Position position = board.inverse().remove(piece);
+        if (position == null) throw new IllegalArgumentException("Aucune pièce à: " + piece);
+        return position;
     }
 
     @NotNull

@@ -5,21 +5,19 @@ import modele.plateau.Plateau;
 import modele.plateau.Position;
 
 public class MouvementNormal extends Mouvement {
-    public MouvementNormal(Position start, Position end) {
-        super(start, end);
+    public MouvementNormal(Piece piece, Position end) {
+        super(piece, end);
     }
 
     public void appliquer(Plateau plateau) {
-        Piece piece = plateau.removePiece(depart);
-        if (plateau.getPiece(fin) != null) throw new IllegalArgumentException("Une pièce est à cette position");
-        plateau.ajouter(fin, piece);
+        debut = plateau.removePiece(piece);
+        Piece pieceEnlever = plateau.ajouter(fin, piece);
+        if (pieceEnlever != null) throw new IllegalArgumentException("Une pièce est à cette position");
     }
 
     @Override
     public void undo(Plateau plateau) {
-        Piece piece = plateau.removePiece(fin);
-        if (plateau.getPiece(depart) != null) throw new IllegalArgumentException("Une pièce est à cette position");
-        plateau.ajouter(depart, piece);
+        plateau.bougerPiece(debut, piece);
     }
 
     /**

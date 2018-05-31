@@ -7,7 +7,7 @@ public class MouvementCombine extends Mouvement {
     private Integer valeur;
 
     public MouvementCombine(Mouvement[] mouvements) {
-        super(mouvements[0].depart, mouvements[0].fin);
+        super(mouvements[0].piece, mouvements[0].fin);
         this.mouvements = mouvements;
     }
 

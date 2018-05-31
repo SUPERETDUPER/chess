@@ -30,10 +30,10 @@ abstract class DirectionPiece extends Piece {
             while (end.isValid()) {
                 Piece piece = plateau.getPiece(end);
 
-                if (piece == null) mouvements.add(new MouvementNormal(startingPosition, end));
+                if (piece == null) mouvements.add(new MouvementNormal(this, end));
                 else {
                     if (piece.getCouleur() != couleur) {
-                        mouvements.add(new MouvementManger(startingPosition, end));
+                        mouvements.add(new MouvementManger(this, end));
                     }
 
                     break;

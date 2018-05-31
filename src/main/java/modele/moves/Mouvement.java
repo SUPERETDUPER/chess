@@ -1,5 +1,6 @@
 package modele.moves;
 
+import modele.pieces.Piece;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
@@ -10,16 +11,21 @@ import java.util.Objects;
  * Chaque mouvement a une position de départ et de fin
  */
 public abstract class Mouvement {
-    final Position depart;
+    final Piece piece;
     final Position fin;
+    Position debut;
 
-    public Mouvement(Position depart, Position fin) {
-        this.depart = depart;
+    public Mouvement(Piece piece, Position fin) {
+        this.piece = piece;
         this.fin = fin;
     }
 
     public Position getFin() {
         return fin;
+    }
+
+    public Piece getPiece() {
+        return piece;
     }
 
     /**
@@ -45,17 +51,17 @@ public abstract class Mouvement {
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof MouvementNormal)) return false;
-        if (!this.depart.equals(((MouvementNormal) obj).depart)) return false;
+        if (!this.piece.equals(((MouvementNormal) obj).piece)) return false;
         return this.fin.equals(((MouvementNormal) obj).fin);
     }
 
     @Override
     public String toString() {
-        return depart + " à " + fin;
+        return piece + " à " + fin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.depart, this.fin);
+        return Objects.hash(this.piece, this.fin);
     }
 }

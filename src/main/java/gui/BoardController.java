@@ -9,14 +9,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import modele.JeuData;
 import modele.moves.Mouvement;
+import modele.moves.MouvementNormal;
 import modele.pieces.Piece;
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -38,7 +38,7 @@ public class BoardController {
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
 
-    private final List<PiecePane> piecePanes = new ArrayList<>();
+    private final HashMap<Piece, PiecePane> piecePanes = new HashMap<>();
 
     //Le plateau
     @FXML
@@ -59,6 +59,9 @@ public class BoardController {
     @Nullable
     private DemandeDeMouvement moveRequest;
 
+    @NotNull
+    private AnimationController animationController;
+
     /**
      * La taille de chaque case
      */
@@ -71,6 +74,7 @@ public class BoardController {
     @FXML
     private void initialize() {
         taille = Bindings.divide(plateau.heightProperty(), Position.LIMITE);
+        animationController = new AnimationController(piecePanes, taille);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -104,15 +108,14 @@ public class BoardController {
                 piecePane.setOnMouseReleased(event -> pieceDropped(event, piecePane));
 
                 //Ajouter la pièce à la liste de pièce
-                piecePanes.add(piecePane);
+                piecePanes.put(piece, piecePane);
             }
         }
 
         //Ajouter toutes les cases et pièces au plateau
-        plateau.getChildren().addAll(piecePanes);
+        plateau.getChildren().addAll(piecePanes.values());
 
         this.jeuData.setNewChangeListener(this::updateBoard);
-        updateBoard();
     }
 
     /**
@@ -184,7 +187,9 @@ public class BoardController {
             moveRequest.apply(mouvement);
         } else {
             Position positionDepart = jeuData.getPlateau().getPosition(piecePane.getPiece());
-            piecePane.bouger(taille.multiply(positionDepart.getColonne()), taille.multiply(positionDepart.getRangee()));
+            animationController.addToQueue(
+                    new MouvementNormal(piecePane.getPiece(), positionDepart)
+            );
         }
     }
 
@@ -213,16 +218,13 @@ public class BoardController {
     /**
      * Pour chaque case afficher la pièce à cette case
      */
-    private void updateBoard() {
+    private void updateBoard(Mouvement mouvement) {
         PiecePane piecePaneToRemove = null;
-        for (PiecePane piecePane : piecePanes) {
+        for (PiecePane piecePane : piecePanes.values()) {
             Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
             if (position != null) {
-                piecePane.bouger(
-                        taille.multiply(position.getColonne()),
-                        taille.multiply(position.getRangee())
-                );
+                animationController.addToQueue(mouvement);
             } else {
                 plateau.getChildren().remove(piecePane);
                 piecePaneToRemove = piecePane;

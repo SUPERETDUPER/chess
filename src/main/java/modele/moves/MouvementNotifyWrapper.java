@@ -39,7 +39,7 @@ public class MouvementNotifyWrapper<T> extends Mouvement {
     private T result;
 
     public MouvementNotifyWrapper(Mouvement mouvement, Supplier<T> applyNotify, Consumer<T> undoNotify) {
-        super(mouvement.depart, mouvement.fin);
+        super(mouvement.piece, mouvement.fin);
         this.mouvement = mouvement;
         this.applyNotify = applyNotify;
         this.undoNotify = undoNotify;

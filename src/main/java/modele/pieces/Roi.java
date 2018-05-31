@@ -65,8 +65,8 @@ public class Roi extends OffsetPiece {
 
             mouvements.add(new MouvementNotifyWrapper<>(
                     new MouvementCombine(new Mouvement[]{
-                            new MouvementNormal(startRoi, startRoi.decaler(new Offset(0, 2))),
-                            new MouvementNormal(debutTour, startRoi.decaler(new Offset(0, 1)))
+                            new MouvementNormal(this, startRoi.decaler(new Offset(0, 2))),
+                            new MouvementNormal(plateau.getPiece(debutTour), startRoi.decaler(new Offset(0, 1)))
                     }),
                     this::onMoveApply,
                     this::onMoveUndo

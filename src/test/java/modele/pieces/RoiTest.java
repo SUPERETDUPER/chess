@@ -23,9 +23,9 @@ class RoiTest {
         Set<Mouvement> mouvements = roi.generateAllMoves(plateau);
 
         Set<Mouvement> expected = new HashSet<>();
-        expected.add(new MouvementNormal(startingPos, new Position(0, 1)));
-        expected.add(new MouvementNormal(startingPos, new Position(1, 0)));
-        expected.add(new MouvementNormal(startingPos, new Position(1, 1)));
+        expected.add(new MouvementNormal(roi, new Position(0, 1)));
+        expected.add(new MouvementNormal(roi, new Position(1, 0)));
+        expected.add(new MouvementNormal(roi, new Position(1, 1)));
 
         Assertions.assertEquals(expected, mouvements);
     }
