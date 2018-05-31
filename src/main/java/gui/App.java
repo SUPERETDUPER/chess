@@ -94,8 +94,8 @@ public class App extends Application {
         fxmlLoader.setController(boardController);
 
         //Montrer l'interface
-        primaryStage.setScene(new Scene(fxmlLoader.load()));
         primaryStage.setMaximized(true);
+        primaryStage.setScene(new Scene(fxmlLoader.load()));
         primaryStage.show();
 
         //Créer le jeu

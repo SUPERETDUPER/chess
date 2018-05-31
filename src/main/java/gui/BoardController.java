@@ -2,11 +2,15 @@ package gui;
 
 import gui.view.Case;
 import gui.view.PiecePane;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Piece;
@@ -66,7 +70,6 @@ public class BoardController {
 
     BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
-        this.jeuData.setNewChangeListener(this::updateBoard);
     }
 
     @FXML
@@ -96,21 +99,24 @@ public class BoardController {
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePaneDisplay = new PiecePane(piece, taille);
-                placerPiece(piecePaneDisplay, position);
+                PiecePane piecePane = new PiecePane(piece, taille);
+                placerPiece(piecePane, position);
 
                 //Ajouter les listeners
-                piecePaneDisplay.setOnMousePressed(event -> piecePressed(event, piecePaneDisplay));
-                piecePaneDisplay.setOnMouseDragged(event -> pieceDragged(event, piecePaneDisplay));
-                piecePaneDisplay.setOnMouseReleased(event -> pieceDropped(event, piecePaneDisplay));
+                piecePane.setOnMousePressed(event -> piecePressed(event, piecePane));
+                piecePane.setOnMouseDragged(event -> pieceDragged(event, piecePane));
+                piecePane.setOnMouseReleased(event -> pieceDropped(event, piecePane));
 
                 //Ajouter la pièce à la liste de pièce
-                piecePanes.add(piecePaneDisplay);
+                piecePanes.add(piecePane);
             }
         }
 
         //Ajouter toutes les cases et pièces au plateau
         plateau.getChildren().addAll(piecePanes);
+
+        this.jeuData.setNewChangeListener(this::updateBoard);
+        updateBoard();
     }
 
     /**
@@ -138,6 +144,7 @@ public class BoardController {
         //Surligner les options et la pièce
         highlightController.selectionner(jeuData.getPlateau().getPosition(pieceClicked), mouvements);
 
+        System.out.println("Unbind");
         //Permettre la pièce de se déplacer
         piecePane.layoutXProperty().unbind();
         piecePane.layoutYProperty().unbind();
@@ -180,7 +187,7 @@ public class BoardController {
             highlightController.deSelectionner();
             moveRequest.apply(mouvement);
         } else {
-            placerPiece(piecePane, jeuData.getPlateau().getPosition(piecePane.getPiece()));
+            bougerPiece(piecePane, jeuData.getPlateau().getPosition(piecePane.getPiece()));
         }
     }
 
@@ -205,16 +212,18 @@ public class BoardController {
         return new Position(rangee, colonne);
     }
 
+    //TODO Fix bug where two updateBoards in a row throw exception because transition starts and then previous ends
     /**
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
+        System.out.println("Update board called");
         PiecePane piecePaneToRemove = null;
         for (PiecePane piecePane : piecePanes) {
             Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
             if (position != null) {
-                placerPiece(piecePane, position);
+                bougerPiece(piecePane, position);
             } else {
                 plateau.getChildren().remove(piecePane);
                 piecePaneToRemove = piecePane;
@@ -227,7 +236,34 @@ public class BoardController {
     /**
      * Place la pièce à la position
      */
-    private void placerPiece(PiecePane piecePane, Position position) {
+    private synchronized void bougerPiece(PiecePane piecePane, Position position) {
+        piecePane.layoutXProperty().unbind();
+        piecePane.layoutYProperty().unbind();
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(
+                        new Duration(100),
+                        new KeyValue(
+                                piecePane.layoutXProperty(),
+                                taille.multiply(position.getColonne()).doubleValue()
+                        ),
+                        new KeyValue(
+                                piecePane.layoutYProperty(),
+                                taille.multiply(position.getRangee()).doubleValue()
+                        )
+                )
+        );
+
+        timeline.setOnFinished(event -> placerPiece(piecePane, position));
+
+        timeline.play();
+    }
+
+    /**
+     * Place la pièce à la position
+     */
+    private synchronized void placerPiece(PiecePane piecePane, Position position) {
+        System.out.println("palcer piece");
         piecePane.layoutXProperty().bind(taille.multiply(position.getColonne()));
         piecePane.layoutYProperty().bind(taille.multiply(position.getRangee()));
     }
