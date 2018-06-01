@@ -2,22 +2,22 @@ package gui.intro;
 
 import gui.App;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 
 import java.io.IOException;
 
-public class IntroScene {
+public class IntroRoot {
 
-    private final Scene scene;
+    private final Parent scene;
 
-    public IntroScene(App.MontrerJeu montrerJeu) throws IOException {
+    public IntroRoot(App.MontrerJeu montrerJeu) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/intro.fxml"));
         fxmlLoader.setController(new IntroController(montrerJeu));
 
-        scene = new Scene(fxmlLoader.load());
+        scene = fxmlLoader.load();
     }
 
-    public Scene getScene() {
+    public Parent getRoot() {
         return scene;
     }
 }

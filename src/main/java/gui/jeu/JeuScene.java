@@ -1,7 +1,7 @@
 package gui.jeu;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 import modele.Jeu;
 import modele.JeuData;
 import modele.joueur.JoueurHumain;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class JeuScene {
 
-    private final Scene scene;
+    private final Parent root;
 
     public JeuScene(boolean isJoueurBlancHumain, boolean isJoueurNoirHumain) throws IOException {
         //Créer les rois
@@ -33,7 +33,7 @@ public class JeuScene {
         fxmlLoader.setController(boardController);
 
 //        //Montrer l'interface
-        scene = new Scene(fxmlLoader.load());
+        root = fxmlLoader.load();
 
         //Créer le jeu
         Jeu jeu = new Jeu(jeuData);
@@ -49,8 +49,8 @@ public class JeuScene {
         jeu.commencer();
     }
 
-    public Scene getScene() {
-        return scene;
+    public Parent getRoot() {
+        return root;
     }
 
     /**
