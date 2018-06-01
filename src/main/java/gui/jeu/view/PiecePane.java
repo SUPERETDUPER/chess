@@ -1,6 +1,7 @@
 package gui.jeu.view;
 
 import javafx.beans.binding.NumberBinding;
+import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -63,9 +64,11 @@ public class PiecePane extends StackPane {
         this.position = position;
         this.layoutXProperty().bind(taille.multiply(position.getColonne()));
         this.layoutYProperty().bind(taille.multiply(position.getRangee()));
+        this.setCacheHint(CacheHint.DEFAULT);
     }
 
     public void unBind() {
+        this.setCacheHint(CacheHint.SPEED);
         this.layoutXProperty().unbind();
         this.layoutYProperty().unbind();
     }
