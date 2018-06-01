@@ -17,7 +17,7 @@ public class JeuScene {
 
     private final Parent root;
 
-    public JeuScene(boolean isJoueurBlancHumain, boolean isJoueurNoirHumain) throws IOException {
+    public JeuScene(boolean isJoueurBlancHumain, boolean isJoueurNoirHumain) {
         //Créer les rois
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
@@ -33,7 +33,11 @@ public class JeuScene {
         fxmlLoader.setController(boardController);
 
 //        //Montrer l'interface
-        root = fxmlLoader.load();
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         //Créer le jeu
         Jeu jeu = new Jeu(jeuData);

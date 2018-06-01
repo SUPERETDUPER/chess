@@ -10,11 +10,15 @@ public class IntroRoot {
 
     private final Parent scene;
 
-    public IntroRoot(App.MontrerJeu montrerJeu) throws IOException {
+    public IntroRoot(App.MontrerJeu montrerJeu) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/intro.fxml"));
         fxmlLoader.setController(new IntroController(montrerJeu));
 
-        scene = fxmlLoader.load();
+        try {
+            scene = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Parent getRoot() {
