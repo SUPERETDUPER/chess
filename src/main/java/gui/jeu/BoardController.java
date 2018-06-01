@@ -182,6 +182,7 @@ public class BoardController {
         if (highlightController.isOption(position)) {
             Mouvement mouvement = highlightController.getMouvement(position);
             highlightController.deSelectionner();
+            animationController.addToQueue(piecePane, position);
             moveRequest.apply(mouvement);
         } else {
             Position positionDepart = jeuData.getPlateau().getPosition(piecePane.getPiece());
