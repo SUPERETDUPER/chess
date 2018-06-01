@@ -1,4 +1,4 @@
-package gui.view;
+package gui.jeu.view;
 
 import javafx.beans.binding.NumberBinding;
 import javafx.scene.layout.StackPane;

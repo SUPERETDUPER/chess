@@ -1,6 +1,6 @@
-package gui;
+package gui.jeu;
 
-import gui.view.PiecePane;
+import gui.jeu.view.PiecePane;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

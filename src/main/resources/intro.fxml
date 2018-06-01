@@ -27,7 +27,7 @@
                 </VBox>
             </HBox>
 
-            <JFXButton id="btnJouer" fx:id="jouer" text="Jouer!"/>
+            <JFXButton id="btnJouer" fx:id="jouer" text="Jouer!" onAction="#handleJouer"/>
         </VBox>
     </center>
 
