@@ -5,6 +5,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import modele.pieces.Piece;
+import modele.plateau.Position;
 
 /**
  * Une pièce affichée sur l'écran
@@ -16,27 +17,32 @@ public class PiecePane extends StackPane {
      * La pièce qui se fait afficher
      */
     private final Piece piece;
+    private final NumberBinding taille;
+
+    private Position position;
 
 
     /**
      * @param piece  la pièce à afficher
      * @param taille la taille de la boite
      */
-    public PiecePane(Piece piece, NumberBinding taille) {
+    public PiecePane(Piece piece, NumberBinding taille, Position position) {
         super();
 
         this.piece = piece;
+        this.taille = taille;
 
         //Attacher la taille
         this.prefHeightProperty().bind(taille);
         this.prefWidthProperty().bind(taille);
+        bind(position);
 
         //Ajouter le text
         Text text = new Text(Character.toString((char) piece.getNumeroUnicode()));
         this.getChildren().add(text);
 
         //Faire que la taille du text reste propertionelle
-        taille.addListener(
+        this.taille.addListener(
                 (observable, oldValue, newValue) ->
                         text.setFont(new Font(newValue.doubleValue() * RAPPORT_TAILLE_FONT_SIZE))
         );
@@ -46,12 +52,25 @@ public class PiecePane extends StackPane {
         return piece;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
     /**
      * Place la pièce à la position
      */
-    public void fixer(NumberBinding x, NumberBinding y) {
-        this.layoutXProperty().bind(x);
-        this.layoutYProperty().bind(y);
+    public void bind(Position position) {
+        this.position = position;
+        this.layoutXProperty().bind(taille.multiply(position.getColonne()));
+        this.layoutYProperty().bind(taille.multiply(position.getRangee()));
+    }
 
+    public void unBind() {
+        this.layoutXProperty().unbind();
+        this.layoutYProperty().unbind();
+    }
+
+    public boolean isAtPosition(Position position) {
+        return this.layoutXProperty().isBound() && this.layoutYProperty().isBound() && this.position.equals(position);
     }
 }

@@ -98,8 +98,7 @@ public class BoardController {
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(piece, taille);
-                piecePane.fixer(taille.multiply(position.getColonne()), taille.multiply(position.getRangee()));
+                PiecePane piecePane = new PiecePane(piece, taille, position);
 
                 //Ajouter les listeners
                 piecePane.setOnMousePressed(event -> piecePressed(event, piecePane));
@@ -114,7 +113,7 @@ public class BoardController {
         //Ajouter toutes les cases et pièces au plateau
         plateau.getChildren().addAll(piecePanes);
 
-        this.jeuData.setNewChangeListener(this::updateBoard);
+        this.jeuData.setChangeListener(this::updateBoard);
         updateBoard();
     }
 
@@ -145,8 +144,7 @@ public class BoardController {
 
         System.out.println("Unbind");
         //Permettre la pièce de se déplacer
-        piecePane.layoutXProperty().unbind();
-        piecePane.layoutYProperty().unbind();
+        piecePane.unBind();
     }
 
     private void pieceDragged(MouseEvent mouseEvent, PiecePane piecePane) {
@@ -212,8 +210,6 @@ public class BoardController {
         return new Position(rangee, colonne);
     }
 
-    //TODO Fix bug where two updateBoards in a row throw exception because transition starts and then previous ends
-
     /**
      * Pour chaque case afficher la pièce à cette case
      */
@@ -223,10 +219,7 @@ public class BoardController {
             Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
             if (position != null) {
-                if (piecePane.getLayoutX() != calculerX(position).getValue().doubleValue() ||
-                        piecePane.getLayoutY() != calculerY(position).getValue().doubleValue()) {
-                    animationController.addToQueue(piecePane, position);
-                }
+                animationController.addToQueue(piecePane, position);
             } else {
                 plateau.getChildren().remove(piecePane);
                 piecePaneToRemove = piecePane;

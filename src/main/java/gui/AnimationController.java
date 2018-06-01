@@ -25,6 +25,7 @@ class AnimationController {
 
     void addToQueue(PiecePane piecePane, Position position) {
         mouvementQueue.add(new Pair<>(piecePane, position));
+        System.out.println("Add to queue: " + piecePane.getPiece() + " from: " + piecePane.getPosition() + " to " + position + "running: " + isRunning);
 
         if (!isRunning) {
             callNext();
@@ -44,29 +45,27 @@ class AnimationController {
      * Place la pièce à la position
      */
     private void bouger(PiecePane piecePane, Position position, Runnable onFinish) {
-        System.out.println("Bouger");
-        NumberBinding xFinal = taille.multiply(position.getColonne());
-        NumberBinding yFinal = taille.multiply(position.getRangee());
-        if (piecePane.getLayoutX() != xFinal.doubleValue() ||
-                piecePane.getLayoutY() != yFinal.doubleValue()) {
+        if (piecePane.isAtPosition(position)) {
+            onFinish.run();
+        } else {
+            System.out.println("Bouger: " + piecePane.getPiece() + " from: " + piecePane.getPosition() + " to " + position);
 
             Timeline timeline = new Timeline(new KeyFrame(
                     new Duration(100),
                     new KeyValue(
                             piecePane.layoutXProperty(),
-                            xFinal.getValue()
+                            taille.multiply(position.getColonne()).getValue()
                     ),
                     new KeyValue(
                             piecePane.layoutYProperty(),
-                            yFinal.getValue()
+                            taille.multiply(position.getRangee()).getValue()
                     )
             ));
 
             timeline.setOnFinished(event -> {
-                piecePane.fixer(xFinal, yFinal);
+                piecePane.bind(position);
                 onFinish.run();
             });
-
 
             piecePane.layoutXProperty().unbind();
             piecePane.layoutYProperty().unbind();

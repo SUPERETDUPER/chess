@@ -42,7 +42,7 @@ public class Jeu {
     private void jouer(@NotNull Mouvement mouvement) {
         mouvement.appliquer(jeuData.getPlateau()); //Jouer le mouvement
 
-        jeuData.notifyListenerOfChange(mouvement);
+        jeuData.notifyListenerOfChange();
 
         tourA = tourA == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC; //Changer le tour
 
