@@ -25,7 +25,6 @@ class AnimationController {
 
     void addToQueue(PiecePane piecePane, Position position) {
         mouvementQueue.add(new Pair<>(piecePane, position));
-        System.out.println("Add to queue: " + piecePane.getPiece() + " from: " + piecePane.getPosition() + " to " + position + "running: " + isRunning);
 
         if (!isRunning) {
             callNext();
@@ -48,8 +47,6 @@ class AnimationController {
         if (piecePane.isAtPosition(position)) {
             onFinish.run();
         } else {
-            System.out.println("Bouger: " + piecePane.getPiece() + " from: " + piecePane.getPosition() + " to " + position);
-
             Timeline timeline = new Timeline(new KeyFrame(
                     new Duration(100),
                     new KeyValue(
