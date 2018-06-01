@@ -1,72 +1,77 @@
 package gui;
 
 import gui.view.PiecePane;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.NumberBinding;
 import javafx.util.Duration;
-import modele.moves.Mouvement;
-import modele.moves.MouvementNormal;
-import modele.pieces.Piece;
+import javafx.util.Pair;
+import modele.plateau.Position;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class AnimationController {
-    private Queue<Mouvement> mouvementQueue = new LinkedList<>();
-    private boolean isRunning = false;
-    private final HashMap<Piece, PiecePane> piecePanes;
+class AnimationController {
     private final NumberBinding taille;
 
-    public AnimationController(HashMap<Piece, PiecePane> piecePanes, NumberBinding taille) {
-        this.piecePanes = piecePanes;
+    private Queue<Pair<PiecePane, Position>> mouvementQueue = new LinkedList<>();
+
+    private boolean isRunning = false;
+
+    AnimationController(NumberBinding taille) {
         this.taille = taille;
     }
 
-    void addToQueue(Mouvement mouvement) {
-        mouvementQueue.add(mouvement);
+    void addToQueue(PiecePane piecePane, Position position) {
+        mouvementQueue.add(new Pair<>(piecePane, position));
 
         if (!isRunning) {
-            isRunning = true;
-            getAnimation(mouvementQueue.remove()).play();
+            callNext();
         }
     }
 
-    private Animation getAnimation(Mouvement mouvement) {
-        KeyFrame keyFrame = new KeyFrame(
-                new Duration(100),
-                (KeyValue[]) null
-        );
-        Timeline timeline = new Timeline(keyFrame);
+    private void callNext() {
+        if (mouvementQueue.isEmpty()) {
+            isRunning = false;
+        } else {
+            Pair<PiecePane, Position> remove = mouvementQueue.remove();
+            bouger(remove.getKey(), remove.getValue(), this::callNext);
+        }
+    }
 
-        if (mouvement instanceof MouvementNormal) {
-            keyFrame.getValues().add(new KeyValue(
-                    piecePanes.get(mouvement.getPiece()).layoutXProperty(),
-                    taille.multiply(mouvement.getFin().getColonne()).doubleValue()
+    /**
+     * Place la pièce à la position
+     */
+    private void bouger(PiecePane piecePane, Position position, Runnable onFinish) {
+        System.out.println("Bouger");
+        NumberBinding xFinal = taille.multiply(position.getColonne());
+        NumberBinding yFinal = taille.multiply(position.getRangee());
+        if (piecePane.getLayoutX() != xFinal.doubleValue() ||
+                piecePane.getLayoutY() != yFinal.doubleValue()) {
+
+            Timeline timeline = new Timeline(new KeyFrame(
+                    new Duration(100),
+                    new KeyValue(
+                            piecePane.layoutXProperty(),
+                            xFinal.getValue()
+                    ),
+                    new KeyValue(
+                            piecePane.layoutYProperty(),
+                            yFinal.getValue()
+                    )
             ));
 
-            keyFrame.getValues().add(
-                    new KeyValue(
-                            piecePanes.get(mouvement.getPiece()).layoutYProperty(),
-                            taille.multiply(mouvement.getFin().getRangee()).doubleValue()
-                    ));
+            timeline.setOnFinished(event -> {
+                piecePane.fixer(xFinal, yFinal);
+                onFinish.run();
+            });
+
+
+            piecePane.layoutXProperty().unbind();
+            piecePane.layoutYProperty().unbind();
+            isRunning = true;
+            timeline.play();
         }
-
-        timeline.setOnFinished(event -> {
-            if (mouvementQueue.isEmpty()) {
-                isRunning = false;
-                piecePanes.get(mouvement.getPiece()).fixer(
-                        taille.multiply(mouvement.getFin().getColonne()),
-                        taille.multiply(mouvement.getFin().getRangee())
-                );
-            } else {
-                getAnimation(mouvementQueue.remove()).play();
-            }
-        });
-
-        return timeline;
     }
 }

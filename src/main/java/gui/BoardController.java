@@ -9,14 +9,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import modele.JeuData;
 import modele.moves.Mouvement;
-import modele.moves.MouvementNormal;
 import modele.pieces.Piece;
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,7 +38,7 @@ public class BoardController {
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
 
-    private final HashMap<Piece, PiecePane> piecePanes = new HashMap<>();
+    private final List<PiecePane> piecePanes = new ArrayList<>();
 
     //Le plateau
     @FXML
@@ -59,7 +59,6 @@ public class BoardController {
     @Nullable
     private DemandeDeMouvement moveRequest;
 
-    @NotNull
     private AnimationController animationController;
 
     /**
@@ -74,7 +73,7 @@ public class BoardController {
     @FXML
     private void initialize() {
         taille = Bindings.divide(plateau.heightProperty(), Position.LIMITE);
-        animationController = new AnimationController(piecePanes, taille);
+        animationController = new AnimationController(taille);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -108,14 +107,15 @@ public class BoardController {
                 piecePane.setOnMouseReleased(event -> pieceDropped(event, piecePane));
 
                 //Ajouter la pièce à la liste de pièce
-                piecePanes.put(piece, piecePane);
+                piecePanes.add(piecePane);
             }
         }
 
         //Ajouter toutes les cases et pièces au plateau
-        plateau.getChildren().addAll(piecePanes.values());
+        plateau.getChildren().addAll(piecePanes);
 
         this.jeuData.setNewChangeListener(this::updateBoard);
+        updateBoard();
     }
 
     /**
@@ -187,9 +187,7 @@ public class BoardController {
             moveRequest.apply(mouvement);
         } else {
             Position positionDepart = jeuData.getPlateau().getPosition(piecePane.getPiece());
-            animationController.addToQueue(
-                    new MouvementNormal(piecePane.getPiece(), positionDepart)
-            );
+            animationController.addToQueue(piecePane, positionDepart);
         }
     }
 
@@ -215,16 +213,20 @@ public class BoardController {
     }
 
     //TODO Fix bug where two updateBoards in a row throw exception because transition starts and then previous ends
+
     /**
      * Pour chaque case afficher la pièce à cette case
      */
-    private void updateBoard(Mouvement mouvement) {
+    private void updateBoard() {
         PiecePane piecePaneToRemove = null;
-        for (PiecePane piecePane : piecePanes.values()) {
+        for (PiecePane piecePane : piecePanes) {
             Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
             if (position != null) {
-                animationController.addToQueue(mouvement);
+                if (piecePane.getLayoutX() != calculerX(position).getValue().doubleValue() ||
+                        piecePane.getLayoutY() != calculerY(position).getValue().doubleValue()) {
+                    animationController.addToQueue(piecePane, position);
+                }
             } else {
                 plateau.getChildren().remove(piecePane);
                 piecePaneToRemove = piecePane;
@@ -232,5 +234,13 @@ public class BoardController {
         }
 
         if (piecePaneToRemove != null) piecePanes.remove(piecePaneToRemove);
+    }
+
+    private NumberBinding calculerX(Position position) {
+        return taille.multiply(position.getColonne());
+    }
+
+    private NumberBinding calculerY(Position position) {
+        return taille.multiply(position.getRangee());
     }
 }

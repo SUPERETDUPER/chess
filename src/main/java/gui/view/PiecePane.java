@@ -17,6 +17,7 @@ public class PiecePane extends StackPane {
      */
     private final Piece piece;
 
+
     /**
      * @param piece  la pièce à afficher
      * @param taille la taille de la boite
@@ -51,5 +52,6 @@ public class PiecePane extends StackPane {
     public void fixer(NumberBinding x, NumberBinding y) {
         this.layoutXProperty().bind(x);
         this.layoutYProperty().bind(y);
+
     }
 }
