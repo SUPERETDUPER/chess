@@ -59,6 +59,8 @@ public class BoardController {
     @Nullable
     private DemandeDeMouvement moveRequest;
 
+    private AnimationController animationController;
+
     /**
      * La taille de chaque case
      */
@@ -71,6 +73,7 @@ public class BoardController {
     @FXML
     private void initialize() {
         taille = Bindings.divide(plateau.heightProperty(), Position.LIMITE);
+        animationController = new AnimationController(taille);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -184,7 +187,7 @@ public class BoardController {
             moveRequest.apply(mouvement);
         } else {
             Position positionDepart = jeuData.getPlateau().getPosition(piecePane.getPiece());
-            piecePane.bouger(taille.multiply(positionDepart.getColonne()), taille.multiply(positionDepart.getRangee()));
+            animationController.addToQueue(piecePane, positionDepart);
         }
     }
 
@@ -210,6 +213,7 @@ public class BoardController {
     }
 
     //TODO Fix bug where two updateBoards in a row throw exception because transition starts and then previous ends
+
     /**
      * Pour chaque case afficher la pièce à cette case
      */
@@ -219,10 +223,10 @@ public class BoardController {
             Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
             if (position != null) {
-                piecePane.bouger(
-                        taille.multiply(position.getColonne()),
-                        taille.multiply(position.getRangee())
-                );
+                if (piecePane.getLayoutX() != calculerX(position).getValue().doubleValue() ||
+                        piecePane.getLayoutY() != calculerY(position).getValue().doubleValue()) {
+                    animationController.addToQueue(piecePane, position);
+                }
             } else {
                 plateau.getChildren().remove(piecePane);
                 piecePaneToRemove = piecePane;
@@ -230,5 +234,13 @@ public class BoardController {
         }
 
         if (piecePaneToRemove != null) piecePanes.remove(piecePaneToRemove);
+    }
+
+    private NumberBinding calculerX(Position position) {
+        return taille.multiply(position.getColonne());
+    }
+
+    private NumberBinding calculerY(Position position) {
+        return taille.multiply(position.getRangee());
     }
 }
