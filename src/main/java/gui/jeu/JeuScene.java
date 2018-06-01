@@ -28,10 +28,17 @@ public class JeuScene {
         BoardController boardController = new BoardController(jeuData);
 
         //Créer l'interface
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board.fxml"));
-        fxmlLoader.setController(boardController);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
 
-//        //Montrer l'interface
+        fxmlLoader.setControllerFactory(param -> {
+            if (param == BoardController.class) {
+                return boardController;
+            }
+
+            throw new RuntimeException("Aucun controlleur connue");
+        });
+
+        //Charger l'interface
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {

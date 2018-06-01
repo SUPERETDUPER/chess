@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      prefHeight="400.0" prefWidth="600.0" alignment="CENTER" fillWidth="false">
+
+    <fx:include VBox.vgrow="SOMETIMES" source="plateau.fxml"/>
+    <JFXButton text="Retourner au menu"/>
+</VBox>
