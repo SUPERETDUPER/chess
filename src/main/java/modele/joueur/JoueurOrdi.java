@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 //TODO Upgrade algorithm to min/max with alpha-beta pruning
+//TODO Write tests because behaves weird
 
 /**
  * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
@@ -57,13 +58,19 @@ public class JoueurOrdi extends Joueur {
 
             if (bestMove == null) {
                 bestMove = moveSequence;
-            } else if (couleur == Couleur.BLANC) {
-                if (moveSequence.getValue() > bestMove.getValue()) {
-                    bestMove = moveSequence;
-                }
             } else {
-                if (moveSequence.getValue() < bestMove.getValue()) {
-                    bestMove = moveSequence;
+                if (couleur == Couleur.BLANC) {
+                    //50% du temps si le mouvement à la même valeur échanger pour avoir de la variété
+                    if (moveSequence.getValue() > bestMove.getValue()
+                            || (moveSequence.getValue() == bestMove.getValue() && Math.random() > 0.5)) {
+                        bestMove = moveSequence;
+                    }
+                } else {
+                    //50% du temps si le mouvement à la même valeur échanger pour avoir de la variété
+                    if (moveSequence.getValue() < bestMove.getValue()
+                            || (moveSequence.getValue() == bestMove.getValue() && Math.random() > 0.5)) {
+                        bestMove = moveSequence;
+                    }
                 }
             }
 
