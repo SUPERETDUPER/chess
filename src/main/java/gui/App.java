@@ -13,19 +13,12 @@ import modele.plateau.Plateau;
 import modele.plateau.Position;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 public class App extends Application {
     private static final String TITRE = "Échec et Mat";
 
-    private static JeuData jeuData;
-
     public static void main(String[] args) {
-        //Créer les rois
-        Roi roiNoir = new Roi(Couleur.NOIR);
-        Roi roiBlanc = new Roi(Couleur.BLANC);
-
-        //Créer le modèle de jeu
-        jeuData = new JeuData(creePlateau(roiNoir, roiBlanc), roiBlanc, roiNoir);
-
         //Commencer l'interface graphique
         launch(args);
     }
@@ -83,7 +76,27 @@ public class App extends Application {
      * Commence l'interface graphique
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
+        loadIntro(primaryStage);
+//        loadGame(primaryStage);
+
+        primaryStage.setMaximized(true);
+        primaryStage.show();
+    }
+
+    private void loadIntro(Stage primaryStage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/intro.fxml"));
+        primaryStage.setScene(new Scene(fxmlLoader.load()));
+    }
+
+    private void loadGame(Stage primaryStage) throws IOException {
+        //Créer les rois
+        Roi roiNoir = new Roi(Couleur.NOIR);
+        Roi roiBlanc = new Roi(Couleur.BLANC);
+
+        //Créer le modèle de jeu
+        JeuData jeuData = new JeuData(creePlateau(roiNoir, roiBlanc), roiBlanc, roiNoir);
+
         primaryStage.setTitle(TITRE); //Définir le titre de la fenêtre
 
         //Créer le controller d'interface
@@ -94,9 +107,7 @@ public class App extends Application {
         fxmlLoader.setController(boardController);
 
         //Montrer l'interface
-        primaryStage.setMaximized(true);
         primaryStage.setScene(new Scene(fxmlLoader.load()));
-        primaryStage.show();
 
         //Créer le jeu
         Jeu jeu = new Jeu(jeuData);
