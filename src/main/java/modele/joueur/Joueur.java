@@ -1,5 +1,7 @@
 package modele.joueur;
 
+import gui.jeu.BoardController;
+import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 
@@ -28,4 +30,13 @@ public abstract class Joueur {
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */
     public abstract void getMouvement(Consumer<Mouvement> callback);
+
+    public abstract void initialize(JeuData jeuData, BoardController boardController);
+
+    abstract String getNom();
+
+    @Override
+    public String toString() {
+        return getNom();
+    }
 }

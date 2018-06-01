@@ -1,5 +1,6 @@
 package modele.joueur;
 
+import gui.jeu.BoardController;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
@@ -15,11 +16,15 @@ import java.util.function.Consumer;
  * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
  */
 public class JoueurOrdi extends Joueur {
-    private final JeuData jeuData;
+    private JeuData jeuData;
     private final static int MAX_DEPTH = 4;
 
-    public JoueurOrdi(JeuData jeuData, Couleur couleur) {
+    public JoueurOrdi(Couleur couleur) {
         super(couleur);
+    }
+
+    @Override
+    public void initialize(JeuData jeuData, BoardController boardController) {
         this.jeuData = jeuData;
     }
 
@@ -104,5 +109,10 @@ public class JoueurOrdi extends Joueur {
         Mouvement getFirst() {
             return mouvements.get(0);
         }
+    }
+
+    @Override
+    String getNom() {
+        return "Ordinateur";
     }
 }

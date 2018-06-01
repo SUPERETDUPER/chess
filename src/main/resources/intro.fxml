@@ -2,28 +2,26 @@
 
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" stylesheets="intro.css"
+            id="root">
     <padding>
         <Insets topRightBottomLeft="10"/>
     </padding>
 
     <center>
-        <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="50" stylesheets="intro.css">
+        <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="50">
 
             <Text id="titre" text="Échec et Mat"/>
 
             <HBox alignment="CENTER" spacing="100">
-                <VBox alignment="CENTER" spacing="20">
+                <VBox alignment="CENTER" spacing="20" fx:id="joueurBlancContainer">
                     <Text styleClass="titreBlancNoir" text="Blanc"/>
-                    <JFXComboBox/>
                 </VBox>
-                <VBox alignment="CENTER" spacing="20">
+                <VBox alignment="CENTER" spacing="20" fx:id="joueurNoirContainer">
                     <Text styleClass="titreBlancNoir" text="Noir"/>
-                    <JFXComboBox/>
                 </VBox>
             </HBox>
 

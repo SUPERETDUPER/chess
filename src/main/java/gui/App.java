@@ -10,13 +10,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.io.IOException;
+import modele.joueur.Joueur;
 
 public class App extends Application {
     @FunctionalInterface
     public interface MontrerJeu {
-        void montrer(boolean isJoueurBlancHumain, boolean isJoueurNoirHumain) throws IOException;
+        void montrerJeu(Joueur premierJoueur, Joueur deuxiemeJoueur);
     }
 
     private static final String TITRE = "Échec et Mat";
@@ -41,7 +40,7 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    private void montrerJeu(boolean isJoueurBlancHumain, boolean isJoueurNoirHumain) {
+    private void montrerJeu(Joueur premierJoueur, Joueur deuxiemeJoueur) {
         Parent pastRoot = scene.getRoot();
         pastRoot.setCacheHint(CacheHint.SPEED);
 
@@ -49,7 +48,7 @@ public class App extends Application {
         fadeOut.setFromValue(100);
         fadeOut.setToValue(0);
 
-        Parent jeuRoot = new JeuScene(isJoueurBlancHumain, isJoueurNoirHumain).getRoot();
+        Parent jeuRoot = new JeuScene(premierJoueur, deuxiemeJoueur).getRoot();
         jeuRoot.setOpacity(0);
         jeuRoot.setCacheHint(CacheHint.SPEED);
 

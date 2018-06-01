@@ -4,8 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import modele.Jeu;
 import modele.JeuData;
-import modele.joueur.JoueurHumain;
-import modele.joueur.JoueurOrdi;
+import modele.joueur.Joueur;
 import modele.pieces.*;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -17,7 +16,7 @@ public class JeuScene {
 
     private final Parent root;
 
-    public JeuScene(boolean isJoueurBlancHumain, boolean isJoueurNoirHumain) {
+    public JeuScene(Joueur premierJoueur, Joueur deuxiemeJoueur) {
         //Créer les rois
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
@@ -43,11 +42,10 @@ public class JeuScene {
         Jeu jeu = new Jeu(jeuData);
 
         //Ajouter et créer les joueurs
-        if (isJoueurBlancHumain) jeu.ajouterJoueur(new JoueurHumain(boardController, Couleur.BLANC));
-        else jeu.ajouterJoueur(new JoueurOrdi(jeuData, Couleur.BLANC));
-
-        if (isJoueurNoirHumain) jeu.ajouterJoueur(new JoueurHumain(boardController, Couleur.NOIR));
-        else jeu.ajouterJoueur(new JoueurOrdi(jeuData, Couleur.NOIR));
+        premierJoueur.initialize(jeuData, boardController);
+        deuxiemeJoueur.initialize(jeuData, boardController);
+        jeu.ajouterJoueur(premierJoueur);
+        jeu.ajouterJoueur(deuxiemeJoueur);
 
         //Commencer la partie
         jeu.commencer();
