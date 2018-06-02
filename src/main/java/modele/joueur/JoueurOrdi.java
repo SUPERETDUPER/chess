@@ -36,7 +36,10 @@ public class JoueurOrdi extends Joueur {
      */
     @Override
     public void getMouvement(Consumer<Mouvement> callback) {
-        callback.accept(calculerMeilleurMouvement(new MoveSequence(), getCouleur()).getFirst());
+        new Thread(() ->
+                callback.accept(calculerMeilleurMouvement(new MoveSequence(), getCouleur()).getFirst())
+        ).start();
+
     }
 
     private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {

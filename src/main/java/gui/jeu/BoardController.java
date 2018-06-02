@@ -2,6 +2,7 @@ package gui.jeu;
 
 import gui.jeu.view.Case;
 import gui.jeu.view.PiecePane;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
@@ -215,26 +216,20 @@ public class BoardController {
      * Pour chaque case afficher la pièce à cette case
      */
     private void updateBoard() {
-        PiecePane piecePaneToRemove = null;
-        for (PiecePane piecePane : piecePanes) {
-            Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
+        Platform.runLater(() -> {
+            PiecePane piecePaneToRemove = null;
+            for (PiecePane piecePane : piecePanes) {
+                Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
-            if (position != null) {
-                animationController.addToQueue(piecePane, position);
-            } else {
-                plateau.getChildren().remove(piecePane);
-                piecePaneToRemove = piecePane;
+                if (position != null) {
+                    animationController.addToQueue(piecePane, position);
+                } else {
+                    plateau.getChildren().remove(piecePane);
+                    piecePaneToRemove = piecePane;
+                }
             }
-        }
 
-        if (piecePaneToRemove != null) piecePanes.remove(piecePaneToRemove);
-    }
-
-    private NumberBinding calculerX(Position position) {
-        return taille.multiply(position.getColonne());
-    }
-
-    private NumberBinding calculerY(Position position) {
-        return taille.multiply(position.getRangee());
+            if (piecePaneToRemove != null) piecePanes.remove(piecePaneToRemove);
+        });
     }
 }
