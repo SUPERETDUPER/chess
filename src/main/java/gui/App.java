@@ -14,6 +14,11 @@ import modele.joueur.Joueur;
 
 public class App extends Application {
     @FunctionalInterface
+    public interface MontrerIntro {
+        void montrerIntro();
+    }
+
+    @FunctionalInterface
     public interface MontrerJeu {
         void montrerJeu(Joueur premierJoueur, Joueur deuxiemeJoueur);
     }
@@ -21,6 +26,7 @@ public class App extends Application {
     private static final String TITRE = "Échec et Mat";
 
     private final Scene scene = new Scene(new Pane());
+    private final Parent intro = new IntroRoot(this::montrerJeu).getRoot();
 
     public static void main(String[] args) {
         //Commencer l'interface graphique
@@ -35,12 +41,20 @@ public class App extends Application {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
 
-        scene.setRoot(new IntroRoot(this::montrerJeu).getRoot());
+        scene.setRoot(intro);
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
     private void montrerJeu(Joueur premierJoueur, Joueur deuxiemeJoueur) {
+        changerRoot(new JeuScene(premierJoueur, deuxiemeJoueur).getRoot());
+    }
+
+    private void montrerIntro() {
+        changerRoot(intro);
+    }
+
+    private void changerRoot(Parent nouveauRoot) {
         Parent pastRoot = scene.getRoot();
         pastRoot.setCacheHint(CacheHint.SPEED);
 
@@ -48,21 +62,20 @@ public class App extends Application {
         fadeOut.setFromValue(100);
         fadeOut.setToValue(0);
 
-        Parent jeuRoot = new JeuScene(premierJoueur, deuxiemeJoueur).getRoot();
-        jeuRoot.setOpacity(0);
-        jeuRoot.setCacheHint(CacheHint.SPEED);
+        nouveauRoot.setOpacity(0);
+        nouveauRoot.setCacheHint(CacheHint.SPEED);
 
-        FadeTransition fadeIn = new FadeTransition(new Duration(1000), jeuRoot);
+        FadeTransition fadeIn = new FadeTransition(new Duration(1000), nouveauRoot);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(100);
         fadeIn.setOnFinished(event -> {
-            jeuRoot.setCacheHint(CacheHint.DEFAULT);
+            nouveauRoot.setCacheHint(CacheHint.DEFAULT);
             pastRoot.setCacheHint(CacheHint.DEFAULT);
         });
 
 
         fadeOut.setOnFinished(event -> {
-            scene.setRoot(jeuRoot);
+            scene.setRoot(nouveauRoot);
             fadeIn.play();
         });
 
