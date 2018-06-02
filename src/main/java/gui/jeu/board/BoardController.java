@@ -1,7 +1,7 @@
-package gui.jeu;
+package gui.jeu.board;
 
-import gui.jeu.view.Case;
-import gui.jeu.view.PiecePane;
+import gui.jeu.board.view.Case;
+import gui.jeu.board.view.PiecePane;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
@@ -67,7 +67,7 @@ public class BoardController {
      */
     private NumberBinding taille;
 
-    BoardController(@NotNull JeuData jeuData) {
+    public BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
     }
 

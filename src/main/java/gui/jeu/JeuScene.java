@@ -1,5 +1,6 @@
 package gui.jeu;
 
+import gui.jeu.board.BoardController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import modele.Jeu;

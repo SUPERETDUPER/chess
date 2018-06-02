@@ -1,6 +1,6 @@
 package modele.joueur;
 
-import gui.jeu.BoardController;
+import gui.jeu.board.BoardController;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;

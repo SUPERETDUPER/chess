@@ -1,7 +1,7 @@
 package modele.joueur;
 
-import gui.jeu.BoardController;
-import gui.jeu.DemandeDeMouvement;
+import gui.jeu.board.BoardController;
+import gui.jeu.board.DemandeDeMouvement;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;

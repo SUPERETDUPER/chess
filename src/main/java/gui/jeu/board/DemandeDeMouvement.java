@@ -1,4 +1,4 @@
-package gui.jeu;
+package gui.jeu.board;
 
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;

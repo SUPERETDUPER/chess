@@ -1,4 +1,4 @@
-package gui.jeu.view;
+package gui.jeu.board.view;
 
 import javafx.geometry.Orientation;
 import javafx.scene.layout.StackPane;

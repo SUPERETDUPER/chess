@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import gui.jeu.view.SquareStackPane?>
+<?import gui.jeu.board.view.SquareStackPane?>
 <?import javafx.scene.layout.Pane?>
 <SquareStackPane fx:id="plateauContainer"
                  xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-                 fx:controller="gui.jeu.BoardController">
+                 fx:controller="gui.jeu.board.BoardController">
     <Pane fx:id="plateau"/>
 </SquareStackPane>

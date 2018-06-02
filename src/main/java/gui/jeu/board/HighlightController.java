@@ -1,6 +1,6 @@
-package gui.jeu;
+package gui.jeu.board;
 
-import gui.jeu.view.Case;
+import gui.jeu.board.view.Case;
 import modele.moves.Mouvement;
 import modele.plateau.Position;
 import org.jetbrains.annotations.NotNull;

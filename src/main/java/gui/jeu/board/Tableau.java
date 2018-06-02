@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package gui.jeu;
+package gui.jeu.board;
 
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;

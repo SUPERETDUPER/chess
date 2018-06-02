@@ -1,4 +1,4 @@
-package gui.jeu.view;
+package gui.jeu.board.view;
 
 import javafx.beans.binding.NumberBinding;
 import javafx.scene.CacheHint;

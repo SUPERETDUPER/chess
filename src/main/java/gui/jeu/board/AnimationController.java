@@ -1,6 +1,6 @@
-package gui.jeu;
+package gui.jeu.board;
 
-import gui.jeu.view.PiecePane;
+import gui.jeu.board.view.PiecePane;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
