@@ -33,9 +33,6 @@ class HighlightController {
     @Nullable
     private Position selectedPosition;
 
-    @Nullable
-    private Position caseAvecBordure;
-
     HighlightController(@NotNull Tableau<Case> cases) {
         this.cases = cases;
     }
@@ -75,23 +72,11 @@ class HighlightController {
 
             options.clear();
             selectedPosition = null;
-            caseAvecBordure = null;
         }
     }
 
-    void setBordure(@NotNull Position position) {
-        if (caseAvecBordure != position) {
-            enleverBordure();
-
-            this.caseAvecBordure = position;
-            cases.get(position).setStyle(Case.Style.BLUE_BORDURE);
-        }
-    }
-
-    void enleverBordure() {
-        if (caseAvecBordure != null) {
-            cases.get(caseAvecBordure).setStyle(Case.Style.BLUE);
-        }
+    boolean isSelected() {
+        return selectedPosition != null;
     }
 
     /**

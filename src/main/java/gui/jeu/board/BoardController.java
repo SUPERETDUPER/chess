@@ -6,7 +6,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import modele.JeuData;
 import modele.moves.Mouvement;
@@ -62,18 +61,15 @@ public class BoardController {
 
     private AnimationController animationController;
 
-    /**
-     * La taille de chaque case
-     */
-    private NumberBinding taille;
-
     public BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
     }
 
     @FXML
     private void initialize() {
-        taille = Bindings.divide(plateau.heightProperty(), Position.LIMITE);
+        // La taille de chaque case
+        NumberBinding taille = Bindings.divide(plateau.heightProperty(), Position.LIMITE);
+
         animationController = new AnimationController(taille);
 
         //Crée une case pour chaque position
@@ -84,12 +80,10 @@ public class BoardController {
 
             //Créer un controleur
             Case aCase = new Case(taille,
-                    (position.getColonne() + position.getRangee()) % 2 == 0 //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
+                    (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
+                    this::handleClick,
+                    position
             );
-
-            aCase.xProperty().bind(taille.multiply(position.getColonne()));
-            aCase.yProperty().bind(taille.multiply(position.getRangee()));
-            aCase.setOnMouseClicked(event -> highlightController.deSelectionner());
 
             //Ajouter la case au plateau et à la liste
             cases.add(position, aCase);
@@ -102,9 +96,7 @@ public class BoardController {
                 PiecePane piecePane = new PiecePane(piece, taille, position);
 
                 //Ajouter les listeners
-                piecePane.setOnMousePressed(event -> piecePressed(event, piecePane));
-                piecePane.setOnMouseDragged(event -> pieceDragged(event, piecePane));
-                piecePane.setOnMouseReleased(event -> pieceDropped(event, piecePane));
+                piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piecePane.getPiece())));
 
                 //Ajouter la pièce à la liste de pièce
                 piecePanes.add(piecePane);
@@ -127,89 +119,32 @@ public class BoardController {
         this.moveRequest = moveRequest;
     }
 
-    private void piecePressed(MouseEvent mouseEvent, PiecePane piecePane) {
+    private void handleClick(Position position) {
         //Si aucun moveRequest ne rien faire
         if (moveRequest == null || moveRequest.isCompleted()) return;
 
-        Piece pieceClicked = piecePane.getPiece();
+        Piece pieceClicked = jeuData.getPlateau().getPiece(position);
 
-        //Si le moveRequest pour l'autre couleur ne rien faire
-        if (moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
-            return;
-
-        //Calculer les mouvements possibles
-        Set<Mouvement> mouvements = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
-
-        //Surligner les options et la pièce
-        highlightController.selectionner(jeuData.getPlateau().getPosition(pieceClicked), mouvements);
-
-        System.out.println("Unbind");
-        //Permettre la pièce de se déplacer
-        piecePane.unBind();
-    }
-
-    private void pieceDragged(MouseEvent mouseEvent, PiecePane piecePane) {
-        //Si la pièce est entrain d'être dragged
-        if (!piecePane.layoutXProperty().isBound()) {
-            //Obtenir sa position selon la souris
-            double positionX = mouseEvent.getX() + (piecePane.getLayoutX());
-            double positionY = mouseEvent.getY() + (piecePane.getLayoutY());
-
-            //Déplacer à cette position
-            double offset = taille.getValue().doubleValue() / 2.0;
-
-            piecePane.relocate(
-                    positionX - offset,
-                    positionY - offset
-            );
-
-            //Surligner la case approprié
-            Position position = getPosition(positionX, positionY);
-
+        //Si une pièce est déjà sélectionné
+        if (highlightController.isSelected()) {
+            //Si la case est une des options appliquer le movement
             if (highlightController.isOption(position)) {
-                highlightController.setBordure(position);
-            } else {
-                highlightController.enleverBordure();
+                Mouvement mouvementChoisi = highlightController.getMouvement(position);
+                highlightController.deSelectionner();
+                moveRequest.apply(mouvementChoisi);
             }
-        }
-    }
 
-    private void pieceDropped(@NotNull MouseEvent mouseEvent, @NotNull PiecePane piecePane) {
-        double positionX = mouseEvent.getX() + (piecePane.getLayoutX());
-        double positionY = mouseEvent.getY() + (piecePane.getLayoutY());
-
-        Position position = getPosition(positionX, positionY);
-
-        if (highlightController.isOption(position)) {
-            Mouvement mouvement = highlightController.getMouvement(position);
-            highlightController.deSelectionner();
-            animationController.addToQueue(piecePane, position);
-            moveRequest.apply(mouvement);
+            highlightController.deSelectionner(); //Déselectionner tout
         } else {
-            Position positionDepart = jeuData.getPlateau().getPosition(piecePane.getPiece());
-            animationController.addToQueue(piecePane, positionDepart);
+            //Quitter si il n'y a rien a faire
+            if (pieceClicked == null || moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
+                return;
+
+            //Calculer les mouvements possibles
+            Set<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
+
+            highlightController.selectionner(position, moves);
         }
-    }
-
-    private Position getPosition(double x, double y) {
-        int colonne = Position.LIMITE - 1;
-        int rangee = Position.LIMITE - 1;
-
-        for (int i = 0; i < Position.LIMITE; i++) {
-            if (cases.get(new Position(0, i)).getX() > x) {
-                colonne = i - 1;
-                break;
-            }
-        }
-
-        for (int i = 0; i < Position.LIMITE; i++) {
-            if (cases.get(new Position(i, 0)).getY() > y) {
-                rangee = i - 1;
-                break;
-            }
-        }
-
-        return new Position(rangee, colonne);
     }
 
     /**

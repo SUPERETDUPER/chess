@@ -4,8 +4,11 @@ import javafx.beans.binding.NumberBinding;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import modele.plateau.Position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
  * Controle une case. Une case à différents stylestyles (couleur et bordure)
@@ -17,8 +20,7 @@ public class Case extends Rectangle {
     public enum Style {
         NORMAL,
         ROUGE,
-        BLUE,
-        BLUE_BORDURE
+        BLUE
     }
 
     /**
@@ -29,13 +31,18 @@ public class Case extends Rectangle {
     /**
      * @param taille        la taille de la case
      * @param isBlanc       si la case est blanche
+     * @param clickListener la fonction à appeler quand la case est appuyé
+     * @param position la position de la case
      */
-    public Case(NumberBinding taille, boolean isBlanc) {
+    public Case(NumberBinding taille, boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull Position position) {
         super();
         this.isBlanc = isBlanc;
 
         this.widthProperty().bind(taille);
         this.heightProperty().bind(taille);
+        this.xProperty().bind(taille.multiply(position.getColonne()));
+        this.yProperty().bind(taille.multiply(position.getRangee()));
+        this.setOnMouseClicked(event -> clickListener.accept(position));
         this.setStrokeWidth(3);
 
         setStyle(Style.NORMAL);  //Met la couleur de l'arrière plan de la case
@@ -46,19 +53,12 @@ public class Case extends Rectangle {
      */
     public void setStyle(@NotNull Style style) {
         this.setFill(getCouleurFill(style));
-
-        if (style == Style.BLUE_BORDURE) {
-            this.setStroke(Color.BLUE);
-        } else {
-            this.setStroke(null);
-        }
     }
 
     @Contract(pure = true)
     private Paint getCouleurFill(@NotNull Style style) {
         switch (style) {
             case BLUE:
-            case BLUE_BORDURE:
                 return isBlanc ? Color.LIGHTBLUE : Color.CORNFLOWERBLUE;
             case ROUGE:
                 return Color.PALEVIOLETRED;
