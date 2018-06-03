@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      prefHeight="400.0" prefWidth="600.0" alignment="CENTER" fillWidth="false">
+      prefHeight="400.0" prefWidth="600.0">
+    <HBox alignment="CENTER_LEFT">
+        <ImageView fitHeight="84" preserveRatio="true">
+            <Image url="baseline_arrow_back_black_48dp.png"/>
+        </ImageView>
+        <effect>
+            <DropShadow/>
+        </effect>
+    </HBox>
 
-    <fx:include VBox.vgrow="SOMETIMES" source="plateau.fxml"/>
-    <JFXButton text="Retourner au menu"/>
+    <VBox fillWidth="false" alignment="CENTER" VBox.vgrow="SOMETIMES">
+        <fx:include VBox.vgrow="SOMETIMES" source="plateau.fxml"/>
+    </VBox>
 </VBox>
