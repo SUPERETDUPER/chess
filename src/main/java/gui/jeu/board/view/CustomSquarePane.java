@@ -7,7 +7,7 @@ import javafx.scene.layout.StackPane;
 /**
  * Un grid pane qui aura toujours la même largeur que hauteur
  */
-public class SquareStackPane extends StackPane {
+public class CustomSquarePane extends StackPane {
     private DisplayCalculator displayCalculator;
 
     public void setDisplayCalculator(DisplayCalculator displayCalculator) {
@@ -20,14 +20,10 @@ public class SquareStackPane extends StackPane {
     }
 
     /**
-     * Définit la largeur préféré comme étant la hauteur
+     * Définit la largeur préféré si il y a un display calculator
      */
     @Override
     protected double computePrefWidth(double height) {
-        if (displayCalculator == null) {
-            return height * 11 / 8;
-        } else {
-            return height * displayCalculator.getWidthHeightRatio();
-        }
+        return displayCalculator == null ? USE_COMPUTED_SIZE : height * displayCalculator.getWidthHeightRatio();
     }
 }
