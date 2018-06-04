@@ -2,9 +2,13 @@ package gui.jeu.board;
 
 import gui.jeu.board.view.Case;
 import gui.jeu.board.view.PiecePane;
+import gui.jeu.board.view.SquareStackPane;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Piece;
@@ -43,7 +47,7 @@ public class BoardController {
     private Pane plateau;
 
     @FXML
-    private StackPane plateauContainer;
+    private SquareStackPane plateauContainer;
 
     //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
@@ -72,6 +76,7 @@ public class BoardController {
 
         animationController = new AnimationController(displayCalculator);
         graveyardControllor = new GraveyardControllor(displayCalculator, plateau);
+        plateauContainer.setDisplayCalculator(displayCalculator);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();

@@ -1,6 +1,7 @@
 package gui.jeu.board.view;
 
 import gui.jeu.board.DisplayCalculator;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -20,11 +21,8 @@ public class PiecePane extends StackPane {
     private final Piece piece;
     private final DisplayCalculator displayCalculator;
 
-    private Position position;
-
-
     /**
-     * @param piece  la pièce à afficher
+     * @param piece             la pièce à afficher
      * @param displayCalculator la displayCalculator de la boite
      */
     public PiecePane(Piece piece, DisplayCalculator displayCalculator, Position position) {
@@ -53,17 +51,16 @@ public class PiecePane extends StackPane {
         return piece;
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
     /**
      * Place la pièce à la position
      */
     public void bind(Position position) {
-        this.position = position;
-        this.layoutXProperty().bind(displayCalculator.getX(position));
-        this.layoutYProperty().bind(displayCalculator.getY(position));
+        bind(displayCalculator.getX(position), displayCalculator.getY(position));
+    }
+
+    private void bind(ObservableValue<? extends Number> x, ObservableValue<? extends Number> y) {
+        this.layoutXProperty().bind(x);
+        this.layoutYProperty().bind(y);
         this.setCacheHint(CacheHint.DEFAULT);
     }
 
@@ -74,6 +71,9 @@ public class PiecePane extends StackPane {
     }
 
     public boolean isAtPosition(Position position) {
-        return this.layoutXProperty().isBound() && this.layoutYProperty().isBound() && this.position.equals(position);
+        return this.layoutXProperty().isBound() &&
+                this.layoutYProperty().isBound() &&
+                this.getLayoutX() == displayCalculator.getX(position).doubleValue() &&
+                this.getLayoutY() == displayCalculator.getY(position).doubleValue();
     }
 }

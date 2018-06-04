@@ -59,4 +59,8 @@ public class DisplayCalculator {
     void incrementGraveyardBlanc() {
         piecesDansGraveyardBlanc.set(piecesDansGraveyardBlanc.get() + 1);
     }
+
+    public double getWidthHeightRatio() {
+        return (Position.LIMITE + 2 + 2 * GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
+    }
 }
