@@ -1,5 +1,6 @@
 package gui.jeu;
 
+import gui.App;
 import gui.jeu.board.BoardController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +18,7 @@ public class JeuScene {
 
     private final Parent root;
 
-    public JeuScene(Joueur premierJoueur, Joueur deuxiemeJoueur) {
+    public JeuScene(Joueur premierJoueur, Joueur deuxiemeJoueur, App.MontrerIntro goBack) {
         //Créer les rois
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
@@ -34,6 +35,8 @@ public class JeuScene {
         fxmlLoader.setControllerFactory(param -> {
             if (param == BoardController.class) {
                 return boardController;
+            } else if (param == JeuControllor.class) {
+                return new JeuControllor(goBack);
             }
 
             throw new RuntimeException("Aucun controlleur connue");

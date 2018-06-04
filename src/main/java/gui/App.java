@@ -47,7 +47,7 @@ public class App extends Application {
     }
 
     private void montrerJeu(Joueur premierJoueur, Joueur deuxiemeJoueur) {
-        changerRoot(new JeuScene(premierJoueur, deuxiemeJoueur).getRoot());
+        changerRoot(new JeuScene(premierJoueur, deuxiemeJoueur, this::montrerIntro).getRoot());
     }
 
     private void montrerIntro() {
