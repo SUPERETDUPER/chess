@@ -6,23 +6,17 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.util.Pair;
-import modele.plateau.Position;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 class AnimationController {
-    private final DisplayCalculator displayCalculator;
 
-    private Queue<Pair<PiecePane, Position>> mouvementQueue = new LinkedList<>();
+    private Queue<Pair<PiecePane, PositionBoard>> mouvementQueue = new LinkedList<>();
 
     private boolean isRunning = false;
 
-    AnimationController(DisplayCalculator taille) {
-        this.displayCalculator = taille;
-    }
-
-    void addToQueue(PiecePane piecePane, Position position) {
+    void addToQueue(PiecePane piecePane, PositionBoard position) {
         mouvementQueue.add(new Pair<>(piecePane, position));
 
         if (!isRunning) {
@@ -34,7 +28,7 @@ class AnimationController {
         if (mouvementQueue.isEmpty()) {
             isRunning = false;
         } else {
-            Pair<PiecePane, Position> remove = mouvementQueue.remove();
+            Pair<PiecePane, PositionBoard> remove = mouvementQueue.remove();
             bouger(remove.getKey(), remove.getValue());
         }
     }
@@ -42,7 +36,7 @@ class AnimationController {
     /**
      * Place la pièce à la position
      */
-    private void bouger(PiecePane piecePane, Position position) {
+    private void bouger(PiecePane piecePane, PositionBoard position) {
         if (piecePane.isAtPosition(position)) {
             callNext();
         } else {
@@ -50,11 +44,11 @@ class AnimationController {
                     new Duration(100),
                     new KeyValue(
                             piecePane.layoutXProperty(),
-                            displayCalculator.getX(position).getValue()
+                            position.getX().getValue()
                     ),
                     new KeyValue(
                             piecePane.layoutYProperty(),
-                            displayCalculator.getY(position).getValue()
+                            position.getY().getValue()
                     )
             ));
 

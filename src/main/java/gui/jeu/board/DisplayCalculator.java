@@ -4,6 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
+import javafx.beans.value.ObservableValue;
 import modele.pieces.Couleur;
 import modele.plateau.Position;
 
@@ -15,7 +16,6 @@ public class DisplayCalculator {
     private final ObservableNumberValue hauteur;
     private final NumberBinding spacingWidth;
 
-
     private final SimpleIntegerProperty piecesDansGraveyardBlanc = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty piecesDansGraveyardNoir = new SimpleIntegerProperty(0);
 
@@ -25,15 +25,15 @@ public class DisplayCalculator {
         spacingWidth = taille.multiply(GRAVEYARD_SPACING_RATIO);
     }
 
-    public ObservableNumberValue getX(Position position) {
+    public ObservableValue<Number> getX(Position position) {
         return taille.multiply(position.getColonne()).add(spacingWidth).add(taille);
     }
 
-    public ObservableNumberValue getY(Position position) {
+    public ObservableValue<Number> getY(Position position) {
         return taille.multiply(position.getRangee());
     }
 
-    ObservableNumberValue getGraveyardY(Couleur couleur) {
+    ObservableValue<Number> getGraveyardY(Couleur couleur) {
         if (couleur == Couleur.BLANC) {
             return Bindings.divide(hauteur, piecesDansGraveyardBlanc).multiply(piecesDansGraveyardBlanc.getValue() - 1);
         } else {
@@ -41,7 +41,7 @@ public class DisplayCalculator {
         }
     }
 
-    ObservableNumberValue getGraveyardX(Couleur couleur) {
+    ObservableValue<Number> getGraveyardX(Couleur couleur) {
         if (couleur == Couleur.BLANC) {
             return new SimpleIntegerProperty(0);
         } else {
