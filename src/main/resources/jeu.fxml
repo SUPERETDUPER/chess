@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -18,6 +19,9 @@
     </HBox>
 
     <VBox fillWidth="false" alignment="CENTER" VBox.vgrow="SOMETIMES">
+        <padding>
+            <Insets topRightBottomLeft="20"/>
+        </padding>
         <fx:include VBox.vgrow="SOMETIMES" source="plateau.fxml"/>
     </VBox>
 </VBox>
