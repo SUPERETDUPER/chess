@@ -34,10 +34,8 @@ public class JeuScene {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
 
         fxmlLoader.setControllerFactory(param -> {
-            if (param == BoardController.class) {
-                return boardController;
-            } else if (param == JeuControllor.class) {
-                return new JeuControllor(goBack);
+            if (param == JeuControllor.class) {
+                return new JeuControllor(goBack, boardController);
             }
 
             throw new RuntimeException("Aucun controlleur connue");
@@ -55,11 +53,8 @@ public class JeuScene {
             joueur.initialize(jeuData, boardController);
         }
 
-        //Créer le jeu
-        Jeu jeu = new Jeu(jeuData, joueurs);
-
-        //Commencer la partie
-        jeu.commencer();
+        //Créer et commencer la partie
+        new Jeu(jeuData, joueurs).commencer();
     }
 
     public Parent getRoot() {

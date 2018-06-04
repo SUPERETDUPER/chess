@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import gui.jeu.board.view.SquareStackPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -22,6 +23,8 @@
         <padding>
             <Insets topRightBottomLeft="20"/>
         </padding>
-        <fx:include VBox.vgrow="SOMETIMES" source="plateau.fxml"/>
+        <SquareStackPane fx:id="plateauContainer" VBox.vgrow="SOMETIMES">
+            <Pane fx:id="plateau"/>
+        </SquareStackPane>
     </VBox>
 </VBox>

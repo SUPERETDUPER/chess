@@ -4,7 +4,6 @@ import gui.jeu.board.view.Case;
 import gui.jeu.board.view.PiecePane;
 import gui.jeu.board.view.SquareStackPane;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -43,11 +42,10 @@ public class BoardController {
     private final List<PiecePane> piecePanes = new ArrayList<>();
 
     //Le plateau
-    @FXML
     private Pane plateau;
-
-    @FXML
-    private SquareStackPane plateauContainer;
+//
+//    @FXML
+//    private SquareStackPane plateauContainer;
 
     //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
@@ -69,8 +67,9 @@ public class BoardController {
         this.jeuData = jeuData;
     }
 
-    @FXML
-    private void initialize() {
+    public void setUp(Pane plateau, SquareStackPane plateauContainer) {
+        this.plateau = plateau;
+
         // La taille de chaque case
         DisplayCalculator displayCalculator = new DisplayCalculator(plateau.heightProperty());
 
