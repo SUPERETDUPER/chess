@@ -20,10 +20,6 @@ public class JoueurOrdi extends Joueur {
     private JeuData jeuData;
     private final static int MAX_DEPTH = 4;
 
-    public JoueurOrdi(Couleur couleur) {
-        super(couleur);
-    }
-
     @Override
     public void initialize(JeuData jeuData, BoardController boardController) {
         this.jeuData = jeuData;
@@ -35,9 +31,9 @@ public class JoueurOrdi extends Joueur {
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */
     @Override
-    public void getMouvement(Consumer<Mouvement> callback) {
+    public void getMouvement(Consumer<Mouvement> callback, Couleur couleur) {
         new Thread(() ->
-                callback.accept(calculerMeilleurMouvement(new MoveSequence(), getCouleur()).getFirst())
+                callback.accept(calculerMeilleurMouvement(new MoveSequence(), couleur).getFirst())
         ).start();
 
     }

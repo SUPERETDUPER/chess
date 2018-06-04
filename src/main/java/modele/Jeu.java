@@ -23,15 +23,15 @@ public class Jeu {
         this.jeuData = jeuData;
     }
 
-    public void ajouterJoueur(Joueur joueur) {
-        joueurs.put(joueur.getCouleur(), joueur);
+    public void ajouterJoueur(Couleur couleur, Joueur joueur) {
+        joueurs.put(couleur, joueur);
     }
 
     /**
      * Commencer la partie
      */
     public void commencer() {
-        joueurs.get(tourA).getMouvement(this::jouer);
+        joueurs.get(tourA).getMouvement(this::jouer, tourA);
     }
 
     /**
@@ -56,7 +56,7 @@ public class Jeu {
                 System.out.println("Stalemate");
             }
         } else {
-            joueurs.get(tourA).getMouvement(this::jouer); //Notifier l'autre joueur qu'il peut joueur
+            joueurs.get(tourA).getMouvement(this::jouer, tourA); //Notifier l'autre joueur qu'il peut joueur
         }
     }
 

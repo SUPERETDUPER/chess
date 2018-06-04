@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 /**
- * Controle une case. Une case à différents stylestyles (couleur et bordure)
+ * Controle une case. Une case à différents styles (couleur et bordure)
  */
 public class Case extends Rectangle {
     /**

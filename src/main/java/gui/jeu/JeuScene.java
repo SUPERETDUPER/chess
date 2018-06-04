@@ -18,7 +18,7 @@ public class JeuScene {
 
     private final Parent root;
 
-    public JeuScene(Joueur premierJoueur, Joueur deuxiemeJoueur, App.MontrerIntro goBack) {
+    public JeuScene(Joueur joueurBlanc, Joueur joueurNoir, App.MontrerIntro goBack) {
         //Créer les rois
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
@@ -53,10 +53,10 @@ public class JeuScene {
         Jeu jeu = new Jeu(jeuData);
 
         //Ajouter et créer les joueurs
-        premierJoueur.initialize(jeuData, boardController);
-        deuxiemeJoueur.initialize(jeuData, boardController);
-        jeu.ajouterJoueur(premierJoueur);
-        jeu.ajouterJoueur(deuxiemeJoueur);
+        joueurBlanc.initialize(jeuData, boardController);
+        joueurNoir.initialize(jeuData, boardController);
+        jeu.ajouterJoueur(Couleur.BLANC, joueurBlanc);
+        jeu.ajouterJoueur(Couleur.NOIR, joueurNoir);
 
         //Commencer la partie
         jeu.commencer();

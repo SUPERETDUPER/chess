@@ -14,10 +14,6 @@ import java.util.function.Consumer;
 public class JoueurHumain extends Joueur {
     private BoardController boardController;
 
-    public JoueurHumain(Couleur couleur) {
-        super(couleur);
-    }
-
     @Override
     public void initialize(JeuData jeuData, BoardController boardController) {
         this.boardController = boardController;
@@ -29,8 +25,8 @@ public class JoueurHumain extends Joueur {
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */
     @Override
-    public void getMouvement(Consumer<Mouvement> callback) {
-        boardController.demanderMouvement(new DemandeDeMouvement(callback, this.getCouleur()));
+    public void getMouvement(Consumer<Mouvement> callback, Couleur couleur) {
+        boardController.demanderMouvement(new DemandeDeMouvement(callback, couleur));
     }
 
     @Override

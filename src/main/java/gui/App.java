@@ -20,7 +20,7 @@ public class App extends Application {
 
     @FunctionalInterface
     public interface MontrerJeu {
-        void montrerJeu(Joueur premierJoueur, Joueur deuxiemeJoueur);
+        void montrerJeu(Joueur joueurBlanc, Joueur joueurNoir);
     }
 
     private static final String TITRE = "Échec et Mat";
@@ -46,8 +46,8 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    private void montrerJeu(Joueur premierJoueur, Joueur deuxiemeJoueur) {
-        changerRoot(new JeuScene(premierJoueur, deuxiemeJoueur, this::montrerIntro).getRoot());
+    private void montrerJeu(Joueur joueurBlanc, Joueur joueurNoir) {
+        changerRoot(new JeuScene(joueurBlanc, joueurNoir, this::montrerIntro).getRoot());
     }
 
     private void montrerIntro() {

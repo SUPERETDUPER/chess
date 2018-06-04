@@ -8,9 +8,14 @@ import javafx.scene.layout.VBox;
 import modele.joueur.Joueur;
 import modele.joueur.JoueurHumain;
 import modele.joueur.JoueurOrdi;
-import modele.pieces.Couleur;
 
+/**
+ * Controlle la page d'intro
+ */
 class IntroController {
+    /**
+     * La méthode à appeler pour passer au jeu
+     */
     private final App.MontrerJeu onJouer;
 
     @FXML
@@ -19,14 +24,15 @@ class IntroController {
     @FXML
     private VBox joueurNoirContainer;
 
+    //Les drop-downs pour les joueurs blancs/noirs
     private JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(FXCollections.observableArrayList(
-            new JoueurHumain(Couleur.BLANC),
-
-            new JoueurOrdi(Couleur.BLANC)
+            new JoueurHumain(),
+            new JoueurOrdi()
     ));
+
     private JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(FXCollections.observableArrayList(
-            new JoueurHumain(Couleur.NOIR),
-            new JoueurOrdi(Couleur.NOIR)
+            new JoueurHumain(),
+            new JoueurOrdi()
     ));
 
     IntroController(App.MontrerJeu onJouer) {
