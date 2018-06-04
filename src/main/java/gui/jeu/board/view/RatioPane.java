@@ -8,10 +8,10 @@ import javafx.scene.layout.Pane;
  * Un grid pane qui aura toujours la même largeur que hauteur
  */
 public class RatioPane extends Pane {
-    private DisplayCalculator displayCalculator;
+    private final DisplayCalculator displayCalculator = new DisplayCalculator(this.heightProperty());
 
-    public void setDisplayCalculator(DisplayCalculator displayCalculator) {
-        this.displayCalculator = displayCalculator;
+    protected DisplayCalculator getDisplayCalculator() {
+        return displayCalculator;
     }
 
     @Override
@@ -24,6 +24,6 @@ public class RatioPane extends Pane {
      */
     @Override
     protected double computePrefWidth(double height) {
-        return displayCalculator == null ? USE_COMPUTED_SIZE : height * displayCalculator.getWidthHeightRatio();
+        return height * displayCalculator.getWidthHeightRatio();
     }
 }

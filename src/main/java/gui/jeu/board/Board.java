@@ -20,12 +20,15 @@ import java.util.Set;
  * Controle le plateau de jeu
  */
 public class Board extends RatioPane {
-
     //La liste de case
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
 
     private final List<PiecePane> piecePanes = new ArrayList<>();
+
+    private final AnimationController animationController = new AnimationController(this.getDisplayCalculator());
+
+    private final GraveyardController graveyardController = new GraveyardController(this.getDisplayCalculator(), this);
 
     //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
@@ -39,20 +42,10 @@ public class Board extends RatioPane {
     @Nullable
     private DemandeDeMouvement moveRequest;
 
-    private AnimationController animationController;
 
-    private GraveyardController graveyardController;
 
     public Board(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
-
-        // La taille de chaque case
-        DisplayCalculator displayCalculator = new DisplayCalculator(this.heightProperty());
-
-        animationController = new AnimationController(displayCalculator);
-        graveyardController = new GraveyardController(displayCalculator, this);
-//        plateauContainer.setDisplayCalculator(displayCalculator);
-        this.setDisplayCalculator(displayCalculator);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -61,7 +54,7 @@ public class Board extends RatioPane {
             Position position = positionIterator.next();
 
             //Créer un controleur
-            Case aCase = new Case(displayCalculator,
+            Case aCase = new Case(this.getDisplayCalculator(),
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     this::handleClick,
                     position
@@ -75,7 +68,7 @@ public class Board extends RatioPane {
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(piece, displayCalculator, position);
+                PiecePane piecePane = new PiecePane(piece, this.getDisplayCalculator(), position);
 
                 //Ajouter les listeners
                 piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piecePane.getPiece())));
