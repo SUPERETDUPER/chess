@@ -53,9 +53,12 @@ class IntroController {
 
     @FXML
     private void handleJouer() {
+        //Créer les joueurs
         EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
         joueurs.put(Couleur.BLANC, joueursBlanc.getSelectionModel().getSelectedItem());
         joueurs.put(Couleur.NOIR, joueursNoir.getSelectionModel().getSelectedItem());
+
+        //Commencer le jeu
         onJouer.montrerJeu(joueurs);
     }
 }

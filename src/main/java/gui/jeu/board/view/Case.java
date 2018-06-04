@@ -55,6 +55,10 @@ public class Case extends Rectangle {
         this.setFill(getCouleurFill(style));
     }
 
+    /**
+     * @param style le style de la case
+     * @return la couleur de remplissage pour la case
+     */
     @Contract(pure = true)
     private Paint getCouleurFill(@NotNull Style style) {
         switch (style) {
