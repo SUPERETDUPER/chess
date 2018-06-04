@@ -35,16 +35,16 @@ class AnimationController {
             isRunning = false;
         } else {
             Pair<PiecePane, Position> remove = mouvementQueue.remove();
-            bouger(remove.getKey(), remove.getValue(), this::callNext);
+            bouger(remove.getKey(), remove.getValue());
         }
     }
 
     /**
      * Place la pièce à la position
      */
-    private void bouger(PiecePane piecePane, Position position, Runnable onFinish) {
+    private void bouger(PiecePane piecePane, Position position) {
         if (piecePane.isAtPosition(position)) {
-            onFinish.run();
+            callNext();
         } else {
             Timeline timeline = new Timeline(new KeyFrame(
                     new Duration(100),
@@ -60,7 +60,7 @@ class AnimationController {
 
             timeline.setOnFinished(event -> {
                 piecePane.bind(position);
-                onFinish.run();
+                callNext();
             });
 
             piecePane.unBind();
