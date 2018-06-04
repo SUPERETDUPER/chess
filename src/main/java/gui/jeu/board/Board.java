@@ -66,7 +66,7 @@ public class Board extends RatioPane {
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(piece, new CasePosition(position, this.getDisplayCalculator()), this.getDisplayCalculator().getTaille());
+                PiecePane piecePane = new PiecePane(piece, new CasePosition(position, this.heightProperty(), this.getDisplayCalculator().getGraveyardWidth()), this.getDisplayCalculator().getTaille());
 
                 //Ajouter les listeners
                 piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piece)));
@@ -130,7 +130,7 @@ public class Board extends RatioPane {
                 Position position = plateau.getPosition(piecePane.getPiece());
 
                 if (position != null) {
-                    animationController.addToQueue(piecePane, new CasePosition(position, this.getDisplayCalculator()));
+                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), this.getDisplayCalculator().getGraveyardWidth()));
                 } else {
                     Couleur couleur = piecePane.getPiece().getCouleur();
 

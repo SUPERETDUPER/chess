@@ -41,14 +41,6 @@ public class DisplayCalculator {
         }
     }
 
-    ObservableValue<Number> getGraveyardX(Couleur couleur) {
-        if (couleur == Couleur.BLANC) {
-            return new SimpleIntegerProperty(0);
-        } else {
-            return Bindings.add(hauteur, spacingWidth).add(spacingWidth).add(taille);
-        }
-    }
-
     public NumberBinding getTaille() {
         return taille;
     }
@@ -63,5 +55,9 @@ public class DisplayCalculator {
 
     public double getWidthHeightRatio() {
         return WIDTH_HEIGHT_RATIO;
+    }
+
+    public ObservableNumberValue getGraveyardWidth() {
+        return spacingWidth.add(taille);
     }
 }
