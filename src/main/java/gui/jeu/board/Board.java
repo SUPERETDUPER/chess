@@ -30,8 +30,6 @@ public class Board extends RatioPane {
 
     private final AnimationController animationController = new AnimationController();
 
-    private final GraveyardController graveyardController = new GraveyardController(this.getDisplayCalculator(), this);
-
     //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
     private final JeuData jeuData;
@@ -71,7 +69,7 @@ public class Board extends RatioPane {
                 PiecePane piecePane = new PiecePane(piece, new CasePosition(position, this.getDisplayCalculator()), this.getDisplayCalculator().getTaille());
 
                 //Ajouter les listeners
-                piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piecePane.getPiece())));
+                piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piece)));
 
                 //Ajouter la pièce à la liste de pièce
                 piecePanes.add(piecePane);

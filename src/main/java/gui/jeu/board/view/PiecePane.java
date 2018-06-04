@@ -2,7 +2,6 @@ package gui.jeu.board.view;
 
 import gui.jeu.board.PositionBoard;
 import javafx.beans.binding.NumberBinding;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -53,18 +52,12 @@ public class PiecePane extends StackPane {
      * Place la pièce à la position
      */
     public void bind(PositionBoard position) {
-        bind(position.getX(), position.getY());
-    }
-
-    private void bind(ObservableValue<? extends Number> x, ObservableValue<? extends Number> y) {
-        System.out.println("Bind");
-        this.layoutXProperty().bind(x);
-        this.layoutYProperty().bind(y);
+        this.layoutXProperty().bind(position.getX());
+        this.layoutYProperty().bind(position.getY());
         this.setCacheHint(CacheHint.DEFAULT);
     }
 
     public void unBind() {
-        System.out.println("Unbind");
         this.setCacheHint(CacheHint.SPEED);
         this.layoutXProperty().unbind();
         this.layoutYProperty().unbind();
