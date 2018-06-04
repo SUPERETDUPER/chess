@@ -4,7 +4,6 @@ import gui.jeu.board.view.PiecePane;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.binding.NumberBinding;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import modele.plateau.Position;
@@ -13,14 +12,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 class AnimationController {
-    private final NumberBinding taille;
+    private final DisplayCalculator displayCalculator;
 
     private Queue<Pair<PiecePane, Position>> mouvementQueue = new LinkedList<>();
 
     private boolean isRunning = false;
 
-    AnimationController(NumberBinding taille) {
-        this.taille = taille;
+    AnimationController(DisplayCalculator taille) {
+        this.displayCalculator = taille;
     }
 
     void addToQueue(PiecePane piecePane, Position position) {
@@ -51,11 +50,11 @@ class AnimationController {
                     new Duration(100),
                     new KeyValue(
                             piecePane.layoutXProperty(),
-                            taille.multiply(position.getColonne()).getValue()
+                            displayCalculator.getX(position).getValue()
                     ),
                     new KeyValue(
                             piecePane.layoutYProperty(),
-                            taille.multiply(position.getRangee()).getValue()
+                            displayCalculator.getY(position).getValue()
                     )
             ));
 
@@ -64,8 +63,7 @@ class AnimationController {
                 onFinish.run();
             });
 
-            piecePane.layoutXProperty().unbind();
-            piecePane.layoutYProperty().unbind();
+            piecePane.unBind();
             isRunning = true;
             timeline.play();
         }

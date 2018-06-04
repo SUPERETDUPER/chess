@@ -1,6 +1,6 @@
 package gui.jeu.board.view;
 
-import javafx.beans.binding.NumberBinding;
+import gui.jeu.board.DisplayCalculator;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -18,32 +18,32 @@ public class PiecePane extends StackPane {
      * La pièce qui se fait afficher
      */
     private final Piece piece;
-    private final NumberBinding taille;
+    private final DisplayCalculator displayCalculator;
 
     private Position position;
 
 
     /**
      * @param piece  la pièce à afficher
-     * @param taille la taille de la boite
+     * @param displayCalculator la displayCalculator de la boite
      */
-    public PiecePane(Piece piece, NumberBinding taille, Position position) {
+    public PiecePane(Piece piece, DisplayCalculator displayCalculator, Position position) {
         super();
 
         this.piece = piece;
-        this.taille = taille;
+        this.displayCalculator = displayCalculator;
 
-        //Attacher la taille
-        this.prefHeightProperty().bind(taille);
-        this.prefWidthProperty().bind(taille);
+        //Attacher la displayCalculator
+        this.prefHeightProperty().bind(displayCalculator.getTaille());
+        this.prefWidthProperty().bind(displayCalculator.getTaille());
         bind(position);
 
         //Ajouter le text
         Text text = new Text(Character.toString((char) piece.getNumeroUnicode()));
         this.getChildren().add(text);
 
-        //Faire que la taille du text reste propertionelle
-        this.taille.addListener(
+        //Faire que la displayCalculator du text reste propertionelle
+        this.displayCalculator.getTaille().addListener(
                 (observable, oldValue, newValue) ->
                         text.setFont(new Font(newValue.doubleValue() * RAPPORT_TAILLE_FONT_SIZE))
         );
@@ -62,8 +62,8 @@ public class PiecePane extends StackPane {
      */
     public void bind(Position position) {
         this.position = position;
-        this.layoutXProperty().bind(taille.multiply(position.getColonne()));
-        this.layoutYProperty().bind(taille.multiply(position.getRangee()));
+        this.layoutXProperty().bind(displayCalculator.getX(position));
+        this.layoutYProperty().bind(displayCalculator.getY(position));
         this.setCacheHint(CacheHint.DEFAULT);
     }
 

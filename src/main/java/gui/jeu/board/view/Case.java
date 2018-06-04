@@ -1,6 +1,6 @@
 package gui.jeu.board.view;
 
-import javafx.beans.binding.NumberBinding;
+import gui.jeu.board.DisplayCalculator;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -29,19 +29,19 @@ public class Case extends Rectangle {
     private final boolean isBlanc;
 
     /**
-     * @param taille        la taille de la case
+     * @param displayCalculator        la displayCalculator de la case
      * @param isBlanc       si la case est blanche
      * @param clickListener la fonction à appeler quand la case est appuyé
      * @param position la position de la case
      */
-    public Case(NumberBinding taille, boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull Position position) {
+    public Case(DisplayCalculator displayCalculator, boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull Position position) {
         super();
         this.isBlanc = isBlanc;
 
-        this.widthProperty().bind(taille);
-        this.heightProperty().bind(taille);
-        this.xProperty().bind(taille.multiply(position.getColonne()));
-        this.yProperty().bind(taille.multiply(position.getRangee()));
+        this.widthProperty().bind(displayCalculator.getTaille());
+        this.heightProperty().bind(displayCalculator.getTaille());
+        this.xProperty().bind(displayCalculator.getX(position));
+        this.yProperty().bind(displayCalculator.getY(position));
         this.setOnMouseClicked(event -> clickListener.accept(position));
         this.setStrokeWidth(3);
 

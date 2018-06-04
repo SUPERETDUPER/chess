@@ -3,8 +3,6 @@ package gui.jeu.board;
 import gui.jeu.board.view.Case;
 import gui.jeu.board.view.PiecePane;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
 import javafx.scene.layout.*;
 import modele.JeuData;
@@ -61,6 +59,8 @@ public class BoardController {
 
     private AnimationController animationController;
 
+    private GraveyardControllor graveyardControllor;
+
     public BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
     }
@@ -68,9 +68,10 @@ public class BoardController {
     @FXML
     private void initialize() {
         // La taille de chaque case
-        NumberBinding taille = Bindings.divide(plateau.heightProperty(), Position.LIMITE);
+        DisplayCalculator displayCalculator = new DisplayCalculator(plateau.heightProperty());
 
-        animationController = new AnimationController(taille);
+        animationController = new AnimationController(displayCalculator);
+        graveyardControllor = new GraveyardControllor(displayCalculator, plateau);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -79,7 +80,7 @@ public class BoardController {
             Position position = positionIterator.next();
 
             //Créer un controleur
-            Case aCase = new Case(taille,
+            Case aCase = new Case(displayCalculator,
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     this::handleClick,
                     position
@@ -93,7 +94,7 @@ public class BoardController {
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(piece, taille, position);
+                PiecePane piecePane = new PiecePane(piece, displayCalculator, position);
 
                 //Ajouter les listeners
                 piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piecePane.getPiece())));
@@ -152,7 +153,7 @@ public class BoardController {
      */
     private void updateBoard() {
         Platform.runLater(() -> {
-            PiecePane piecePaneToRemove = null;
+            List<PiecePane> piecesToRemove = new ArrayList<>();
             for (PiecePane piecePane : piecePanes) {
                 Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
 
@@ -160,11 +161,14 @@ public class BoardController {
                     animationController.addToQueue(piecePane, position);
                 } else {
                     plateau.getChildren().remove(piecePane);
-                    piecePaneToRemove = piecePane;
+                    graveyardControllor.addPiece(piecePane);
+                    piecesToRemove.add(piecePane);
                 }
             }
 
-            if (piecePaneToRemove != null) piecePanes.remove(piecePaneToRemove);
+            for (PiecePane piecePane : piecesToRemove) {
+                piecePanes.remove(piecePane);
+            }
         });
     }
 }
