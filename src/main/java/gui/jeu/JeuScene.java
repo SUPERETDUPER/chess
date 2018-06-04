@@ -34,8 +34,8 @@ public class JeuScene {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
 
         fxmlLoader.setControllerFactory(param -> {
-            if (param == JeuControllor.class) {
-                return new JeuControllor(goBack, boardController);
+            if (param == JeuController.class) {
+                return new JeuController(goBack, boardController);
             }
 
             throw new RuntimeException("Aucun controlleur connue");

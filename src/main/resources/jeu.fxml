@@ -9,7 +9,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       prefHeight="400.0" prefWidth="600.0"
-      fx:controller="gui.jeu.JeuControllor">
+      fx:controller="gui.jeu.JeuController">
     <HBox alignment="CENTER_LEFT">
         <ImageView fitHeight="84" preserveRatio="true" onMouseClicked="#handleBack">
             <Image url="baseline_arrow_back_black_48dp.png"/>

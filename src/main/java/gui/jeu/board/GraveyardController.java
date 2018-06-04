@@ -4,11 +4,11 @@ import gui.jeu.board.view.PiecePane;
 import javafx.scene.layout.Pane;
 import modele.pieces.Couleur;
 
-public class GraveyardControllor {
+public class GraveyardController {
     private final DisplayCalculator displayCalculator;
     private final Pane container;
 
-    public GraveyardControllor(DisplayCalculator displayCalculator, Pane container) {
+    public GraveyardController(DisplayCalculator displayCalculator, Pane container) {
         this.displayCalculator = displayCalculator;
         this.container = container;
     }

@@ -61,7 +61,7 @@ public class BoardController {
 
     private AnimationController animationController;
 
-    private GraveyardControllor graveyardControllor;
+    private GraveyardController graveyardController;
 
     public BoardController(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
@@ -74,7 +74,7 @@ public class BoardController {
         DisplayCalculator displayCalculator = new DisplayCalculator(plateau.heightProperty());
 
         animationController = new AnimationController(displayCalculator);
-        graveyardControllor = new GraveyardControllor(displayCalculator, plateau);
+        graveyardController = new GraveyardController(displayCalculator, plateau);
         plateauContainer.setDisplayCalculator(displayCalculator);
 
         //Crée une case pour chaque position
@@ -165,7 +165,7 @@ public class BoardController {
                     animationController.addToQueue(piecePane, position);
                 } else {
                     plateau.getChildren().remove(piecePane);
-                    graveyardControllor.addPiece(piecePane);
+                    graveyardController.addPiece(piecePane);
                     piecesToRemove.add(piecePane);
                 }
             }
