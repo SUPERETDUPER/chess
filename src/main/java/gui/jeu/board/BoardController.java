@@ -42,7 +42,7 @@ public class BoardController {
     private final List<PiecePane> piecePanes = new ArrayList<>();
 
     //Le plateau
-    private Pane plateau;
+    private final Pane plateau = new Pane();
 //
 //    @FXML
 //    private CustomSquarePane plateauContainer;
@@ -67,8 +67,8 @@ public class BoardController {
         this.jeuData = jeuData;
     }
 
-    public void setUp(Pane plateau, CustomSquarePane plateauContainer) {
-        this.plateau = plateau;
+    public void setUp(CustomSquarePane plateauContainer) {
+        plateauContainer.getChildren().add(plateau);
 
         // La taille de chaque case
         DisplayCalculator displayCalculator = new DisplayCalculator(plateau.heightProperty());

@@ -42,8 +42,8 @@ public class Case extends Rectangle {
         this.heightProperty().bind(displayCalculator.getTaille());
         this.xProperty().bind(displayCalculator.getX(position));
         this.yProperty().bind(displayCalculator.getY(position));
+
         this.setOnMouseClicked(event -> clickListener.accept(position));
-        this.setStrokeWidth(3);
 
         setStyle(Style.NORMAL);  //Met la couleur de l'arrière plan de la case
     }

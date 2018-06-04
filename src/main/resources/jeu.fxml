@@ -23,8 +23,6 @@
         <padding>
             <Insets topRightBottomLeft="20"/>
         </padding>
-        <CustomSquarePane fx:id="plateauContainer" VBox.vgrow="SOMETIMES">
-            <Pane fx:id="plateau"/>
-        </CustomSquarePane>
+        <CustomSquarePane fx:id="plateauContainer" VBox.vgrow="SOMETIMES"/>
     </VBox>
 </VBox>

@@ -4,12 +4,8 @@ import gui.App;
 import gui.jeu.board.BoardController;
 import gui.jeu.board.view.CustomSquarePane;
 import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
 
 public class JeuControllor {
-    @FXML
-    private Pane plateau;
-
     @FXML
     private CustomSquarePane plateauContainer;
 
@@ -23,7 +19,7 @@ public class JeuControllor {
 
     @FXML
     private void initialize() {
-        boardController.setUp(plateau, plateauContainer);
+        boardController.setUp(plateauContainer);
     }
 
     @FXML
