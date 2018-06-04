@@ -15,16 +15,13 @@ public class Jeu {
     private final JeuData jeuData;
 
     @NotNull
-    private final EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
+    private EnumMap<Couleur, Joueur> joueurs;
 
     private Couleur tourA = Couleur.BLANC;
 
-    public Jeu(JeuData jeuData) {
+    public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;
-    }
-
-    public void ajouterJoueur(Couleur couleur, Joueur joueur) {
-        joueurs.put(couleur, joueur);
+        this.joueurs = joueurs;
     }
 
     /**

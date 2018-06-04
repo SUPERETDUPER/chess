@@ -11,6 +11,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import modele.joueur.Joueur;
+import modele.pieces.Couleur;
+
+import java.util.EnumMap;
 
 public class App extends Application {
     @FunctionalInterface
@@ -20,7 +23,7 @@ public class App extends Application {
 
     @FunctionalInterface
     public interface MontrerJeu {
-        void montrerJeu(Joueur joueurBlanc, Joueur joueurNoir);
+        void montrerJeu(EnumMap<Couleur, Joueur> joueurs);
     }
 
     private static final String TITRE = "Échec et Mat";
@@ -46,8 +49,8 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    private void montrerJeu(Joueur joueurBlanc, Joueur joueurNoir) {
-        changerRoot(new JeuScene(joueurBlanc, joueurNoir, this::montrerIntro).getRoot());
+    private void montrerJeu(EnumMap<Couleur, Joueur> joueurs) {
+        changerRoot(new JeuScene(joueurs, this::montrerIntro).getRoot());
     }
 
     private void montrerIntro() {

@@ -8,6 +8,9 @@ import javafx.scene.layout.VBox;
 import modele.joueur.Joueur;
 import modele.joueur.JoueurHumain;
 import modele.joueur.JoueurOrdi;
+import modele.pieces.Couleur;
+
+import java.util.EnumMap;
 
 /**
  * Controlle la page d'intro
@@ -37,19 +40,22 @@ class IntroController {
 
     IntroController(App.MontrerJeu onJouer) {
         this.onJouer = onJouer;
+
+        joueursNoir.getSelectionModel().select(0);
+        joueursBlanc.getSelectionModel().select(0);
     }
 
     @FXML
     private void initialize() {
-        joueursNoir.getSelectionModel().select(0);
-        joueursBlanc.getSelectionModel().select(0);
         joueurBlancContainer.getChildren().add(joueursBlanc);
         joueurNoirContainer.getChildren().add(joueursNoir);
     }
 
     @FXML
     private void handleJouer() {
-        onJouer.montrerJeu(joueursBlanc.getSelectionModel().getSelectedItem(),
-                joueursNoir.getSelectionModel().getSelectedItem());
+        EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
+        joueurs.put(Couleur.BLANC, joueursBlanc.getSelectionModel().getSelectedItem());
+        joueurs.put(Couleur.NOIR, joueursNoir.getSelectionModel().getSelectedItem());
+        onJouer.montrerJeu(joueurs);
     }
 }

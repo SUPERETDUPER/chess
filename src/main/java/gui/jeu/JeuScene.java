@@ -13,12 +13,13 @@ import modele.plateau.Position;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.EnumMap;
 
 public class JeuScene {
 
     private final Parent root;
 
-    public JeuScene(Joueur joueurBlanc, Joueur joueurNoir, App.MontrerIntro goBack) {
+    public JeuScene(EnumMap<Couleur, Joueur> joueurs, App.MontrerIntro goBack) {
         //Créer les rois
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
@@ -49,14 +50,13 @@ public class JeuScene {
             throw new RuntimeException(e);
         }
 
-        //Créer le jeu
-        Jeu jeu = new Jeu(jeuData);
-
         //Ajouter et créer les joueurs
-        joueurBlanc.initialize(jeuData, boardController);
-        joueurNoir.initialize(jeuData, boardController);
-        jeu.ajouterJoueur(Couleur.BLANC, joueurBlanc);
-        jeu.ajouterJoueur(Couleur.NOIR, joueurNoir);
+        for (Joueur joueur : joueurs.values()) {
+            joueur.initialize(jeuData, boardController);
+        }
+
+        //Créer le jeu
+        Jeu jeu = new Jeu(jeuData, joueurs);
 
         //Commencer la partie
         jeu.commencer();
