@@ -59,12 +59,14 @@ public class PiecePane extends StackPane {
     }
 
     private void bind(ObservableValue<? extends Number> x, ObservableValue<? extends Number> y) {
+        System.out.println("Bind");
         this.layoutXProperty().bind(x);
         this.layoutYProperty().bind(y);
         this.setCacheHint(CacheHint.DEFAULT);
     }
 
     public void unBind() {
+        System.out.println("Unbind");
         this.setCacheHint(CacheHint.SPEED);
         this.layoutXProperty().unbind();
         this.layoutYProperty().unbind();

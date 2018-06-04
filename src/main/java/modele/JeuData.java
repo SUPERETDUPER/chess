@@ -10,12 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class JeuData {
     @NotNull
     private final Plateau plateau;
 
-    private Runnable changeListener;
+    private Consumer<Plateau> changeListener;
 
     @NotNull
     private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
@@ -27,12 +28,12 @@ public class JeuData {
         rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
     }
 
-    public void setChangeListener(Runnable changeListener) {
+    public void setChangeListener(Consumer<Plateau> changeListener) {
         this.changeListener = changeListener;
     }
 
-    void notifyListenerOfChange() {
-        changeListener.run();
+    void notifyListenerOfChange(Plateau plateau) {
+        changeListener.accept(plateau);
     }
 
     @NotNull

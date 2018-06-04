@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Piece;
+import modele.plateau.Plateau;
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;
 import org.jetbrains.annotations.NotNull;
@@ -41,8 +42,6 @@ public class Board extends RatioPane {
     //Objet qui spécifie si l'on veut obtenir des mouvements de l'utilisateur
     @Nullable
     private DemandeDeMouvement moveRequest;
-
-
 
     public Board(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
@@ -82,7 +81,7 @@ public class Board extends RatioPane {
         this.getChildren().addAll(piecePanes);
 
         this.jeuData.setChangeListener(this::updateBoard);
-        updateBoard();
+        updateBoard(jeuData.getPlateau());
     }
 
     /**
@@ -125,11 +124,11 @@ public class Board extends RatioPane {
     /**
      * Pour chaque case afficher la pièce à cette case
      */
-    private void updateBoard() {
+    private void updateBoard(Plateau plateau) {
         Platform.runLater(() -> {
             List<PiecePane> piecesToRemove = new ArrayList<>();
             for (PiecePane piecePane : piecePanes) {
-                Position position = jeuData.getPlateau().getPosition(piecePane.getPiece());
+                Position position = plateau.getPosition(piecePane.getPiece());
 
                 if (position != null) {
                     animationController.addToQueue(piecePane, position);

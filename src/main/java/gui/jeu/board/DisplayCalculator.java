@@ -9,6 +9,7 @@ import modele.plateau.Position;
 
 public class DisplayCalculator {
     private final static double GRAVEYARD_SPACING_RATIO = 0.1;
+    private static final double WIDTH_HEIGHT_RATIO = (Position.LIMITE + 2 + 2 * GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
 
     private final NumberBinding taille;
     private final ObservableNumberValue hauteur;
@@ -32,7 +33,7 @@ public class DisplayCalculator {
         return taille.multiply(position.getRangee());
     }
 
-    public ObservableNumberValue getGraveyardY(Couleur couleur) {
+    ObservableNumberValue getGraveyardY(Couleur couleur) {
         if (couleur == Couleur.BLANC) {
             return Bindings.divide(hauteur, piecesDansGraveyardBlanc).multiply(piecesDansGraveyardBlanc.getValue() - 1);
         } else {
@@ -40,7 +41,7 @@ public class DisplayCalculator {
         }
     }
 
-    public ObservableNumberValue getGraveyardX(Couleur couleur) {
+    ObservableNumberValue getGraveyardX(Couleur couleur) {
         if (couleur == Couleur.BLANC) {
             return new SimpleIntegerProperty(0);
         } else {
@@ -61,6 +62,6 @@ public class DisplayCalculator {
     }
 
     public double getWidthHeightRatio() {
-        return (Position.LIMITE + 2 + 2 * GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
+        return WIDTH_HEIGHT_RATIO;
     }
 }
