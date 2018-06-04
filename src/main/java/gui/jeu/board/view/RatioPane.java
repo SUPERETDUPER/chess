@@ -2,12 +2,12 @@ package gui.jeu.board.view;
 
 import gui.jeu.board.DisplayCalculator;
 import javafx.geometry.Orientation;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 
 /**
  * Un grid pane qui aura toujours la même largeur que hauteur
  */
-public class CustomSquarePane extends StackPane {
+public class RatioPane extends Pane {
     private DisplayCalculator displayCalculator;
 
     public void setDisplayCalculator(DisplayCalculator displayCalculator) {

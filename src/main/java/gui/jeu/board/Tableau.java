@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Une structure de données pour le plateau du jeu d'échec
  * Permet aux autres class de garder un objet dans une position du tableau.
- * Par example le {@link BoardController} garde toutes les boites du plateau de jeu dans cette structure de données
+ * Par example le {@link Board} garde toutes les boites du plateau de jeu dans cette structure de données
  * <p>
  * Les classes peuvent accéder les données dans la structure à l'aide de {@link Position} sans devoir se soucier de comment les données sont organisées
  * <p>

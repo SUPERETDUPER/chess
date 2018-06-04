@@ -1,25 +1,25 @@
 package gui.jeu;
 
 import gui.App;
-import gui.jeu.board.BoardController;
-import gui.jeu.board.view.CustomSquarePane;
+import gui.jeu.board.Board;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 
 public class JeuController {
     @FXML
-    private CustomSquarePane plateauContainer;
+    private StackPane plateauContainer;
 
     private final App.MontrerIntro goBack;
-    private final BoardController boardController;
+    private final Board board;
 
-    public JeuController(App.MontrerIntro goBack, BoardController boardController) {
+    public JeuController(App.MontrerIntro goBack, Board board) {
         this.goBack = goBack;
-        this.boardController = boardController;
+        this.board = board;
     }
 
     @FXML
     private void initialize() {
-        boardController.setUp(plateauContainer);
+        plateauContainer.getChildren().add(board);
     }
 
     @FXML

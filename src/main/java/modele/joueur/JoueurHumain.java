@@ -1,6 +1,6 @@
 package modele.joueur;
 
-import gui.jeu.board.BoardController;
+import gui.jeu.board.Board;
 import gui.jeu.board.DemandeDeMouvement;
 import modele.JeuData;
 import modele.moves.Mouvement;
@@ -12,11 +12,11 @@ import java.util.function.Consumer;
  * Un joueur qui utilise le plateau de jeu pour soumettre ses mouvements
  */
 public class JoueurHumain extends Joueur {
-    private BoardController boardController;
+    private Board board;
 
     @Override
-    public void initialize(JeuData jeuData, BoardController boardController) {
-        this.boardController = boardController;
+    public void initialize(JeuData jeuData, Board board) {
+        this.board = board;
     }
 
     /**
@@ -26,7 +26,7 @@ public class JoueurHumain extends Joueur {
      */
     @Override
     public void getMouvement(Consumer<Mouvement> callback, Couleur couleur) {
-        boardController.demanderMouvement(new DemandeDeMouvement(callback, couleur));
+        board.demanderMouvement(new DemandeDeMouvement(callback, couleur));
     }
 
     @Override

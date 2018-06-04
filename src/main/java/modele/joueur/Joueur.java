@@ -1,6 +1,6 @@
 package modele.joueur;
 
-import gui.jeu.board.BoardController;
+import gui.jeu.board.Board;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
@@ -19,7 +19,7 @@ public abstract class Joueur {
      */
     public abstract void getMouvement(Consumer<Mouvement> callback, Couleur couleur);
 
-    public abstract void initialize(JeuData jeuData, BoardController boardController);
+    public abstract void initialize(JeuData jeuData, Board board);
 
     abstract String getNom();
 

@@ -1,7 +1,7 @@
 package gui.jeu;
 
 import gui.App;
-import gui.jeu.board.BoardController;
+import gui.jeu.board.Board;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import modele.Jeu;
@@ -28,14 +28,14 @@ public class JeuScene {
         JeuData jeuData = new JeuData(creePlateau(roiNoir, roiBlanc), roiBlanc, roiNoir);
 
         //Créer le controller d'interface
-        BoardController boardController = new BoardController(jeuData);
+        Board board = new Board(jeuData);
 
         //Créer l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
 
         fxmlLoader.setControllerFactory(param -> {
             if (param == JeuController.class) {
-                return new JeuController(goBack, boardController);
+                return new JeuController(goBack, board);
             }
 
             throw new RuntimeException("Aucun controlleur connue");
@@ -50,7 +50,7 @@ public class JeuScene {
 
         //Ajouter et créer les joueurs
         for (Joueur joueur : joueurs.values()) {
-            joueur.initialize(jeuData, boardController);
+            joueur.initialize(jeuData, board);
         }
 
         //Créer et commencer la partie

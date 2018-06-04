@@ -1,13 +1,9 @@
 package gui.jeu.board;
 
 import gui.jeu.board.view.Case;
-import gui.jeu.board.view.CustomSquarePane;
 import gui.jeu.board.view.PiecePane;
+import gui.jeu.board.view.RatioPane;
 import javafx.application.Platform;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Piece;
@@ -23,29 +19,13 @@ import java.util.Set;
 /**
  * Controle le plateau de jeu
  */
-public class BoardController {
-    private static final RowConstraints ROW_CONSTRAINT = new RowConstraints();
-    private static final ColumnConstraints COLUMN_CONSTRAINTS = new ColumnConstraints();
-
-    static {
-        //Créer les constraintes pour les rangées/colonnes
-        ROW_CONSTRAINT.setVgrow(Priority.SOMETIMES);
-        ROW_CONSTRAINT.setPercentHeight(100.0F / Position.LIMITE);
-        COLUMN_CONSTRAINTS.setHgrow(Priority.SOMETIMES);
-        COLUMN_CONSTRAINTS.setPercentWidth(100.0F / Position.LIMITE);
-    }
+public class Board extends RatioPane {
 
     //La liste de case
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
 
     private final List<PiecePane> piecePanes = new ArrayList<>();
-
-    //Le plateau
-    private final Pane plateau = new Pane();
-//
-//    @FXML
-//    private CustomSquarePane plateauContainer;
 
     //Le modele du jeu (contient le plateau et les pièces)
     @NotNull
@@ -63,19 +43,16 @@ public class BoardController {
 
     private GraveyardController graveyardController;
 
-    public BoardController(@NotNull JeuData jeuData) {
+    public Board(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
-    }
-
-    public void setUp(CustomSquarePane plateauContainer) {
-        plateauContainer.getChildren().add(plateau);
 
         // La taille de chaque case
-        DisplayCalculator displayCalculator = new DisplayCalculator(plateau.heightProperty());
+        DisplayCalculator displayCalculator = new DisplayCalculator(this.heightProperty());
 
         animationController = new AnimationController(displayCalculator);
-        graveyardController = new GraveyardController(displayCalculator, plateau);
-        plateauContainer.setDisplayCalculator(displayCalculator);
+        graveyardController = new GraveyardController(displayCalculator, this);
+//        plateauContainer.setDisplayCalculator(displayCalculator);
+        this.setDisplayCalculator(displayCalculator);
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -92,7 +69,7 @@ public class BoardController {
 
             //Ajouter la case au plateau et à la liste
             cases.add(position, aCase);
-            plateau.getChildren().addAll(aCase);
+            this.getChildren().addAll(aCase);
 
             //Si il y a une pièce à cette position créer une pièce
             Piece piece = jeuData.getPlateau().getPiece(position);
@@ -109,7 +86,7 @@ public class BoardController {
         }
 
         //Ajouter toutes les cases et pièces au plateau
-        plateau.getChildren().addAll(piecePanes);
+        this.getChildren().addAll(piecePanes);
 
         this.jeuData.setChangeListener(this::updateBoard);
         updateBoard();
@@ -164,7 +141,7 @@ public class BoardController {
                 if (position != null) {
                     animationController.addToQueue(piecePane, position);
                 } else {
-                    plateau.getChildren().remove(piecePane);
+                    this.getChildren().remove(piecePane);
                     graveyardController.addPiece(piecePane);
                     piecesToRemove.add(piecePane);
                 }

@@ -1,6 +1,6 @@
 package modele.joueur;
 
-import gui.jeu.board.BoardController;
+import gui.jeu.board.Board;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
@@ -21,7 +21,7 @@ public class JoueurOrdi extends Joueur {
     private final static int MAX_DEPTH = 4;
 
     @Override
-    public void initialize(JeuData jeuData, BoardController boardController) {
+    public void initialize(JeuData jeuData, Board board) {
         this.jeuData = jeuData;
     }
 
