@@ -40,4 +40,8 @@ class GraveyardController {
     ObservableNumberValue getSpacing() {
         return Bindings.multiply(largeur, GRAVEYARD_SPACING_RATIO);
     }
+
+    double getTotalWidthRatio() {
+        return 2 * (1 + GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
+    }
 }

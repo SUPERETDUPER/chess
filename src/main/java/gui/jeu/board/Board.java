@@ -2,8 +2,9 @@ package gui.jeu.board;
 
 import gui.jeu.board.view.Case;
 import gui.jeu.board.view.PiecePane;
-import gui.jeu.board.view.RatioPane;
 import javafx.application.Platform;
+import javafx.geometry.Orientation;
+import javafx.scene.layout.Pane;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
@@ -21,7 +22,7 @@ import java.util.Set;
 /**
  * Controle le plateau de jeu
  */
-public class Board extends RatioPane {
+public class Board extends Pane {
     //La liste de case
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
@@ -155,5 +156,18 @@ public class Board extends RatioPane {
                 piecePanes.remove(piecePane);
             }
         });
+    }
+
+    @Override
+    public Orientation getContentBias() {
+        return Orientation.VERTICAL;
+    }
+
+    /**
+     * Définit la largeur préféré si il y a un display calculator
+     */
+    @Override
+    protected double computePrefWidth(double height) {
+        return height * (1 + graveyardController.getTotalWidthRatio());
     }
 }
