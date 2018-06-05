@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      prefHeight="400.0" prefWidth="600.0"
-      fx:controller="gui.jeu.JeuController">
-    <HBox alignment="CENTER_LEFT">
-        <ImageView fitHeight="84" preserveRatio="true" onMouseClicked="#handleBack">
-            <Image url="baseline_arrow_back_black_48dp.png"/>
-        </ImageView>
-        <effect>
-            <DropShadow/>
-        </effect>
-    </HBox>
 
-    <VBox fillWidth="false" alignment="CENTER" VBox.vgrow="SOMETIMES">
-        <padding>
-            <Insets topRightBottomLeft="20"/>
-        </padding>
-        <StackPane fx:id="plateauContainer" VBox.vgrow="SOMETIMES"/>
-    </VBox>
-</VBox>
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+<JFXDrawer xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="gui.jeu.JeuController" fx:id="drawer">
+    <sidePane>
+        <JFXListView fx:id="drawerList"/>
+    </sidePane>
+
+    <defaultDrawerSize>
+        300
+    </defaultDrawerSize>
+
+    <content>
+        <VBox>
+            <padding>
+                <Insets topRightBottomLeft="20"/>
+            </padding>
+            <JFXHamburger alignment="BASELINE_LEFT" onMouseClicked="#handleHamburger"/>
+
+            <VBox alignment="CENTER" fillWidth="false" VBox.vgrow="SOMETIMES">
+                <StackPane fx:id="plateauContainer" VBox.vgrow="SOMETIMES"/>
+            </VBox>
+        </VBox>
+    </content>
+</JFXDrawer>
