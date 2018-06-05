@@ -17,8 +17,40 @@ import java.util.function.Consumer;
  * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
  */
 public class JoueurOrdi extends Joueur {
+    public enum Difficulte {
+        DIFFICILE {
+            @Override
+            public String toString() {
+                return "difficile";
+            }
+        },
+        FACILE {
+            @Override
+            public String toString() {
+                return "facile";
+            }
+        }
+    }
+
+    private final int depth;
+    private final Difficulte difficulte;
+
     private JeuData jeuData;
-    private final static int MAX_DEPTH = 4;
+
+    public JoueurOrdi(Difficulte difficulte) {
+        this.difficulte = difficulte;
+
+        switch (difficulte) {
+            case FACILE:
+                depth = 3;
+                break;
+            case DIFFICILE:
+                depth = 4;
+                break;
+            default:
+                throw new RuntimeException("Difficulté inconnue");
+        }
+    }
 
     @Override
     public void initialize(JeuData jeuData, Board board) {
@@ -39,7 +71,7 @@ public class JoueurOrdi extends Joueur {
     }
 
     private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
-        if (pastSequence.getLength() == MAX_DEPTH) return pastSequence;
+        if (pastSequence.getLength() == depth) return pastSequence;
 
         Set<Mouvement> mouvements;
 
@@ -90,7 +122,6 @@ public class JoueurOrdi extends Joueur {
         MoveSequence() {
             this.value = 0;
             this.mouvements = new ArrayList<>();
-
         }
 
         private MoveSequence(List<Mouvement> mouvements, int value) {
@@ -119,6 +150,6 @@ public class JoueurOrdi extends Joueur {
 
     @Override
     String getNom() {
-        return "Ordinateur";
+        return "Ordinateur (" + difficulte + ")";
     }
 }

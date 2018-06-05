@@ -30,12 +30,14 @@ class IntroController {
     //Les drop-downs pour les joueurs blancs/noirs
     private JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(FXCollections.observableArrayList(
             new JoueurHumain(),
-            new JoueurOrdi()
+            new JoueurOrdi(JoueurOrdi.Difficulte.FACILE),
+            new JoueurOrdi(JoueurOrdi.Difficulte.DIFFICILE)
     ));
 
     private JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(FXCollections.observableArrayList(
             new JoueurHumain(),
-            new JoueurOrdi()
+            new JoueurOrdi(JoueurOrdi.Difficulte.FACILE),
+            new JoueurOrdi(JoueurOrdi.Difficulte.DIFFICILE)
     ));
 
     IntroController(App.MontrerJeu onJouer) {
