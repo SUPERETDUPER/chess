@@ -42,6 +42,8 @@ public class Board extends RatioPane {
     @Nullable
     private DemandeDeMouvement moveRequest;
 
+    private final GraveyardController graveyardController = new GraveyardController(this.heightProperty());
+
     public Board(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
 
@@ -52,10 +54,10 @@ public class Board extends RatioPane {
             Position position = positionIterator.next();
 
             //Créer un controleur
-            Case aCase = new Case(this.getDisplayCalculator(),
+            Case aCase = new Case(
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     this::handleClick,
-                    position
+                    new CasePosition(position, this.heightProperty(), graveyardController.getLargeur())
             );
 
             //Ajouter la case au plateau et à la liste
@@ -66,7 +68,10 @@ public class Board extends RatioPane {
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(piece, new CasePosition(position, this.heightProperty(), this.getDisplayCalculator().getGraveyardWidth()), this.getDisplayCalculator().getTaille());
+                PiecePane piecePane = new PiecePane(
+                        piece,
+                        new CasePosition(position, this.heightProperty(), graveyardController.getLargeur())
+                );
 
                 //Ajouter les listeners
                 piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piece)));
@@ -130,17 +135,17 @@ public class Board extends RatioPane {
                 Position position = plateau.getPosition(piecePane.getPiece());
 
                 if (position != null) {
-                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), this.getDisplayCalculator().getGraveyardWidth()));
+                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), graveyardController.getLargeur()));
                 } else {
                     Couleur couleur = piecePane.getPiece().getCouleur();
 
                     if (couleur == Couleur.BLANC) {
-                        this.getDisplayCalculator().incrementGraveyardBlanc();
+                        graveyardController.incrementGraveyardBlanc();
                     } else {
-                        this.getDisplayCalculator().incrementGraveyardNoir();
+                        graveyardController.incrementGraveyardNoir();
                     }
 
-                    animationController.addToQueue(piecePane, new GraveyardPosition(couleur, this.getDisplayCalculator()));
+                    animationController.addToQueue(piecePane, new GraveyardPosition(couleur, this.heightProperty(), graveyardController));
 
                     piecesToRemove.add(piecePane);
                 }

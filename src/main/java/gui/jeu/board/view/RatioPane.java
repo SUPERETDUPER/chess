@@ -1,6 +1,5 @@
 package gui.jeu.board.view;
 
-import gui.jeu.board.DisplayCalculator;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
 
@@ -8,11 +7,7 @@ import javafx.scene.layout.Pane;
  * Un grid pane qui aura toujours la même largeur que hauteur
  */
 public class RatioPane extends Pane {
-    private final DisplayCalculator displayCalculator = new DisplayCalculator(this.heightProperty());
 
-    protected DisplayCalculator getDisplayCalculator() {
-        return displayCalculator;
-    }
 
     @Override
     public Orientation getContentBias() {
@@ -24,6 +19,7 @@ public class RatioPane extends Pane {
      */
     @Override
     protected double computePrefWidth(double height) {
-        return height * displayCalculator.getWidthHeightRatio();
+        //TODO Find better way
+        return height * 1.25;
     }
 }

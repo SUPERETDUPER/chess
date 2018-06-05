@@ -1,6 +1,6 @@
 package gui.jeu.board.view;
 
-import gui.jeu.board.DisplayCalculator;
+import gui.jeu.board.CasePosition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -29,21 +29,20 @@ public class Case extends Rectangle {
     private final boolean isBlanc;
 
     /**
-     * @param displayCalculator        la displayCalculator de la case
      * @param isBlanc       si la case est blanche
      * @param clickListener la fonction à appeler quand la case est appuyé
      * @param position la position de la case
      */
-    public Case(DisplayCalculator displayCalculator, boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull Position position) {
+    public Case(boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull CasePosition position) {
         super();
         this.isBlanc = isBlanc;
 
-        this.widthProperty().bind(displayCalculator.getTaille());
-        this.heightProperty().bind(displayCalculator.getTaille());
-        this.xProperty().bind(displayCalculator.getX(position));
-        this.yProperty().bind(displayCalculator.getY(position));
+        this.widthProperty().bind(position.getLargeur());
+        this.heightProperty().bind(position.getLargeur());
+        this.xProperty().bind(position.getX());
+        this.yProperty().bind(position.getY());
 
-        this.setOnMouseClicked(event -> clickListener.accept(position));
+        this.setOnMouseClicked(event -> clickListener.accept(position.getPosition()));
 
         setStyle(Style.NORMAL);  //Met la couleur de l'arrière plan de la case
     }

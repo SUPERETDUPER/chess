@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 class AnimationController {
-
     private Queue<Pair<PiecePane, PositionBoard>> mouvementQueue = new LinkedList<>();
 
     private boolean isRunning = false;

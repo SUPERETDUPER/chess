@@ -1,7 +1,6 @@
 package gui.jeu.board.view;
 
 import gui.jeu.board.PositionBoard;
-import javafx.beans.binding.NumberBinding;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -20,17 +19,16 @@ public class PiecePane extends StackPane {
     private final Piece piece;
 
     /**
-     * @param taille la taille de la case
-     * @param piece             la pièce à afficher
+     * @param piece la pièce à afficher
      */
-    public PiecePane(Piece piece, PositionBoard position, NumberBinding taille) {
+    public PiecePane(Piece piece, PositionBoard position) {
         super();
 
         this.piece = piece;
 
         //Attacher la displayCalculator
-        this.prefHeightProperty().bind(taille);
-        this.prefWidthProperty().bind(taille);
+        this.prefHeightProperty().bind(position.getLargeur());
+        this.prefWidthProperty().bind(position.getLargeur());
         bind(position);
 
         //Ajouter le text
@@ -38,7 +36,7 @@ public class PiecePane extends StackPane {
         this.getChildren().add(text);
 
         //Faire que la displayCalculator du text reste propertionelle
-        taille.addListener(
+        this.prefWidthProperty().addListener(
                 (observable, oldValue, newValue) ->
                         text.setFont(new Font(newValue.doubleValue() * RAPPORT_TAILLE_FONT_SIZE))
         );

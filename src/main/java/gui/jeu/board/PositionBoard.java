@@ -6,4 +6,6 @@ public interface PositionBoard {
     ObservableValue<Number> getX();
 
     ObservableValue<Number> getY();
+
+    ObservableValue<Number> getLargeur();
 }
