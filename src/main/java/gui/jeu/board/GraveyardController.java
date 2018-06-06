@@ -33,8 +33,12 @@ class GraveyardController {
         return piecesDansGraveyardNoir.getReadOnlyProperty();
     }
 
-    ObservableNumberValue getLargeur() {
-        return Bindings.multiply(largeur, 1 + GRAVEYARD_SPACING_RATIO);
+    ObservableNumberValue getLargeurTotal() {
+        return Bindings.multiply(largeur, 2 + GRAVEYARD_SPACING_RATIO);
+    }
+
+    public ObservableNumberValue getLargeur() {
+        return largeur;
     }
 
     ObservableNumberValue getSpacing() {
@@ -42,6 +46,6 @@ class GraveyardController {
     }
 
     double getTotalWidthRatio() {
-        return 2 * (1 + GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
+        return 2 * (2 + GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
     }
 }

@@ -37,6 +37,7 @@ class AnimationController {
      */
     private void bouger(PiecePane piecePane, PositionBoard position) {
         if (piecePane.isAtPosition(position)) {
+            piecePane.bind(position);
             callNext();
         } else {
             Timeline timeline = new Timeline(new KeyFrame(

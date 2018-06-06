@@ -58,7 +58,7 @@ public class Board extends Pane {
             Case aCase = new Case(
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     this::handleClick,
-                    new CasePosition(position, this.heightProperty(), graveyardController.getLargeur())
+                    new CasePosition(position, this.heightProperty(), graveyardController.getLargeurTotal())
             );
 
             //Ajouter la case au plateau et à la liste
@@ -71,7 +71,7 @@ public class Board extends Pane {
             if (piece != null) {
                 PiecePane piecePane = new PiecePane(
                         piece,
-                        new CasePosition(position, this.heightProperty(), graveyardController.getLargeur())
+                        new CasePosition(position, this.heightProperty(), graveyardController.getLargeurTotal())
                 );
 
                 //Ajouter les listeners
@@ -136,7 +136,7 @@ public class Board extends Pane {
                 Position position = plateau.getPosition(piecePane.getPiece());
 
                 if (position != null) {
-                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), graveyardController.getLargeur()));
+                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), graveyardController.getLargeurTotal()));
                 } else {
                     Couleur couleur = piecePane.getPiece().getCouleur();
 

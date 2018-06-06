@@ -6,6 +6,7 @@ import modele.pieces.Piece;
 import modele.pieces.Roi;
 import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ public class JeuData {
     @NotNull
     private final Plateau plateau;
 
+    @Nullable
     private Consumer<Plateau> changeListener;
 
     @NotNull
@@ -28,11 +30,12 @@ public class JeuData {
         rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
     }
 
-    public void setChangeListener(Consumer<Plateau> changeListener) {
+    public void setChangeListener(@NotNull Consumer<Plateau> changeListener) {
         this.changeListener = changeListener;
     }
 
     void notifyListenerOfChange(Plateau plateau) {
+        System.out.println("Notified: " + plateau + (changeListener == null));
         changeListener.accept(plateau);
     }
 
