@@ -7,17 +7,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Classe qui supervise les joueurs et s'assure de respecter les tours
  */
 public class Jeu {
+    public enum Resultat {
+        BLANC_GAGNE,
+        NOIR_GAGNE,
+        EGALITE
+    }
+
     private final JeuData jeuData;
 
     @NotNull
     private EnumMap<Couleur, Joueur> joueurs;
 
     private Couleur tourA = Couleur.BLANC;
+
+    private Consumer<Resultat> resultatListener;
 
     public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;
@@ -29,6 +38,10 @@ public class Jeu {
      */
     public void commencer() {
         joueurs.get(tourA).getMouvement(this::jouer, tourA);
+    }
+
+    public void setResultatListener(Consumer<Resultat> resultatListener) {
+        this.resultatListener = resultatListener;
     }
 
     /**
@@ -48,8 +61,14 @@ public class Jeu {
 
         if (mouvements.isEmpty()) {
             if (Helper.isPieceAttaquer(jeuData.getPlateau(), jeuData.getRoi(tourA))) {
+                if (tourA == Couleur.BLANC) {
+                    resultatListener.accept(Resultat.BLANC_GAGNE);
+                } else {
+                    resultatListener.accept(Resultat.NOIR_GAGNE);
+                }
                 System.out.println("Checkmate");
             } else {
+                resultatListener.accept(Resultat.EGALITE);
                 System.out.println("Stalemate");
             }
         } else {
