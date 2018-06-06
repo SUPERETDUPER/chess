@@ -64,14 +64,15 @@ public class JoueurOrdi extends Joueur {
      */
     @Override
     public void getMouvement(Consumer<Mouvement> callback, Couleur couleur) {
-        new Thread(() ->
-                callback.accept(calculerMeilleurMouvement(new MoveSequence(), couleur).getFirst())
-        ).start();
-
+        new Thread(() -> {
+            Resultat resultat = calculerMeilleurMouvement(new MoveSequence(), couleur);
+            System.out.println(resultat.getMouvementsAnalyzer());
+            callback.accept(resultat.getMoveSequence().getFirst());
+        }).start();
     }
 
-    private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
-        if (pastSequence.getLength() == depth) return pastSequence;
+    private Resultat calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
+        if (pastSequence.getLength() == depth) return new Resultat(pastSequence, 1);
 
         Set<Mouvement> mouvements;
 
@@ -82,10 +83,13 @@ public class JoueurOrdi extends Joueur {
         }
 
         MoveSequence bestMove = null;
+        int mouvementsAnalyzer = 0;
 
         for (Mouvement mouvement : mouvements) {
             mouvement.appliquer(jeuData.getPlateau());
-            MoveSequence moveSequence = calculerMeilleurMouvement(pastSequence.addAndReturn(mouvement), oppose(couleur));
+            Resultat resultat = calculerMeilleurMouvement(pastSequence.addAndReturn(mouvement), oppose(couleur));
+            MoveSequence moveSequence = resultat.getMoveSequence();
+            mouvementsAnalyzer += resultat.getMouvementsAnalyzer();
 
             if (bestMove == null) {
                 bestMove = moveSequence;
@@ -108,7 +112,7 @@ public class JoueurOrdi extends Joueur {
             mouvement.undo(jeuData.getPlateau());
         }
 
-        return bestMove == null ? pastSequence : bestMove;
+        return new Resultat(bestMove == null ? pastSequence : bestMove, mouvementsAnalyzer);
     }
 
     private Couleur oppose(Couleur couleur) {
@@ -145,6 +149,24 @@ public class JoueurOrdi extends Joueur {
 
         Mouvement getFirst() {
             return mouvements.get(0);
+        }
+    }
+
+    private class Resultat {
+        private final MoveSequence moveSequence;
+        private final int mouvementsAnalyzer;
+
+        public Resultat(MoveSequence moveSequence, int mouvementsAnalyzer) {
+            this.moveSequence = moveSequence;
+            this.mouvementsAnalyzer = mouvementsAnalyzer;
+        }
+
+        public int getMouvementsAnalyzer() {
+            return mouvementsAnalyzer;
+        }
+
+        public MoveSequence getMoveSequence() {
+            return moveSequence;
         }
     }
 
