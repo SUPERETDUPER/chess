@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import modele.Jeu;
 
 public class JeuController {
     @FXML
@@ -23,8 +24,11 @@ public class JeuController {
 
     private final ObservableList<Action> actions;
 
-    JeuController(App.MontrerIntro goBack, Board board) {
-        this.board = board;
+    private final Jeu jeu;
+
+    JeuController(App.MontrerIntro goBack, Jeu jeu) {
+        this.board = new Board(jeu.getJeuData());
+        this.jeu = jeu;
 
         Action revnirAuMenuPrincipal = new Action() {
             @Override
@@ -39,6 +43,10 @@ public class JeuController {
         };
 
         actions = FXCollections.observableArrayList(revnirAuMenuPrincipal);
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     @FXML

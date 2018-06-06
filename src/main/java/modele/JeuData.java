@@ -35,7 +35,6 @@ public class JeuData {
     }
 
     void notifyListenerOfChange(Plateau plateau) {
-        System.out.println("Notified: " + plateau + (changeListener == null));
         changeListener.accept(plateau);
     }
 
