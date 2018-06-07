@@ -5,9 +5,7 @@ import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 //TODO Upgrade algorithm to min/max with alpha-beta pruning
@@ -17,39 +15,15 @@ import java.util.function.Consumer;
  * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
  */
 public class JoueurOrdi extends Joueur {
-    public enum Difficulte {
-        DIFFICILE {
-            @Override
-            public String toString() {
-                return "difficile";
-            }
-        },
-        FACILE {
-            @Override
-            public String toString() {
-                return "facile";
-            }
-        }
-    }
+    public static final Difficulte NIVEAU_FACILE = new Difficulte(3, 10000, "Facile");
+    public static final Difficulte NIVEAU_DIFFICILE = new Difficulte(4, 40000, "Difficile");
 
-    private final int depth;
     private final Difficulte difficulte;
 
     private JeuData jeuData;
 
     public JoueurOrdi(Difficulte difficulte) {
         this.difficulte = difficulte;
-
-        switch (difficulte) {
-            case FACILE:
-                depth = 3;
-                break;
-            case DIFFICILE:
-                depth = 4;
-                break;
-            default:
-                throw new RuntimeException("Difficulté inconnue");
-        }
     }
 
     @Override
@@ -64,114 +38,146 @@ public class JoueurOrdi extends Joueur {
      */
     @Override
     public void getMouvement(Consumer<Mouvement> callback, Couleur couleur) {
-        new Thread(() -> {
-            Resultat resultat = calculerMeilleurMouvement(new MoveSequence(), couleur);
-            System.out.println(resultat.getMouvementsAnalyzer());
-            callback.accept(resultat.getMoveSequence().getFirst());
-        }).start();
+        new Thread(() -> callback.accept(calculerMeilleurMouvement(couleur))).start();
     }
 
-    private Resultat calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
-        if (pastSequence.getLength() == depth) return new Resultat(pastSequence, 1);
+    private Mouvement calculerMeilleurMouvement(Couleur couleur) {
+        State bestState = null;
 
-        Set<Mouvement> mouvements;
-
-        if (pastSequence.getLength() == 0) {
-            mouvements = jeuData.getAllLegalMoves(couleur);
-        } else {
-            mouvements = jeuData.getAllMoves(couleur);
-        }
-
-        MoveSequence bestMove = null;
         int mouvementsAnalyzer = 0;
 
-        for (Mouvement mouvement : mouvements) {
-            mouvement.appliquer(jeuData.getPlateau());
-            Resultat resultat = calculerMeilleurMouvement(pastSequence.addAndReturn(mouvement), oppose(couleur));
-            MoveSequence moveSequence = resultat.getMoveSequence();
-            mouvementsAnalyzer += resultat.getMouvementsAnalyzer();
+        Queue<State> states = new LinkedList<>(Collections.singletonList(new State(couleur)));
 
-            if (bestMove == null) {
-                bestMove = moveSequence;
+        while (true) {
+            State state = states.remove(); //Obtenir la prochaine position à analyzer
+
+            for (Mouvement mouvement : state.getPreviousMoves()) {
+                mouvement.appliquer(jeuData.getPlateau());
+            }
+
+            if (bestState == null) {
+                bestState = state;
             } else {
-                if (couleur == Couleur.BLANC) {
+                if (state.getCouleur() == Couleur.NOIR) {
                     //50% du temps si le mouvement à la même valeur échanger pour avoir de la variété
-                    if (moveSequence.getValue() > bestMove.getValue()
-                            || (moveSequence.getValue() == bestMove.getValue() && Math.random() > 0.5)) {
-                        bestMove = moveSequence;
+                    if ((state.getValue() > bestState.getValue())
+                            || (state.getValue() == bestState.getValue() && Math.random() > 0.5)) {
+                        bestState = state;
                     }
                 } else {
                     //50% du temps si le mouvement à la même valeur échanger pour avoir de la variété
-                    if (moveSequence.getValue() < bestMove.getValue()
-                            || (moveSequence.getValue() == bestMove.getValue() && Math.random() > 0.5)) {
-                        bestMove = moveSequence;
+                    if (state.getValue() < bestState.getValue()
+                            || (state.getValue() == bestState.getValue() && Math.random() > 0.5)) {
+                        bestState = state;
                     }
                 }
             }
 
-            mouvement.undo(jeuData.getPlateau());
+            mouvementsAnalyzer += 1;
+
+            System.out.println(state.getSize() + " " + mouvementsAnalyzer);
+
+            if (state.getSize() >= difficulte.getMinSearchDepth() && mouvementsAnalyzer >= difficulte.getMinSearchMoves()) {
+                for (int i = state.getPreviousMoves().size() - 1; i >= 0; i--) {
+                    state.getPreviousMoves().get(i).undo(jeuData.getPlateau());
+                }
+
+                break; //Si passe arreter
+            }
+
+            //Ajouter les autres options à la liste
+            Set<Mouvement> mouvements;
+
+            if (state.getPreviousMoves().size() == 0) {
+                mouvements = jeuData.getAllLegalMoves(state.getCouleur());
+            } else {
+                mouvements = jeuData.getAllMoves(state.getCouleur());
+            }
+
+            for (Mouvement mouvement : mouvements) {
+                states.add(state.appendAndReturn(mouvement));
+            }
+
+            for (int i = state.getPreviousMoves().size() - 1; i >= 0; i--) {
+                state.getPreviousMoves().get(i).undo(jeuData.getPlateau());
+            }
         }
 
-        return new Resultat(bestMove == null ? pastSequence : bestMove, mouvementsAnalyzer);
+        System.out.println(mouvementsAnalyzer + " " + bestState.getValue());
+
+        return bestState.getPreviousMoves().get(0);
     }
 
-    private Couleur oppose(Couleur couleur) {
-        return couleur == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC;
-    }
-
-    private class MoveSequence {
-        private final List<Mouvement> mouvements;
+    private class State {
         private final int value;
+        private final List<Mouvement> previousMoves;
+        private final Couleur couleur;
 
-        MoveSequence() {
-            this.value = 0;
-            this.mouvements = new ArrayList<>();
-        }
-
-        private MoveSequence(List<Mouvement> mouvements, int value) {
-            this.mouvements = mouvements;
+        State(int value, List<Mouvement> previousMoves, Couleur couleur) {
             this.value = value;
+            this.couleur = couleur;
+            this.previousMoves = previousMoves;
         }
 
-        MoveSequence addAndReturn(Mouvement mouvement) {
-            List<Mouvement> newList = new ArrayList<>(mouvements);
-            newList.add(mouvement);
-            return new MoveSequence(newList, value + mouvement.getValeur());
+        State(Couleur couleur) {
+            this.couleur = couleur;
+            this.value = 0;
+            this.previousMoves = new ArrayList<>();
+        }
+
+        State appendAndReturn(Mouvement mouvement) {
+            List<Mouvement> newMoveSequence = new ArrayList<>(this.previousMoves);
+            newMoveSequence.add(mouvement);
+            return new State(value + mouvement.getValeur(),
+                    newMoveSequence,
+                    couleur == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC
+            );
+        }
+
+        List<Mouvement> getPreviousMoves() {
+            return previousMoves;
         }
 
         int getValue() {
             return value;
         }
 
-        int getLength() {
-            return mouvements.size();
+        int getSize() {
+            return previousMoves.size();
         }
 
-        Mouvement getFirst() {
-            return mouvements.get(0);
+        public Couleur getCouleur() {
+            return couleur;
+        }
+    }
+
+    private static class Difficulte {
+        private final int minSearchDepth;
+        private final int minSearchMoves;
+        private final String nom;
+
+        Difficulte(int minSearchDepth, int minSearchMoves, String nom) {
+            this.minSearchDepth = minSearchDepth;
+            this.minSearchMoves = minSearchMoves;
+            this.nom = nom;
+        }
+
+        int getMinSearchDepth() {
+            return minSearchDepth;
+        }
+
+        int getMinSearchMoves() {
+            return minSearchMoves;
+        }
+
+        String getNom() {
+            return nom;
         }
     }
 
-    private class Resultat {
-        private final MoveSequence moveSequence;
-        private final int mouvementsAnalyzer;
-
-        public Resultat(MoveSequence moveSequence, int mouvementsAnalyzer) {
-            this.moveSequence = moveSequence;
-            this.mouvementsAnalyzer = mouvementsAnalyzer;
-        }
-
-        public int getMouvementsAnalyzer() {
-            return mouvementsAnalyzer;
-        }
-
-        public MoveSequence getMoveSequence() {
-            return moveSequence;
-        }
-    }
 
     @Override
     String getNom() {
-        return "Ordinateur (" + difficulte + ")";
+        return "Ordinateur (" + difficulte.getNom() + ")";
     }
 }

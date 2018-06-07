@@ -58,7 +58,7 @@ public class Plateau {
     @NotNull
     public Position removePiece(@NotNull Piece piece) {
         Position position = board.inverse().remove(piece);
-        if (position == null) throw new IllegalArgumentException("Aucune pièce à: " + piece);
+        if (position == null) throw new IllegalArgumentException("Aucune pièce " + piece);
         return position;
     }
 

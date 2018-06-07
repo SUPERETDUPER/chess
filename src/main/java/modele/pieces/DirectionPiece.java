@@ -33,7 +33,7 @@ abstract class DirectionPiece extends Piece {
                 if (piece == null) mouvements.add(new MouvementNormal(this, end));
                 else {
                     if (piece.getCouleur() != couleur) {
-                        mouvements.add(new MouvementManger(this, end));
+                        mouvements.add(new MouvementManger(this, end, piece));
                     }
 
                     break;
