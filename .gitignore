@@ -2,3 +2,4 @@
 ### Maven template
 target/
 .idea/workspace.xml
+/dernierePartie.txt

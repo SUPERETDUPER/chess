@@ -2,10 +2,15 @@ package modele.plateau;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import modele.JeuData;
+import modele.moves.Mouvement;
+import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +18,7 @@ import java.util.Set;
  * Represente le plateau de jeu. Permet d'acceder directement à la pièce à une position ou à la position d'une pièce
  * Utilise le BiMap de Google Guava
  */
-public class Plateau {
+public class Plateau implements Serializable {
     private final BiMap<Position, Piece> board;
 
     public Plateau() {
@@ -22,6 +27,19 @@ public class Plateau {
 
     public Plateau(Map<Position, Piece> startingMap) {
         board = HashBiMap.create(startingMap);
+    }
+
+    /**
+     * @return vrai si la pièce peut se faire manger par une pièce de l'autre couleur
+     */
+    public boolean isPieceAttaquer(Piece piece) {
+        for (Piece attaqueur : iteratePieces()) {
+            if (attaqueur.getCouleur() != piece.getCouleur() && attaqueur.attaquePosition(this, getPosition(piece))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Nullable
@@ -87,5 +105,17 @@ public class Plateau {
         stringBuilder.append("]");
 
         return stringBuilder.toString();
+    }
+
+    @NotNull
+    public Set<Mouvement> getAllMoves(Couleur couleur, JeuData jeuData) {
+        Set<Mouvement> mouvements = new HashSet<>();
+
+        for (Piece piece : iteratePieces()) {
+            if (piece.getCouleur() == couleur) {
+                mouvements.addAll(piece.generateAllMoves(this));
+            }
+        }
+        return mouvements;
     }
 }

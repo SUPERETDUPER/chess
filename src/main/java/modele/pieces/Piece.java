@@ -4,13 +4,14 @@ import modele.moves.Mouvement;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Une pièce de jeu
  */
-public abstract class Piece {
-    final Couleur couleur;
+public abstract class Piece implements Serializable {
+    Couleur couleur;
 
     public Piece(Couleur couleur) {
         this.couleur = couleur;

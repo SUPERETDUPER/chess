@@ -59,7 +59,7 @@ public class JoueurOrdi extends Joueur {
         if (pastSequence.getLength() == 0) {
             mouvements = jeuData.getAllLegalMoves(couleur);
         } else {
-            mouvements = jeuData.getAllMoves(couleur);
+            mouvements = jeuData.plateau.getAllMoves(couleur, jeuData);
         }
 
         MoveSequence bestMove = null;

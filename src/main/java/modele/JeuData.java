@@ -2,7 +2,6 @@ package modele;
 
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
-import modele.pieces.Piece;
 import modele.pieces.Roi;
 import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +14,7 @@ import java.util.function.Consumer;
 
 public class JeuData {
     @NotNull
-    private final Plateau plateau;
+    public final Plateau plateau;
 
     @Nullable
     private Consumer<Plateau> changeListener;
@@ -50,19 +49,7 @@ public class JeuData {
 
     @NotNull
     public Set<Mouvement> getAllLegalMoves(Couleur couleur) {
-        return filterOnlyLegal(getAllMoves(couleur), couleur);
-    }
-
-    @NotNull
-    public Set<Mouvement> getAllMoves(Couleur couleur) {
-        Set<Mouvement> mouvements = new HashSet<>();
-
-        for (Piece piece : plateau.iteratePieces()) {
-            if (piece.getCouleur() == couleur) {
-                mouvements.addAll(piece.generateAllMoves(plateau));
-            }
-        }
-        return mouvements;
+        return filterOnlyLegal(plateau.getAllMoves(couleur, this), couleur);
     }
 
     @NotNull
@@ -74,7 +61,7 @@ public class JeuData {
         for (Mouvement mouvement : mouvements) {
             mouvement.appliquer(tempPlateau);
 
-            if (!Helper.isPieceAttaquer(tempPlateau, getRoi(verifierPour))) {
+            if (!tempPlateau.isPieceAttaquer(getRoi(verifierPour))) {
                 legalMouvements.add(mouvement);
             }
 

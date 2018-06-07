@@ -1,9 +1,11 @@
 package modele.plateau;
 
+import java.io.Serializable;
+
 /**
  * Un déplacement relatif
  */
-public class Offset {
+public class Offset implements Serializable {
     public static final Offset HAUT_GAUGHE = new Offset(-1, -1);
     public static final Offset HAUT_CENTRE = new Offset(-1, 0);
     public static final Offset HAUT_DROIT = new Offset(-1, 1);

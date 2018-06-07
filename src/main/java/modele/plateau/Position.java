@@ -3,20 +3,24 @@ package modele.plateau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Une position du plateau
  */
-public class Position {
+public class Position implements Serializable {
     public static final int LIMITE = 8;
 
-    private final int rangee;
-    private final int colonne;
+    private int rangee;
+    private int colonne;
 
     public Position(int rangee, int colonne) {
         this.rangee = rangee;
         this.colonne = colonne;
+    }
+
+    public Position() {
     }
 
     public int getColonne() {

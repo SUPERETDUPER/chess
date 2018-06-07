@@ -13,6 +13,11 @@ import javafx.scene.layout.StackPane;
 import modele.Jeu;
 import modele.joueur.Joueur;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 /**
  * Controlle l'intreface de jeu
  */
@@ -48,6 +53,25 @@ class JeuController {
             @Override
             String getDescription() {
                 return "Revenir au menu principal";
+            }
+        });
+
+        actions.add(new Action() {
+            @Override
+            void onClick() {
+                try {
+                    File file = new File("dernierePartie.txt");
+                    file.createNewFile();
+                    new ObjectOutputStream(new FileOutputStream(file)).writeObject(jeu.getJeuData().plateau);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("File not found: " + e);
+                }
+            }
+
+            @Override
+            String getDescription() {
+                return "Sauvgarder";
             }
         });
     }
