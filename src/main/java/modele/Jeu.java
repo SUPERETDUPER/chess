@@ -61,7 +61,7 @@ public class Jeu {
 
         if (mouvements.isEmpty()) {
             if (Helper.isPieceAttaquer(jeuData.getPlateau(), jeuData.getRoi(tourA))) {
-                if (tourA == Couleur.BLANC) {
+                if (tourA == Couleur.NOIR) {
                     resultatListener.accept(Resultat.BLANC_GAGNE);
                 } else {
                     resultatListener.accept(Resultat.NOIR_GAGNE);
