@@ -17,39 +17,15 @@ import java.util.function.Consumer;
  * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
  */
 public class JoueurOrdi extends Joueur {
-    public enum Difficulte {
-        DIFFICILE {
-            @Override
-            public String toString() {
-                return "difficile";
-            }
-        },
-        FACILE {
-            @Override
-            public String toString() {
-                return "facile";
-            }
-        }
-    }
+    public static final Difficulte NIVEAU_FACILE = new Difficulte(3, "Facile");
+    public static final Difficulte NIVEAU_DIFFICILE = new Difficulte(4, "Difficile");
 
-    private final int depth;
     private final Difficulte difficulte;
 
     private JeuData jeuData;
 
     public JoueurOrdi(Difficulte difficulte) {
         this.difficulte = difficulte;
-
-        switch (difficulte) {
-            case FACILE:
-                depth = 3;
-                break;
-            case DIFFICILE:
-                depth = 4;
-                break;
-            default:
-                throw new RuntimeException("Difficulté inconnue");
-        }
     }
 
     @Override
@@ -71,7 +47,7 @@ public class JoueurOrdi extends Joueur {
     }
 
     private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
-        if (pastSequence.getLength() == depth) return pastSequence;
+        if (pastSequence.getLength() == difficulte.depth) return pastSequence;
 
         Set<Mouvement> mouvements;
 
@@ -148,8 +124,18 @@ public class JoueurOrdi extends Joueur {
         }
     }
 
+    private static class Difficulte {
+        private final int depth;
+        private final String nom;
+
+        public Difficulte(int depth, String nom) {
+            this.depth = depth;
+            this.nom = nom;
+        }
+    }
+
     @Override
     String getNom() {
-        return "Ordinateur (" + difficulte + ")";
+        return "Ordinateur (" + difficulte.nom + ")";
     }
 }
