@@ -9,28 +9,23 @@ import modele.plateau.Position;
 class GraveyardController {
     private final static double GRAVEYARD_SPACING_RATIO = 0.1;
 
-    private final ReadOnlyIntegerWrapper piecesDansGraveyardBlanc = new ReadOnlyIntegerWrapper(0);
-    private final ReadOnlyIntegerWrapper piecesDansGraveyardNoir = new ReadOnlyIntegerWrapper(0);
+    private final ReadOnlyIntegerWrapper piecesDansGraveyard = new ReadOnlyIntegerWrapper(0);
     private final ObservableNumberValue largeur;
+    private final ObservableNumberValue xOffset;
+    private final boolean leftToRight;
 
-    GraveyardController(ObservableNumberValue height) {
+    GraveyardController(ObservableNumberValue height, ObservableNumberValue xOffset, boolean leftToRight) {
         this.largeur = Bindings.divide(height, Position.LIMITE);
+        this.xOffset = xOffset;
+        this.leftToRight = leftToRight;
     }
 
-    void incrementGraveyardNoir() {
-        piecesDansGraveyardNoir.set(piecesDansGraveyardNoir.get() + 1);
+    void incrementCounter() {
+        piecesDansGraveyard.set(piecesDansGraveyard.get() + 1);
     }
 
-    void incrementGraveyardBlanc() {
-        piecesDansGraveyardBlanc.set(piecesDansGraveyardBlanc.get() + 1);
-    }
-
-    ReadOnlyIntegerProperty getPiecesDansGraveyardBlanc() {
-        return piecesDansGraveyardBlanc.getReadOnlyProperty();
-    }
-
-    ReadOnlyIntegerProperty getPiecesDansGraveyardNoir() {
-        return piecesDansGraveyardNoir.getReadOnlyProperty();
+    ReadOnlyIntegerProperty getPiecesDansGraveyard() {
+        return piecesDansGraveyard.getReadOnlyProperty();
     }
 
     ObservableNumberValue getLargeurTotal() {
@@ -46,6 +41,14 @@ class GraveyardController {
     }
 
     double getTotalWidthRatio() {
-        return 2 * (2 + GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
+        return (2 + GRAVEYARD_SPACING_RATIO) / Position.LIMITE;
+    }
+
+    public ObservableNumberValue getXOffset() {
+        return xOffset;
+    }
+
+    public boolean isLeftToRight() {
+        return leftToRight;
     }
 }

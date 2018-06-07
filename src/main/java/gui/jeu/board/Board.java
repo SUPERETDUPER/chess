@@ -3,6 +3,7 @@ package gui.jeu.board;
 import gui.jeu.board.view.Case;
 import gui.jeu.board.view.PiecePane;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
 import modele.JeuData;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
 
@@ -43,10 +45,15 @@ public class Board extends Pane {
     @Nullable
     private DemandeDeMouvement moveRequest;
 
-    private final GraveyardController graveyardController = new GraveyardController(this.heightProperty());
+    private final EnumMap<Couleur, GraveyardController> graveyardControllers = new EnumMap<>(Couleur.class);
 
     public Board(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
+
+        this.graveyardControllers.put(Couleur.BLANC, new GraveyardController(this.heightProperty(),
+                new SimpleIntegerProperty(0), false));
+        this.graveyardControllers.put(Couleur.NOIR, new GraveyardController(this.heightProperty(),
+                this.heightProperty().add(graveyardControllers.get(Couleur.BLANC).getLargeurTotal()), true));
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -58,7 +65,7 @@ public class Board extends Pane {
             Case aCase = new Case(
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     this::handleClick,
-                    new CasePosition(position, this.heightProperty(), graveyardController.getLargeurTotal())
+                    new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotal())
             );
 
             //Ajouter la case au plateau et à la liste
@@ -71,7 +78,7 @@ public class Board extends Pane {
             if (piece != null) {
                 PiecePane piecePane = new PiecePane(
                         piece,
-                        new CasePosition(position, this.heightProperty(), graveyardController.getLargeurTotal())
+                        new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotal())
                 );
 
                 //Ajouter les listeners
@@ -136,11 +143,9 @@ public class Board extends Pane {
                 Position position = plateau.getPosition(piecePane.getPiece());
 
                 if (position != null) {
-                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), graveyardController.getLargeurTotal()));
+                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotal()));
                 } else {
-                    Couleur couleur = piecePane.getPiece().getCouleur();
-
-                    animationController.addToQueue(piecePane, new GraveyardPosition(couleur, this.heightProperty(), graveyardController));
+                    animationController.addToQueue(piecePane, new GraveyardPosition(graveyardControllers.get(piecePane.getPiece().getCouleur())));
 
                     piecesToRemove.add(piecePane);
                 }
@@ -162,6 +167,12 @@ public class Board extends Pane {
      */
     @Override
     protected double computePrefWidth(double height) {
-        return height * (1 + graveyardController.getTotalWidthRatio());
+        double ratio = 1;
+
+        for (GraveyardController graveyardController : graveyardControllers.values()) {
+            ratio += graveyardController.getTotalWidthRatio();
+        }
+
+        return height * ratio;
     }
 }

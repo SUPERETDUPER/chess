@@ -5,57 +5,51 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
-import modele.pieces.Couleur;
 import modele.plateau.Position;
 
 public class GraveyardPosition implements PositionBoard {
-    private final Couleur couleur;
-    private final ObservableNumberValue hauteur;
     private final GraveyardController graveyardController;
 
-    public GraveyardPosition(Couleur couleur, ObservableNumberValue hauteur, GraveyardController graveyardController) {
-        this.couleur = couleur;
-        this.hauteur = hauteur;
+    public GraveyardPosition(GraveyardController graveyardController) {
         this.graveyardController = graveyardController;
     }
 
     @Override
     public ObservableValue<Number> getX() {
-        if (couleur == Couleur.BLANC) {
-            if (graveyardController.getPiecesDansGraveyardBlanc().get() >= Position.LIMITE) {
+        return Bindings.add(getRelativeX(), graveyardController.getXOffset());
+    }
+
+    private ObservableNumberValue getRelativeX() {
+        if (graveyardController.isLeftToRight()) {
+            if (graveyardController.getPiecesDansGraveyard().get() < Position.LIMITE) {
                 return new SimpleIntegerProperty(0);
             } else {
                 return graveyardController.getLargeur();
             }
         } else {
-            if (graveyardController.getPiecesDansGraveyardNoir().get() < Position.LIMITE) {
-                return Bindings.add(hauteur, graveyardController.getLargeurTotal()).add(graveyardController.getSpacing());
+            if (graveyardController.getPiecesDansGraveyard().get() < Position.LIMITE) {
+                return graveyardController.getLargeur();
             } else {
-                return Bindings.add(hauteur, graveyardController.getLargeurTotal()).add(graveyardController.getSpacing())
-                        .add(graveyardController.getLargeur());
+                return new SimpleIntegerProperty(0);
             }
         }
     }
 
     @Override
     public ObservableValue<Number> getY() {
-        int piecesDansGraveyard = (couleur == Couleur.BLANC ? graveyardController.getPiecesDansGraveyardBlanc() : graveyardController.getPiecesDansGraveyardNoir()).get();
+        int piecesDansGraveyard = graveyardController.getPiecesDansGraveyard().get();
 
         if (piecesDansGraveyard >= Position.LIMITE) piecesDansGraveyard -= Position.LIMITE;
 
-        return Bindings.divide(hauteur, Position.LIMITE).multiply(piecesDansGraveyard);
+        return Bindings.multiply(graveyardController.getLargeur(), piecesDansGraveyard);
     }
 
     public ObservableValue<Number> getLargeur() {
-        return Bindings.divide(hauteur, Position.LIMITE);
+        return graveyardController.getLargeur();
     }
 
     @Override
     public void notifyPlaced() {
-        if (couleur == Couleur.BLANC) {
-            graveyardController.incrementGraveyardBlanc();
-        } else {
-            graveyardController.incrementGraveyardNoir();
-        }
+        graveyardController.incrementCounter();
     }
 }
