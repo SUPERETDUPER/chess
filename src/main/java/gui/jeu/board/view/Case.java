@@ -1,6 +1,6 @@
 package gui.jeu.board.view;
 
-import gui.jeu.board.CasePosition;
+import gui.jeu.board.layout.CasePosition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;

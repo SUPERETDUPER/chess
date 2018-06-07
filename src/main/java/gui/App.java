@@ -21,11 +21,6 @@ public class App extends Application {
         void montrerIntro();
     }
 
-    @FunctionalInterface
-    public interface MontrerJeu {
-        void montrerJeu(EnumMap<Couleur, Joueur> joueurs);
-    }
-
     private static final String TITRE = "Échec et Mat";
 
     private final Scene scene = new Scene(new Pane());

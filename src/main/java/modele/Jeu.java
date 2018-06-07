@@ -31,6 +31,10 @@ public class Jeu {
     public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;
         this.joueurs = joueurs;
+
+        for (Joueur joueur : joueurs.values()) {
+            joueur.initializeJeuData(jeuData);
+        }
     }
 
     /**
@@ -78,5 +82,10 @@ public class Jeu {
 
     public JeuData getJeuData() {
         return jeuData;
+    }
+
+    @NotNull
+    public EnumMap<Couleur, Joueur> getJoueurs() {
+        return joueurs;
     }
 }

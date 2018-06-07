@@ -3,7 +3,7 @@ package gui.jeu;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXListView;
 import gui.App;
-import gui.jeu.board.Board;
+import gui.jeu.board.PlateauPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,8 +11,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import modele.Jeu;
+import modele.joueur.Joueur;
 
-public class JeuController {
+/**
+ * Controlle l'intreface de jeu
+ */
+class JeuController {
     @FXML
     private StackPane plateauContainer;
 
@@ -22,18 +26,20 @@ public class JeuController {
     @FXML
     private JFXListView<Action> drawerList;
 
-    private final Board board;
+    private final PlateauPane plateauPane;
 
-    private final ObservableList<Action> actions;
-
-    private final Jeu jeu;
+    private final ObservableList<Action> actions = FXCollections.observableArrayList();
 
     JeuController(App.MontrerIntro goBack, Jeu jeu) {
-        this.board = new Board(jeu.getJeuData());
-        this.jeu = jeu;
-        jeu.setResultatListener(this::handleResultat);
+        this.plateauPane = new PlateauPane(jeu.getJeuData());
 
-        Action revnirAuMenuPrincipal = new Action() {
+        for (Joueur joueur : jeu.getJoueurs().values()) {
+            joueur.initializeInterface(plateauPane);
+        }
+
+        jeu.setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
+
+        actions.add(new Action() {
             @Override
             void onClick() {
                 goBack.montrerIntro();
@@ -43,49 +49,52 @@ public class JeuController {
             String getDescription() {
                 return "Revenir au menu principal";
             }
-        };
-
-        actions = FXCollections.observableArrayList(revnirAuMenuPrincipal);
-    }
-
-    public Board getBoard() {
-        return board;
+        });
     }
 
     @FXML
     private void initialize() {
-        plateauContainer.getChildren().add(board);
+        plateauContainer.getChildren().add(plateauPane);
+
         drawerList.setItems(actions);
 
+        //Quand la liste est appuyée executer l'option
         drawerList.setOnMouseClicked(event -> drawerList.getSelectionModel().getSelectedItem().onClick());
     }
 
     @FXML
-    private void handleHamburger() {
+    private void handleHamburgerClick() {
         drawer.open();
     }
 
     private void handleResultat(Jeu.Resultat resultat) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            switch (resultat) {
-                case EGALITE:
-                    alert.setContentText("Match nul");
-                    break;
-                case NOIR_GAGNE:
-                    alert.setContentText("Les noirs ont gagnés");
-                    break;
-                case BLANC_GAGNE:
-                    alert.setContentText("Les blancs ont gagnés");
-            }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        switch (resultat) {
+            case EGALITE:
+                alert.setContentText("Match nul");
+                break;
+            case NOIR_GAGNE:
+                alert.setContentText("Les noirs ont gagnés");
+                break;
+            case BLANC_GAGNE:
+                alert.setContentText("Les blancs ont gagnés");
+        }
 
-            alert.showAndWait();
-        });
+        alert.showAndWait();
     }
 
-    public abstract static class Action {
+    /**
+     * Une action dans le drawer
+     */
+    public abstract class Action {
+        /**
+         * Ce qu'il faut faire pour compléter l'action
+         */
         abstract void onClick();
 
+        /**
+         * @return Le nom de l'action
+         */
         abstract String getDescription();
 
         @Override

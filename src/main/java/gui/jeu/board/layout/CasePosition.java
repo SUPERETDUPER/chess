@@ -1,4 +1,4 @@
-package gui.jeu.board;
+package gui.jeu.board.layout;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
@@ -11,7 +11,7 @@ public class CasePosition implements PositionBoard {
     private final ObservableNumberValue xOffset;
     private final NumberBinding largeur;
 
-    CasePosition(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
+    public CasePosition(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
         this.position = position;
         this.xOffset = xOffset;
 

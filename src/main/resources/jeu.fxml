@@ -6,8 +6,7 @@
 <?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
-<JFXDrawer xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="gui.jeu.JeuController" fx:id="drawer">
+<JFXDrawer xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:id="drawer">
     <sidePane>
         <JFXListView fx:id="drawerList"/>
     </sidePane>
@@ -21,7 +20,7 @@
             <padding>
                 <Insets topRightBottomLeft="20"/>
             </padding>
-            <JFXHamburger alignment="BASELINE_LEFT" onMouseClicked="#handleHamburger"/>
+            <JFXHamburger alignment="BASELINE_LEFT" onMouseClicked="#handleHamburgerClick"/>
 
             <VBox alignment="CENTER" fillWidth="false" VBox.vgrow="SOMETIMES">
                 <StackPane fx:id="plateauContainer" VBox.vgrow="SOMETIMES"/>

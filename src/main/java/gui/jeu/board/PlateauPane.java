@@ -1,5 +1,7 @@
 package gui.jeu.board;
 
+import gui.jeu.board.layout.CasePosition;
+import gui.jeu.board.layout.GraveyardPosition;
 import gui.jeu.board.view.Case;
 import gui.jeu.board.view.PiecePane;
 import javafx.application.Platform;
@@ -24,7 +26,7 @@ import java.util.Set;
 /**
  * Controle le plateau de jeu
  */
-public class Board extends Pane {
+public class PlateauPane extends Pane {
     //La liste de case
     @NotNull
     private final Tableau<Case> cases = new Tableau<>();
@@ -47,7 +49,7 @@ public class Board extends Pane {
 
     private final EnumMap<Couleur, GraveyardController> graveyardControllers = new EnumMap<>(Couleur.class);
 
-    public Board(@NotNull JeuData jeuData) {
+    public PlateauPane(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
 
         this.graveyardControllers.put(Couleur.BLANC, new GraveyardController(this.heightProperty(),

@@ -6,7 +6,7 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.value.ObservableNumberValue;
 import modele.plateau.Position;
 
-class GraveyardController {
+public class GraveyardController {
     private final static double GRAVEYARD_SPACING_RATIO = 0.1;
 
     private final ReadOnlyIntegerWrapper piecesDansGraveyard = new ReadOnlyIntegerWrapper(0);
@@ -20,11 +20,11 @@ class GraveyardController {
         this.leftToRight = leftToRight;
     }
 
-    void incrementCounter() {
+    public void incrementCounter() {
         piecesDansGraveyard.set(piecesDansGraveyard.get() + 1);
     }
 
-    ReadOnlyIntegerProperty getPiecesDansGraveyard() {
+    public ReadOnlyIntegerProperty getPiecesDansGraveyard() {
         return piecesDansGraveyard.getReadOnlyProperty();
     }
 

@@ -29,29 +29,15 @@ public class JeuScene {
         //Créer et commencer la partie
         Jeu jeu = new Jeu(jeuData, joueurs);
 
-        JeuController jeuController = new JeuController(goBack, jeu);
-
         //Créer l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
-
-        fxmlLoader.setControllerFactory(param -> {
-            if (param == JeuController.class) {
-                return jeuController;
-            }
-
-            throw new RuntimeException("Aucun controlleur connue");
-        });
+        fxmlLoader.setController(new JeuController(goBack, jeu));
 
         //Charger l'interface
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-
-        //Ajouter et créer les joueurs
-        for (Joueur joueur : joueurs.values()) {
-            joueur.initialize(jeuData, jeuController.getBoard());
         }
 
         jeu.commencer();

@@ -1,10 +1,13 @@
 package gui.intro;
 
-import gui.App;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import modele.joueur.Joueur;
+import modele.pieces.Couleur;
 
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.function.Consumer;
 
 /**
  * Le container pour la page d'intro
@@ -14,9 +17,9 @@ public class IntroRoot {
     private final Parent root;
 
     /**
-     * Créer le contenaire
+     * Créer la page d'intro avec le fichier fxml
      */
-    public IntroRoot(App.MontrerJeu montrerJeu) {
+    public IntroRoot(Consumer<EnumMap<Couleur, Joueur>> montrerJeu) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/intro.fxml"));
         fxmlLoader.setController(new IntroController(montrerJeu));
 

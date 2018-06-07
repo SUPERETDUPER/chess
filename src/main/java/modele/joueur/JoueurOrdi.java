@@ -1,6 +1,6 @@
 package modele.joueur;
 
-import gui.jeu.board.Board;
+import gui.jeu.board.PlateauPane;
 import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
@@ -29,8 +29,13 @@ public class JoueurOrdi extends Joueur {
     }
 
     @Override
-    public void initialize(JeuData jeuData, Board board) {
+    public void initializeJeuData(JeuData jeuData) {
         this.jeuData = jeuData;
+    }
+
+    @Override
+    public void initializeInterface(PlateauPane plateauPane) {
+
     }
 
     /**

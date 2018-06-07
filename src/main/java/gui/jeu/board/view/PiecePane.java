@@ -1,6 +1,6 @@
 package gui.jeu.board.view;
 
-import gui.jeu.board.PositionBoard;
+import gui.jeu.board.layout.PositionBoard;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;

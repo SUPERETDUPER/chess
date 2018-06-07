@@ -1,5 +1,6 @@
 package gui.jeu.board;
 
+import gui.jeu.board.layout.PositionBoard;
 import gui.jeu.board.view.PiecePane;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

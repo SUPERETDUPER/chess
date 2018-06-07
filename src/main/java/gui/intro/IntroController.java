@@ -1,7 +1,6 @@
 package gui.intro;
 
 import com.jfoenix.controls.JFXComboBox;
-import gui.App;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
@@ -11,6 +10,7 @@ import modele.joueur.JoueurOrdi;
 import modele.pieces.Couleur;
 
 import java.util.EnumMap;
+import java.util.function.Consumer;
 
 /**
  * Controlle la page d'intro
@@ -19,7 +19,7 @@ class IntroController {
     /**
      * La méthode à appeler pour passer au jeu
      */
-    private final App.MontrerJeu onJouer;
+    private final Consumer<EnumMap<Couleur, Joueur>> onJouer;
 
     @FXML
     private VBox joueurBlancContainer;
@@ -40,27 +40,29 @@ class IntroController {
             new JoueurOrdi(JoueurOrdi.NIVEAU_DIFFICILE)
     ));
 
-    IntroController(App.MontrerJeu onJouer) {
+    IntroController(Consumer<EnumMap<Couleur, Joueur>> onJouer) {
         this.onJouer = onJouer;
 
+        //Sélectionner la première option
         joueursNoir.getSelectionModel().select(0);
         joueursBlanc.getSelectionModel().select(0);
     }
 
     @FXML
     private void initialize() {
+        //Ajouter le drop down à l'interface
         joueurBlancContainer.getChildren().add(joueursBlanc);
         joueurNoirContainer.getChildren().add(joueursNoir);
     }
 
     @FXML
     private void handleJouer() {
-        //Créer les joueurs
+        //Obtenir les 2 joueurs et les mettres dans une liste
         EnumMap<Couleur, Joueur> joueurs = new EnumMap<>(Couleur.class);
         joueurs.put(Couleur.BLANC, joueursBlanc.getSelectionModel().getSelectedItem());
         joueurs.put(Couleur.NOIR, joueursNoir.getSelectionModel().getSelectedItem());
 
         //Commencer le jeu
-        onJouer.montrerJeu(joueurs);
+        onJouer.accept(joueurs);
     }
 }

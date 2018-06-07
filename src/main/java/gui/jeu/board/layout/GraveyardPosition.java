@@ -1,6 +1,7 @@
-package gui.jeu.board;
+package gui.jeu.board.layout;
 
 
+import gui.jeu.board.GraveyardController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;

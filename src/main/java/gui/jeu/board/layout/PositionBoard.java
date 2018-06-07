@@ -1,4 +1,4 @@
-package gui.jeu.board;
+package gui.jeu.board.layout;
 
 import javafx.beans.value.ObservableValue;
 
