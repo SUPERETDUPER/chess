@@ -8,4 +8,6 @@ public interface PositionBoard {
     ObservableValue<Number> getY();
 
     ObservableValue<Number> getLargeur();
+
+    void notifyPlaced();
 }

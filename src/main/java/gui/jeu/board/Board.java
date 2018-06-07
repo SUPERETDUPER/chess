@@ -140,12 +140,6 @@ public class Board extends Pane {
                 } else {
                     Couleur couleur = piecePane.getPiece().getCouleur();
 
-                    if (couleur == Couleur.BLANC) {
-                        graveyardController.incrementGraveyardBlanc();
-                    } else {
-                        graveyardController.incrementGraveyardNoir();
-                    }
-
                     animationController.addToQueue(piecePane, new GraveyardPosition(couleur, this.heightProperty(), graveyardController));
 
                     piecesToRemove.add(piecePane);

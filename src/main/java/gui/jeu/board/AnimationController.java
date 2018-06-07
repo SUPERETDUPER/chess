@@ -37,8 +37,7 @@ class AnimationController {
      */
     private void bouger(PiecePane piecePane, PositionBoard position) {
         if (piecePane.isAtPosition(position)) {
-            piecePane.bind(position);
-            callNext();
+            onFinish(piecePane, position);
         } else {
             Timeline timeline = new Timeline(new KeyFrame(
                     new Duration(100),
@@ -52,14 +51,16 @@ class AnimationController {
                     )
             ));
 
-            timeline.setOnFinished(event -> {
-                piecePane.bind(position);
-                callNext();
-            });
+            timeline.setOnFinished(event -> onFinish(piecePane, position));
 
             piecePane.unBind();
             isRunning = true;
             timeline.play();
         }
+    }
+
+    private void onFinish(PiecePane piecePane, PositionBoard position) {
+        piecePane.bind(position);
+        callNext();
     }
 }

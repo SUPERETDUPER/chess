@@ -52,6 +52,7 @@ public class PiecePane extends StackPane {
     public void bind(PositionBoard position) {
         this.layoutXProperty().bind(position.getX());
         this.layoutYProperty().bind(position.getY());
+        position.notifyPlaced();
         this.setCacheHint(CacheHint.DEFAULT);
     }
 

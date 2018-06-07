@@ -35,4 +35,8 @@ public class CasePosition implements PositionBoard {
     public ObservableValue<Number> getLargeur() {
         return largeur;
     }
+
+    @Override
+    public void notifyPlaced() {
+    }
 }
