@@ -3,6 +3,7 @@ package gui.jeu.board;
 import gui.jeu.board.view.Case;
 import modele.moves.Mouvement;
 import modele.plateau.Position;
+import modele.plateau.Tableau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

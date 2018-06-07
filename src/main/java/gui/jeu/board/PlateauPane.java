@@ -15,6 +15,7 @@ import modele.pieces.Piece;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 import modele.plateau.PositionIterator;
+import modele.plateau.Tableau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

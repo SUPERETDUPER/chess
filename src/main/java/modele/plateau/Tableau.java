@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package gui.jeu.board;
+package modele.plateau;
 
-import modele.plateau.Position;
-import modele.plateau.PositionIterator;
+import gui.jeu.board.PlateauPane;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,11 +55,11 @@ public class Tableau<T> implements Iterable<T> {
      * @return la donnée désirée
      */
     @NotNull
-    T get(@NotNull Position position) {
+    public T get(@NotNull Position position) {
         return liste.get(getIndex(position));
     }
 
-    void add(@NotNull Position position, @NotNull T valeur) {
+    public void add(@NotNull Position position, @NotNull T valeur) {
         liste.add(getIndex(position), valeur);
     }
 
