@@ -7,12 +7,13 @@ import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class JeuData {
+public class JeuData implements Serializable {
     @NotNull
     public final Plateau plateau;
 

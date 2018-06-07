@@ -5,12 +5,13 @@ import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
  * Un joueur. Chaque joueur a une couleur.
  */
-public abstract class Joueur {
+public abstract class Joueur implements Serializable {
     /**
      * Demande au joueur de soumettre son prochain mouvement par l'entremise du callback
      *

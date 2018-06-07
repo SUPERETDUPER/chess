@@ -5,6 +5,7 @@ import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -12,7 +13,7 @@ import java.util.function.Consumer;
 /**
  * Classe qui supervise les joueurs et s'assure de respecter les tours
  */
-public class Jeu {
+public class Jeu implements Serializable {
     public enum Resultat {
         BLANC_GAGNE,
         NOIR_GAGNE,

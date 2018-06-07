@@ -3,8 +3,10 @@ package gui.jeu;
 import gui.App;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import modele.Chargeur;
 import modele.Jeu;
 import modele.JeuData;
+import modele.Modele;
 import modele.joueur.Joueur;
 import modele.pieces.*;
 import modele.plateau.Plateau;
@@ -31,7 +33,7 @@ public class JeuScene {
 
         //Créer l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
-        fxmlLoader.setController(new JeuController(goBack, jeu));
+        fxmlLoader.setController(new JeuController(goBack, new Modele(jeu, new Chargeur())));
 
         //Charger l'interface
         try {

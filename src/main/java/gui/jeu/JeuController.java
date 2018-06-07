@@ -11,12 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import modele.Jeu;
+import modele.Modele;
 import modele.joueur.Joueur;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 /**
  * Controlle l'intreface de jeu
@@ -35,14 +31,14 @@ class JeuController {
 
     private final ObservableList<Action> actions = FXCollections.observableArrayList();
 
-    JeuController(App.MontrerIntro goBack, Jeu jeu) {
-        this.plateauPane = new PlateauPane(jeu.getJeuData());
+    JeuController(App.MontrerIntro goBack, Modele modele) {
+        this.plateauPane = new PlateauPane(modele.getJeu().getJeuData());
 
-        for (Joueur joueur : jeu.getJoueurs().values()) {
+        for (Joueur joueur : modele.getJeu().getJoueurs().values()) {
             joueur.initializeInterface(plateauPane);
         }
 
-        jeu.setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
+        modele.getJeu().setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
 
         actions.add(new Action() {
             @Override
@@ -59,14 +55,7 @@ class JeuController {
         actions.add(new Action() {
             @Override
             void onClick() {
-                try {
-                    File file = new File("dernierePartie.txt");
-                    file.createNewFile();
-                    new ObjectOutputStream(new FileOutputStream(file)).writeObject(jeu.getJeuData().plateau);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("File not found: " + e);
-                }
+                modele.getChargeur().sauvgarder(modele.getJeu());
             }
 
             @Override
