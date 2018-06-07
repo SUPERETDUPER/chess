@@ -10,15 +10,14 @@ import modele.plateau.Position;
 public class MouvementManger extends Mouvement {
     private Piece morceauPris;
 
-    public MouvementManger(Piece piece, Position end, Piece morceauPris) {
+    public MouvementManger(Piece piece, Position end) {
         super(piece, end);
-        this.morceauPris = morceauPris;
     }
 
     @Override
     public void appliquer(Plateau plateau) {
         debut = plateau.removePiece(piece); //Enlève la pièce et obtient la position initiale
-        plateau.ajouter(fin, piece); //Met la pièce à l'autre position
+        morceauPris = plateau.ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
     }
 
     @Override

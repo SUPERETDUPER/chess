@@ -34,7 +34,7 @@ abstract class OffsetPiece extends Piece {
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine
             if (piece == null) mouvements.add(new MouvementNormal(this, nextPosition));
-            else if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(this, nextPosition, piece));
+            else if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(this, nextPosition));
         }
 
         return mouvements;

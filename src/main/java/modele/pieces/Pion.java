@@ -61,7 +61,7 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             Piece piece = plateau.getPiece(fin);
             if (piece != null && piece.getCouleur() != couleur)
-                mouvements.add(createMove(new MouvementManger(this, fin, piece)));
+                mouvements.add(createMove(new MouvementManger(this, fin)));
         }
 
         fin = currentPosition.decaler(ATTAQUE_DROITE);
@@ -69,7 +69,7 @@ public class Pion extends Piece {
         if (fin.isValid()) {
             Piece piece = plateau.getPiece(fin);
             if (piece != null && piece.getCouleur() != couleur)
-                mouvements.add(createMove(new MouvementManger(this, fin, piece)));
+                mouvements.add(createMove(new MouvementManger(this, fin)));
         }
 
         return mouvements;
