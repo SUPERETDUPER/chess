@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -92,5 +93,9 @@ public class Tableau<T> implements Iterable<T> {
                 return Tableau.this.get(positionIterator.next());
             }
         };
+    }
+
+    public Collection<T> getValues() {
+        return liste;
     }
 }

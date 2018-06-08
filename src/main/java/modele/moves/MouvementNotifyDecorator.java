@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  *
  * @param <T> le type d'objet transféré entre le apply et undo
  */
-public class MouvementNotifyWrapper<T> extends Mouvement {
+public class MouvementNotifyDecorator<T> extends Mouvement {
     /**
      * Le mouvement que l'objet contient
      */
@@ -38,7 +38,7 @@ public class MouvementNotifyWrapper<T> extends Mouvement {
      */
     private T result;
 
-    public MouvementNotifyWrapper(Mouvement mouvement, Supplier<T> applyNotify, Consumer<T> undoNotify) {
+    public MouvementNotifyDecorator(Mouvement mouvement, Supplier<T> applyNotify, Consumer<T> undoNotify) {
         super(mouvement.piece, mouvement.fin);
         this.mouvement = mouvement;
         this.applyNotify = applyNotify;

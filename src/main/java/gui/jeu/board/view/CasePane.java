@@ -1,6 +1,6 @@
 package gui.jeu.board.view;
 
-import gui.jeu.board.layout.CasePosition;
+import gui.jeu.board.placement.CasePosition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 /**
  * Controle une case. Une case à différents styles (couleur et bordure)
  */
-public class Case extends Rectangle {
+public class CasePane extends Rectangle {
     /**
      * Les différentes couleurs et bordure possible pour la case
      */
@@ -33,12 +33,12 @@ public class Case extends Rectangle {
      * @param clickListener la fonction à appeler quand la case est appuyé
      * @param position la position de la case
      */
-    public Case(boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull CasePosition position) {
+    public CasePane(boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull CasePosition position) {
         super();
         this.isBlanc = isBlanc;
 
-        this.widthProperty().bind(position.getLargeur());
-        this.heightProperty().bind(position.getLargeur());
+        this.widthProperty().bind(position.getTaille());
+        this.heightProperty().bind(position.getTaille());
         this.xProperty().bind(position.getX());
         this.yProperty().bind(position.getY());
 

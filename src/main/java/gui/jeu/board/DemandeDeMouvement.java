@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 /**
  * Un objet qui représente une demande de mouvement d'un joueur humain sur le plateau de jeu
+ * Utilisé pour demander au PlateauPane de laisser le joueur humain effectuer un mouvement et capturer le résultat
  */
 public class DemandeDeMouvement {
     /**
@@ -20,29 +21,29 @@ public class DemandeDeMouvement {
      * la couleur du joueur
      */
     @NotNull
-    private final Couleur couleurDeLaDemande;
+    private final Couleur couleur;
 
     /**
      * Si la demande a été complété
      */
-    private boolean isConsumed = false;
+    private boolean isCompleted = false;
 
-    public DemandeDeMouvement(@NotNull Consumer<Mouvement> callback, @NotNull Couleur couleurDuTour) {
+    public DemandeDeMouvement(@NotNull Consumer<Mouvement> callback, @NotNull Couleur couleur) {
         this.moveCallback = callback;
-        this.couleurDeLaDemande = couleurDuTour;
+        this.couleur = couleur;
     }
 
     void apply(Mouvement mouvement) {
-        isConsumed = true;
+        isCompleted = true;
         moveCallback.accept(mouvement);
     }
 
     boolean isCompleted() {
-        return isConsumed;
+        return isCompleted;
     }
 
     @NotNull
-    Couleur getCouleurDeLaDemande() {
-        return couleurDeLaDemande;
+    Couleur getCouleur() {
+        return couleur;
     }
 }

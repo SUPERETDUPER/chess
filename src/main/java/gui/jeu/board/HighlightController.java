@@ -1,6 +1,6 @@
 package gui.jeu.board;
 
-import gui.jeu.board.view.Case;
+import gui.jeu.board.view.CasePane;
 import modele.moves.Mouvement;
 import modele.plateau.Position;
 import modele.plateau.Tableau;
@@ -12,20 +12,23 @@ import java.util.Set;
 
 /**
  * Contrôle comment les cases devraient être surlignées
+ *
+ * Il y a toujours une case rouge et les mouvementsPossibles en blue qui sont sélectionné
  */
 class HighlightController {
     /**
-     * Le controlleur de chaque case
+     * Chaque case
      */
     @NotNull
-    private final Tableau<Case> cases;
+    private final Tableau<CasePane> cases;
 
     /**
-     * La liste d'option pour la case sélectionné
+     * La liste de mouvements possibles pour la case sélectionné
+     * Ordonné par la position finale
      * Vide si rien n'est sélectionné
      */
     @NotNull
-    private HashMap<Position, Mouvement> options = new HashMap<>();
+    private HashMap<Position, Mouvement> mouvementsPossibles = new HashMap<>();
 
     /**
      * La case présentement sélectionné
@@ -34,29 +37,32 @@ class HighlightController {
     @Nullable
     private Position selectedPosition;
 
-    HighlightController(@NotNull Tableau<Case> cases) {
+    /**
+     * @param cases la liste de cases
+     */
+    HighlightController(@NotNull Tableau<CasePane> cases) {
         this.cases = cases;
     }
 
     /**
      * Sélectionner une case et les positions possibles
      *
-     * @param position la position de la case
-     * @param options les options de mouvement possible
+     * @param position la position de la case à sélectionner (en rouge)
+     * @param mouvementsPossibles la liste de mouvements possibles
      */
-    void selectionner(@NotNull Position position, Set<Mouvement> options) {
+    void selectionner(@NotNull Position position, Set<Mouvement> mouvementsPossibles) {
         this.deSelectionner();
 
         //Surligner la position de départ
         this.selectedPosition = position;
-        cases.get(position).setStyle(Case.Style.ROUGE);
+        cases.get(position).setStyle(CasePane.Style.ROUGE);
 
-        //Surligner toutes les options
-        for (Mouvement mouvement : options) {
+        //Surligner toutes les mouvementsPossibles
+        for (Mouvement mouvement : mouvementsPossibles) {
             Position positionToDisplay = mouvement.getFin();
 
-            this.options.put(positionToDisplay, mouvement);
-            cases.get(positionToDisplay).setStyle(Case.Style.BLUE);
+            this.mouvementsPossibles.put(positionToDisplay, mouvement); //Ajouter à la liste
+            cases.get(positionToDisplay).setStyle(CasePane.Style.BLUE); //Surligner
         }
     }
 
@@ -65,13 +71,13 @@ class HighlightController {
      */
     void deSelectionner() {
         if (selectedPosition != null) {
-            cases.get(selectedPosition).setStyle(Case.Style.NORMAL);
+            cases.get(selectedPosition).setStyle(CasePane.Style.NORMAL);
 
-            for (Position position : options.keySet()) {
-                cases.get(position).setStyle(Case.Style.NORMAL);
+            for (Position position : mouvementsPossibles.keySet()) {
+                cases.get(position).setStyle(CasePane.Style.NORMAL);
             }
 
-            options.clear();
+            mouvementsPossibles.clear();
             selectedPosition = null;
         }
     }
@@ -84,15 +90,15 @@ class HighlightController {
      * @param position la position à vérifier
      * @return vrai si la position est une option
      */
-    boolean isOption(Position position) {
-        return options.containsKey(position);
+    boolean isMouvementPossible(Position position) {
+        return mouvementsPossibles.containsKey(position);
     }
 
     /**
      * @param position la position de fin du mouvement
      * @return le mouvement associé à cette position
      */
-    Mouvement getMouvement(Position position) {
-        return options.get(position);
+    Mouvement getMouvementPossible(Position position) {
+        return mouvementsPossibles.get(position);
     }
 }

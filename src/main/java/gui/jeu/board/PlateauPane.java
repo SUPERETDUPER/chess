@@ -1,11 +1,10 @@
 package gui.jeu.board;
 
-import gui.jeu.board.layout.CasePosition;
-import gui.jeu.board.layout.GraveyardPosition;
-import gui.jeu.board.view.Case;
+import gui.jeu.board.placement.CasePosition;
+import gui.jeu.board.placement.GraveyardController;
+import gui.jeu.board.view.CasePane;
 import gui.jeu.board.view.PiecePane;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
 import modele.Couleur;
@@ -28,35 +27,63 @@ import java.util.Set;
  * Controle le plateau de jeu
  */
 public class PlateauPane extends Pane {
-    //La liste de case
-    @NotNull
-    private final Tableau<Case> cases = new Tableau<>();
 
+    /**
+     * La liste de cases
+     */
+    @NotNull
+    private final Tableau<CasePane> cases = new Tableau<>();
+
+    /**
+     * La liste de pièces
+     */
+    @NotNull
     private final List<PiecePane> piecePanes = new ArrayList<>();
 
+    /**
+     * La controlleur d'animation
+     */
+    @NotNull
     private final AnimationController animationController = new AnimationController();
 
-    //Le modele du jeu (contient le plateau et les pièces)
+    /**
+     * Le plateau de jeu et les rois
+     */
     @NotNull
     private final JeuData jeuData;
 
-    //Controller pour surligner les cases
     @NotNull
     private final HighlightController highlightController = new HighlightController(cases);
 
-    //Objet qui spécifie si l'on veut obtenir des mouvements de l'utilisateur
-    @Nullable
-    private DemandeDeMouvement moveRequest;
-
+    @NotNull
     private final EnumMap<Couleur, GraveyardController> graveyardControllers = new EnumMap<>(Couleur.class);
 
+    //Objet qui spécifie si l'on veut obtenir des mouvements de l'utilisateur
+    @Nullable
+    private DemandeDeMouvement demandeDeMouvement;
+
+    /**
+     * @param jeuData le plateau de jeu
+     */
     public PlateauPane(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
 
-        this.graveyardControllers.put(Couleur.BLANC, new GraveyardController(this.heightProperty(),
-                new SimpleIntegerProperty(0), false));
-        this.graveyardControllers.put(Couleur.NOIR, new GraveyardController(this.heightProperty(),
-                this.heightProperty().add(graveyardControllers.get(Couleur.BLANC).getLargeurTotal()), true));
+        //Créer les graveyards et les ajouter à la liste
+        GraveyardController graveyardBlanc = new GraveyardController(
+                this.heightProperty(),
+                false
+        );
+
+        this.graveyardControllers.put(Couleur.BLANC, graveyardBlanc);
+
+        this.graveyardControllers.put(
+                Couleur.NOIR,
+                new GraveyardController(
+                        this.heightProperty(),
+                        true,
+                        this.heightProperty().add(graveyardBlanc.getLargeurTotale())
+                )
+        );
 
         //Crée une case pour chaque position
         PositionIterator positionIterator = new PositionIterator();
@@ -64,25 +91,23 @@ public class PlateauPane extends Pane {
         while (positionIterator.hasNext()) {
             Position position = positionIterator.next();
 
-            //Créer un controleur
-            Case aCase = new Case(
+            CasePosition positionGraphique = new CasePosition(position, this.heightProperty(), graveyardBlanc.getLargeurTotale());
+
+            //Créer la case
+            CasePane casePane = new CasePane(
                     (position.getColonne() + position.getRangee()) % 2 == 0, //Calcule si la case devrait être blanche (en-haut à gauche est blanc)
                     this::handleClick,
-                    new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotal())
+                    positionGraphique //La position de la case
             );
 
-            //Ajouter la case au plateau et à la liste
-            cases.add(position, aCase);
-            this.getChildren().addAll(aCase);
+            //Ajouter la case à la liste
+            cases.add(position, casePane);
 
             //Si il y a une pièce à cette position créer une pièce
             Piece piece = jeuData.getPlateau().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(
-                        piece,
-                        new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotal())
-                );
+                PiecePane piecePane = new PiecePane(piece, positionGraphique);
 
                 //Ajouter les listeners
                 piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piece)));
@@ -92,70 +117,85 @@ public class PlateauPane extends Pane {
             }
         }
 
-        //Ajouter toutes les cases et pièces au plateau
+        //Ajouter toutes pièces au plateau
+        this.getChildren().addAll(cases.getValues());
         this.getChildren().addAll(piecePanes);
 
-        this.jeuData.setChangeListener(this::updateBoard);
-        updateBoard(jeuData.getPlateau());
+        this.jeuData.setChangeListener(this::replacerLesPieces); // Si il y a un changement replacer les pièces
     }
 
     /**
-     * Appelé par un joueur pour demander à l'objet d'enregistrer le mouvement du joueur
+     * Appelé par un joueur pour demander au plateau d'enregistrer le mouvement du joueur humain
      *
      * @param moveRequest l'information sur le mouvement demandé
      */
     public void demanderMouvement(DemandeDeMouvement moveRequest) {
-        this.moveRequest = moveRequest;
+        this.demandeDeMouvement = moveRequest;
     }
 
+    /**
+     * Quand une position est appuyé
+     *
+     * @param position la position est appuyé
+     */
     private void handleClick(Position position) {
-        //Si aucun moveRequest ne rien faire
-        if (moveRequest == null || moveRequest.isCompleted()) return;
+        //Si aucune demandeDeMouvement ne rien faire
+        if (demandeDeMouvement == null || demandeDeMouvement.isCompleted()) return;
 
+        //Obtenir la pièce à cette position
         Piece pieceClicked = jeuData.getPlateau().getPiece(position);
 
-        //Si une pièce est déjà sélectionné
-        if (highlightController.isSelected()) {
-            //Si la case est une des options appliquer le movement
-            if (highlightController.isOption(position)) {
-                Mouvement mouvementChoisi = highlightController.getMouvement(position);
-                highlightController.deSelectionner();
-                moveRequest.apply(mouvementChoisi);
+        //Si rien n'est sélectionné
+        if (!highlightController.isSelected()) {
+            //Si la pièce existe et elle est de la couleur du demandeDeMouvement
+            if (pieceClicked != null && demandeDeMouvement.getCouleur() == pieceClicked.getCouleur()) {
+
+                //Calculer les mouvements possibles
+                Set<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
+
+                highlightController.selectionner(position, moves); //Sélectionner
             }
-
-            highlightController.deSelectionner(); //Déselectionner tout
         } else {
-            //Quitter si il n'y a rien a faire
-            if (pieceClicked == null || moveRequest.getCouleurDeLaDemande() != pieceClicked.getCouleur())
-                return;
-
-            //Calculer les mouvements possibles
-            Set<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
-
-            highlightController.selectionner(position, moves);
+            //Si la case est une des options appliquer le movement
+            if (highlightController.isMouvementPossible(position)) {
+                Mouvement mouvementChoisi = highlightController.getMouvementPossible(position);
+                highlightController.deSelectionner();
+                demandeDeMouvement.apply(mouvementChoisi);
+            } else {
+                highlightController.deSelectionner(); //Déselectionner tout
+            }
         }
     }
 
     /**
      * Pour chaque case afficher la pièce à cette case
      */
-    private void updateBoard(Plateau plateau) {
+    private void replacerLesPieces(Plateau plateau) {
+        //Sur le FX Thread
         Platform.runLater(() -> {
-            List<PiecePane> piecesToRemove = new ArrayList<>();
-            for (PiecePane piecePane : piecePanes) {
-                Position position = plateau.getPosition(piecePane.getPiece());
+            //Pour chaque pieces déplacer à position
+            for (int i = 0; i < piecePanes.size(); i++) {
+                PiecePane piecePane = piecePanes.get(i);
 
-                if (position != null) {
-                    animationController.addToQueue(piecePane, new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotal()));
-                } else {
-                    animationController.addToQueue(piecePane, new GraveyardPosition(graveyardControllers.get(piecePane.getPiece().getCouleur())));
+                if (piecePane != null) {
+                    Position position = plateau.getPosition(piecePane.getPiece());
 
-                    piecesToRemove.add(piecePane);
+                    //Si la position existe déplacer à position
+                    //Si la position n'existe pas déplacer à graveyard
+                    if (position == null) {
+                        animationController.ajouterAnimation(
+                                piecePane,
+                                graveyardControllers.get(piecePane.getPiece().getCouleur()).getNextGraveyardPosition()
+                        );
+
+                        piecePanes.set(i, null);
+                    } else {
+                        animationController.ajouterAnimation(
+                                piecePane,
+                                new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotale())
+                        );
+                    }
                 }
-            }
-
-            for (PiecePane piecePane : piecesToRemove) {
-                piecePanes.remove(piecePane);
             }
         });
     }
@@ -166,7 +206,7 @@ public class PlateauPane extends Pane {
     }
 
     /**
-     * Définit la largeur préféré si il y a un display calculator
+     * Définit la largeur préféré comme étant dépendant de la hauteur
      */
     @Override
     protected double computePrefWidth(double height) {

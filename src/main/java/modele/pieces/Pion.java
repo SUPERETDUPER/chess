@@ -4,7 +4,7 @@ import modele.Couleur;
 import modele.moves.Mouvement;
 import modele.moves.MouvementManger;
 import modele.moves.MouvementNormal;
-import modele.moves.MouvementNotifyWrapper;
+import modele.moves.MouvementNotifyDecorator;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -85,8 +85,8 @@ public class Pion extends Piece {
     }
 
     @NotNull
-    private MouvementNotifyWrapper<Boolean> createMove(Mouvement mouvement) {
-        return new MouvementNotifyWrapper<>(
+    private MouvementNotifyDecorator<Boolean> createMove(Mouvement mouvement) {
+        return new MouvementNotifyDecorator<>(
                 mouvement,
                 this::onMoveApply,
                 this::onMoveUndo

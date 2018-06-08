@@ -4,7 +4,7 @@ import modele.Couleur;
 import modele.moves.Mouvement;
 import modele.moves.MouvementCombine;
 import modele.moves.MouvementNormal;
-import modele.moves.MouvementNotifyWrapper;
+import modele.moves.MouvementNotifyDecorator;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -64,7 +64,7 @@ public class Roi extends OffsetPiece {
                 && plateau.getPiece(finTour) == null
                 && !hasMoved) {
 
-            mouvements.add(new MouvementNotifyWrapper<>(
+            mouvements.add(new MouvementNotifyDecorator<>(
                     new MouvementCombine(new Mouvement[]{
                             new MouvementNormal(this, startRoi.decaler(new Offset(0, 2))),
                             new MouvementNormal(plateau.getPiece(debutTour), startRoi.decaler(new Offset(0, 1)))

@@ -1,39 +1,35 @@
-package gui.jeu.board.layout;
+package gui.jeu.board.placement;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.value.ObservableNumberValue;
-import javafx.beans.value.ObservableValue;
 import modele.plateau.Position;
 
-public class CasePosition implements PositionBoard {
+/**
+ * La position d'une case sur le plateau
+ */
+public class CasePosition extends PositionGraphique {
     private final Position position;
     private final ObservableNumberValue xOffset;
-    private final NumberBinding largeur;
 
     public CasePosition(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
+        super(hauteur);
         this.position = position;
         this.xOffset = xOffset;
-
-        largeur = Bindings.divide(hauteur, Position.LIMITE);
     }
 
     @Override
-    public ObservableValue<Number> getX() {
-        return largeur.multiply(position.getColonne()).add(xOffset);
+    public NumberBinding getX() {
+        return Bindings.divide(hauteurDuPlateau, Position.LIMITE).multiply(position.getColonne()).add(xOffset);
     }
 
     @Override
-    public ObservableValue<Number> getY() {
-        return largeur.multiply(position.getRangee());
+    public NumberBinding getY() {
+        return Bindings.divide(hauteurDuPlateau, Position.LIMITE).multiply(position.getRangee());
     }
 
     public Position getPosition() {
         return position;
-    }
-
-    public ObservableValue<Number> getLargeur() {
-        return largeur;
     }
 
     @Override

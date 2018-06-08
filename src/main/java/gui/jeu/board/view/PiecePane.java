@@ -1,6 +1,6 @@
 package gui.jeu.board.view;
 
-import gui.jeu.board.layout.PositionBoard;
+import gui.jeu.board.placement.PositionGraphique;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -21,14 +21,14 @@ public class PiecePane extends StackPane {
     /**
      * @param piece la pièce à afficher
      */
-    public PiecePane(Piece piece, PositionBoard position) {
+    public PiecePane(Piece piece, PositionGraphique position) {
         super();
 
         this.piece = piece;
 
         //Attacher la displayCalculator
-        this.prefHeightProperty().bind(position.getLargeur());
-        this.prefWidthProperty().bind(position.getLargeur());
+        this.prefHeightProperty().bind(position.getTaille());
+        this.prefWidthProperty().bind(position.getTaille());
         bind(position);
 
         //Ajouter le text
@@ -49,7 +49,7 @@ public class PiecePane extends StackPane {
     /**
      * Place la pièce à la position
      */
-    public void bind(PositionBoard position) {
+    public void bind(PositionGraphique position) {
         this.layoutXProperty().bind(position.getX());
         this.layoutYProperty().bind(position.getY());
         position.notifyPlaced();
@@ -62,7 +62,7 @@ public class PiecePane extends StackPane {
         this.layoutYProperty().unbind();
     }
 
-    public boolean isAtPosition(PositionBoard position) {
+    public boolean isAtPosition(PositionGraphique position) {
         return this.layoutXProperty().isBound() &&
                 this.layoutYProperty().isBound() &&
                 this.getLayoutX() == position.getX().getValue().doubleValue() &&
