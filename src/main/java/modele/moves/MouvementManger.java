@@ -9,6 +9,7 @@ import modele.plateau.Position;
  */
 public class MouvementManger extends Mouvement {
     private Piece morceauPris;
+    private Position debut;
 
     public MouvementManger(Piece piece, Position end) {
         super(piece, end);

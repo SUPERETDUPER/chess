@@ -5,6 +5,8 @@ import modele.plateau.Plateau;
 import modele.plateau.Position;
 
 public class MouvementNormal extends Mouvement {
+    private Position debut;
+
     public MouvementNormal(Piece piece, Position end) {
         super(piece, end);
     }

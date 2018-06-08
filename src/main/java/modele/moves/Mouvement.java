@@ -13,7 +13,6 @@ import java.util.Objects;
 public abstract class Mouvement {
     final Piece piece;
     final Position fin;
-    Position debut;
 
     public Mouvement(Piece piece, Position fin) {
         this.piece = piece;
