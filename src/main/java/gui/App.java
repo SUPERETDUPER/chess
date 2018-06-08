@@ -54,7 +54,7 @@ public class App extends Application {
     }
 
     private void montrerJeu(EnumMap<Couleur, Joueur> joueurs) {
-        chargeur.creeNouveau(joueurs);
+        chargeur.creeNouveauJeu(joueurs);
         changerRoot(new JeuScene(this::montrerIntro, chargeur).getRoot());
     }
 
