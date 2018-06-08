@@ -23,16 +23,16 @@ public class Jeu implements Serializable {
         EGALITE
     }
 
-    private final JeuData jeuData;
+    private JeuData jeuData;
 
     @NotNull
     private EnumMap<Couleur, Joueur> joueurs;
 
-    private ReadOnlyObjectWrapper<Couleur> tourA = new ReadOnlyObjectWrapper<>(Couleur.BLANC);
+    transient private ReadOnlyObjectWrapper<Couleur> tourA = new ReadOnlyObjectWrapper<>(Couleur.BLANC);
 
-    private Consumer<Resultat> resultatListener;
+    transient private Consumer<Resultat> resultatListener;
 
-    public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
+    Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;
         this.joueurs = joueurs;
 
@@ -93,26 +93,17 @@ public class Jeu implements Serializable {
         return joueurs;
     }
 
+    ReadOnlyObjectWrapper<Couleur> tourAProperty() {
+        return tourA;
+    }
+
     private void writeObject(ObjectOutputStream out) throws IOException {
-        Consumer<Resultat> listener = resultatListener;
-        resultatListener = null;
-
-        Couleur tourAValue = this.tourA.get();
-        this.tourA = null;
-
         out.defaultWriteObject();
-        out.writeObject(tourAValue);
-
-        this.tourA = new ReadOnlyObjectWrapper<>(tourAValue);
-        resultatListener = listener;
+        out.writeObject(tourA.get());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         tourA = new ReadOnlyObjectWrapper<>((Couleur) in.readObject());
-    }
-
-    ReadOnlyObjectWrapper<Couleur> tourAProperty() {
-        return tourA;
     }
 }

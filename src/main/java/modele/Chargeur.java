@@ -17,7 +17,9 @@ public class Chargeur {
         try {
             if (!file.exists()) file.createNewFile();
 
-            new ObjectOutputStream(new FileOutputStream(file)).writeObject(jeu);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
+            objectOutputStream.writeObject(jeu);
+            objectOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -27,13 +29,16 @@ public class Chargeur {
         return file.exists();
     }
 
-    public void chargerDuFichier() {
+    public boolean chargerDuFichier() {
         try {
-            this.jeu = (Jeu) new ObjectInputStream(new FileInputStream(file)).readObject();
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
+            this.jeu = (Jeu) objectInputStream.readObject();
             this.jeu.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder());
-        } catch (IOException | ClassNotFoundException e) {
+            objectInputStream.close();
+            return true;
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return false;
         }
     }
 

@@ -19,7 +19,7 @@ import java.util.Set;
  * Utilise le BiMap de Google Guava
  */
 public class Plateau implements Serializable {
-    private final BiMap<Position, Piece> board;
+    private BiMap<Position, Piece> board;
 
     public Plateau() {
         this.board = HashBiMap.create(32);

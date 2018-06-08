@@ -5,6 +5,7 @@ import modele.Couleur;
 import modele.JeuData;
 import modele.moves.Mouvement;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class JoueurOrdi extends Joueur {
     public static final Difficulte NIVEAU_FACILE = new Difficulte(3, "Facile");
     public static final Difficulte NIVEAU_DIFFICILE = new Difficulte(4, "Difficile");
 
-    private final Difficulte difficulte;
+    private Difficulte difficulte;
 
     private JeuData jeuData;
 
@@ -129,7 +130,7 @@ public class JoueurOrdi extends Joueur {
         }
     }
 
-    private static class Difficulte {
+    private static class Difficulte implements Serializable {
         private final int depth;
         private final String nom;
 

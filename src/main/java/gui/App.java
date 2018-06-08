@@ -43,8 +43,7 @@ public class App extends Application {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
 
-        if (chargeur.peutCharger()) {
-            chargeur.chargerDuFichier();
+        if (chargeur.peutCharger() && chargeur.chargerDuFichier()) {
             scene.setRoot(new JeuScene(this::montrerIntro, chargeur).getRoot());
         } else {
             scene.setRoot(intro);

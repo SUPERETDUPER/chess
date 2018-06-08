@@ -6,8 +6,6 @@ import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -16,13 +14,13 @@ import java.util.function.Consumer;
 
 public class JeuData implements Serializable {
     @NotNull
-    public final Plateau plateau;
+    public Plateau plateau;
 
     @Nullable
-    private Consumer<Plateau> changeListener;
+    transient private Consumer<Plateau> changeListener;
 
     @NotNull
-    private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
+    private EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
     public JeuData(@NotNull Plateau plateau, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
         this.plateau = plateau;
@@ -71,12 +69,5 @@ public class JeuData implements Serializable {
         }
 
         return legalMouvements;
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        Consumer<Plateau> listener = changeListener;
-        changeListener = null;
-        out.defaultWriteObject();
-        changeListener = listener;
     }
 }
