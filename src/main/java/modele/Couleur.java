@@ -1,4 +1,4 @@
-package modele.pieces;
+package modele;
 
 /**
  * Les couleurs des pièces

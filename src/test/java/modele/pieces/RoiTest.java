@@ -1,5 +1,6 @@
 package modele.pieces;
 
+import modele.Couleur;
 import modele.moves.Mouvement;
 import modele.moves.MouvementNormal;
 import modele.plateau.Plateau;

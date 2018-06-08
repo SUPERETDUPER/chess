@@ -2,9 +2,9 @@ package modele.plateau;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import modele.Couleur;
 import modele.JeuData;
 import modele.moves.Mouvement;
-import modele.pieces.Couleur;
 import modele.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

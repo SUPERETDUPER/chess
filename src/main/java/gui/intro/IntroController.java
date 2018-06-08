@@ -4,10 +4,10 @@ import com.jfoenix.controls.JFXComboBox;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import modele.Couleur;
 import modele.joueur.Joueur;
 import modele.joueur.JoueurHumain;
 import modele.joueur.JoueurOrdi;
-import modele.pieces.Couleur;
 
 import java.util.EnumMap;
 import java.util.function.Consumer;

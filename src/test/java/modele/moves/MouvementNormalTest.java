@@ -1,6 +1,6 @@
 package modele.moves;
 
-import modele.pieces.Couleur;
+import modele.Couleur;
 import modele.pieces.Roi;
 import modele.plateau.Position;
 import org.junit.jupiter.api.Assertions;

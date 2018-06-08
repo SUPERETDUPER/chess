@@ -2,8 +2,8 @@ package gui.intro;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import modele.Couleur;
 import modele.joueur.Joueur;
-import modele.pieces.Couleur;
 
 import java.io.IOException;
 import java.util.EnumMap;

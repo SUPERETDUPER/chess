@@ -2,9 +2,9 @@ package modele.joueur;
 
 import gui.jeu.board.DemandeDeMouvement;
 import gui.jeu.board.PlateauPane;
+import modele.Couleur;
 import modele.JeuData;
 import modele.moves.Mouvement;
-import modele.pieces.Couleur;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

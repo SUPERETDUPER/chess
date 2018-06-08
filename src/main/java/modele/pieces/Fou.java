@@ -1,5 +1,6 @@
 package modele.pieces;
 
+import modele.Couleur;
 import modele.plateau.Offset;
 
 public class Fou extends DirectionPiece {

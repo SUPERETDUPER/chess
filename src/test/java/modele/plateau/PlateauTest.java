@@ -1,6 +1,6 @@
 package modele.plateau;
 
-import modele.pieces.Couleur;
+import modele.Couleur;
 import modele.pieces.Piece;
 import modele.pieces.Roi;
 import org.junit.jupiter.api.Assertions;

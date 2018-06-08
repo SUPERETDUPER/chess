@@ -1,5 +1,6 @@
 package modele.pieces;
 
+import modele.Couleur;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;

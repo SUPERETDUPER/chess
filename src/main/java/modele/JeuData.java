@@ -1,7 +1,6 @@
 package modele;
 
 import modele.moves.Mouvement;
-import modele.pieces.Couleur;
 import modele.pieces.Roi;
 import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;

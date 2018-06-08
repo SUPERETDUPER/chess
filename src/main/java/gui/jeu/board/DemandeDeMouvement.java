@@ -1,7 +1,7 @@
 package gui.jeu.board;
 
+import modele.Couleur;
 import modele.moves.Mouvement;
-import modele.pieces.Couleur;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;

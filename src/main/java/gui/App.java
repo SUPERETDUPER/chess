@@ -11,8 +11,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import modele.Chargeur;
+import modele.Couleur;
 import modele.joueur.Joueur;
-import modele.pieces.Couleur;
 
 import java.util.EnumMap;
 
