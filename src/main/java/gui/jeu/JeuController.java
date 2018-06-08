@@ -77,7 +77,10 @@ class JeuController {
         drawerList.setItems(actions);
 
         //Quand la liste est appuyée executer l'option
-        drawerList.setOnMouseClicked(event -> drawerList.getSelectionModel().getSelectedItem().onClick());
+        drawerList.setOnMouseClicked(event -> {
+            drawerList.getSelectionModel().getSelectedItem().onClick();
+            drawerList.getSelectionModel().clearSelection();
+        });
 
         //Animer le hamburger quand le drawer s'ouvre
 
