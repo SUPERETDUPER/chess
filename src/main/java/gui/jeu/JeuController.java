@@ -56,18 +56,6 @@ class JeuController {
                 return "Revenir au menu principal";
             }
         });
-
-        actions.add(new Action() {
-            @Override
-            void onClick() {
-                chargeur.sauvgarder();
-            }
-
-            @Override
-            String getDescription() {
-                return "Sauvgarder";
-            }
-        });
     }
 
     @FXML

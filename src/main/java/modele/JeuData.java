@@ -4,18 +4,22 @@ import modele.moves.Mouvement;
 import modele.pieces.Roi;
 import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class JeuData implements Serializable {
     @NotNull
     public final Plateau plateau;
 
-    private final List<Consumer<Plateau>> changeListeners = new ArrayList<>();
+    @Nullable
+    private Consumer<Plateau> changeListener;
 
     @NotNull
     private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
@@ -27,14 +31,12 @@ public class JeuData implements Serializable {
         rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
     }
 
-    public void addChangeListener(@NotNull Consumer<Plateau> changeListener) {
-        changeListeners.add(changeListener);
+    public void setChangeListener(@NotNull Consumer<Plateau> changeListener) {
+        this.changeListener = changeListener;
     }
 
     void notifyListenerOfChange(Plateau plateau) {
-        for (Consumer<Plateau> listener : changeListeners) {
-            listener.accept(plateau);
-        }
+        changeListener.accept(plateau);
     }
 
     @NotNull
@@ -71,12 +73,10 @@ public class JeuData implements Serializable {
         return legalMouvements;
     }
 
-
     private void writeObject(ObjectOutputStream out) throws IOException {
-        //Pour que les listeners externe ne soit pas sauvegardé
-        @SuppressWarnings("UnnecessaryLocalVariable") List<Consumer<Plateau>> listeners = changeListeners;
-        changeListeners.clear();
+        Consumer<Plateau> listener = changeListener;
+        changeListener = null;
         out.defaultWriteObject();
-        changeListeners.addAll(listeners);
+        changeListener = listener;
     }
 }

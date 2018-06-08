@@ -30,6 +30,7 @@ public class Chargeur {
     public void chargerDuFichier() {
         try {
             this.jeu = (Jeu) new ObjectInputStream(new FileInputStream(file)).readObject();
+            this.jeu.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -46,6 +47,7 @@ public class Chargeur {
 
         //Créer et commencer la partie
         this.jeu = new Jeu(jeuData, joueurs);
+        jeu.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder());
     }
 
     public Jeu getJeu() {
