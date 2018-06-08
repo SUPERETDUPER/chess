@@ -13,7 +13,7 @@ public class Chargeur {
     private File file = new File("dernierePartie.txt");
     private Jeu jeu;
 
-    public void sauvgarder() {
+    private void sauvgarder() {
         try {
             if (!file.exists()) file.createNewFile();
 
