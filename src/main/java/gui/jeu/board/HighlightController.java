@@ -12,7 +12,7 @@ import java.util.Set;
 
 /**
  * Contrôle comment les cases devraient être surlignées
- *
+ * <p>
  * Il y a toujours une case rouge et les mouvementsPossibles en blue qui sont sélectionné
  */
 class HighlightController {
@@ -47,7 +47,7 @@ class HighlightController {
     /**
      * Sélectionner une case et les positions possibles
      *
-     * @param position la position de la case à sélectionner (en rouge)
+     * @param position            la position de la case à sélectionner (en rouge)
      * @param mouvementsPossibles la liste de mouvements possibles
      */
     void selectionner(@NotNull Position position, Set<Mouvement> mouvementsPossibles) {

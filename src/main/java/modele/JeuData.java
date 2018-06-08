@@ -49,7 +49,7 @@ public class JeuData implements Serializable {
 
     @NotNull
     public Set<Mouvement> getAllLegalMoves(Couleur couleur) {
-        return filterOnlyLegal(plateau.getAllMoves(couleur, this), couleur);
+        return filterOnlyLegal(plateau.getAllMoves(couleur), couleur);
     }
 
     @NotNull

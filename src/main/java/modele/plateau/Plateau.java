@@ -3,12 +3,13 @@ package modele.plateau;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import modele.Couleur;
-import modele.JeuData;
 import modele.moves.Mouvement;
 import modele.pieces.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;
@@ -111,19 +112,19 @@ public class Plateau implements Serializable {
     /**
      * @param piece la pièce qui était à position
      */
-    public Piece bougerPiece(@NotNull Position position, @NotNull Piece piece) {
+    public synchronized Piece bougerPiece(@NotNull Position position, @NotNull Piece piece) {
         return board.forcePut(position, piece);
     }
 
     @NotNull
-    public Piece removePiece(@NotNull Position position) {
+    public synchronized Piece removePiece(@NotNull Position position) {
         Piece remove = board.remove(position);
         if (remove == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
         return remove;
     }
 
     @NotNull
-    public Position removePiece(@NotNull Piece piece) {
+    public synchronized Position removePiece(@NotNull Piece piece) {
         Position position = board.inverse().remove(piece);
         if (position == null) throw new IllegalArgumentException("Aucune pièce à: " + piece);
         return position;
@@ -157,7 +158,7 @@ public class Plateau implements Serializable {
     }
 
     @NotNull
-    public Set<Mouvement> getAllMoves(Couleur couleur, JeuData jeuData) {
+    public Set<Mouvement> getAllMoves(Couleur couleur) {
         Set<Mouvement> mouvements = new HashSet<>();
 
         for (Piece piece : iteratePieces()) {
@@ -166,5 +167,9 @@ public class Plateau implements Serializable {
             }
         }
         return mouvements;
+    }
+
+    private synchronized void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
     }
 }

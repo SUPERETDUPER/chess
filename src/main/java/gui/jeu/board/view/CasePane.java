@@ -31,7 +31,7 @@ public class CasePane extends Rectangle {
     /**
      * @param isBlanc       si la case est blanche
      * @param clickListener la fonction à appeler quand la case est appuyé
-     * @param position la position de la case
+     * @param position      la position de la case
      */
     public CasePane(boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull CasePosition position) {
         super();
