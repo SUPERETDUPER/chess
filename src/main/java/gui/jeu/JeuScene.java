@@ -30,7 +30,4 @@ public class JeuScene {
     public Parent getRoot() {
         return root;
     }
-
-
-
 }

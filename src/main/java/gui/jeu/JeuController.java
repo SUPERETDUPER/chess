@@ -1,9 +1,11 @@
 package gui.jeu;
 
 import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
 import gui.App;
 import gui.jeu.board.PlateauPane;
+import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,6 +28,9 @@ class JeuController {
 
     @FXML
     private JFXListView<Action> drawerList;
+
+    @FXML
+    private JFXHamburger hamburger;
 
     private final PlateauPane plateauPane;
 
@@ -73,11 +78,27 @@ class JeuController {
 
         //Quand la liste est appuyée executer l'option
         drawerList.setOnMouseClicked(event -> drawerList.getSelectionModel().getSelectedItem().onClick());
+
+        //Animer le hamburger quand le drawer s'ouvre
+
+        double animationRate = Math.abs(hamburger.getAnimation().getRate());
+
+        drawer.setOnDrawerOpening((event) -> {
+            Transition burgerAnimation = hamburger.getAnimation();
+            burgerAnimation.setRate(animationRate);
+            burgerAnimation.play();
+        });
+
+        drawer.setOnDrawerClosing(event -> {
+            Transition burgerAnimation = hamburger.getAnimation();
+            burgerAnimation.setRate(-animationRate);
+            burgerAnimation.play();
+        });
     }
 
     @FXML
     private void handleHamburgerClick() {
-        drawer.open();
+        drawer.toggle();
     }
 
     private void handleResultat(Jeu.Resultat resultat) {
