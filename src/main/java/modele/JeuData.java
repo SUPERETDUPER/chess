@@ -7,6 +7,8 @@ import modele.plateau.Plateau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -70,5 +72,12 @@ public class JeuData implements Serializable {
         }
 
         return legalMouvements;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        Consumer<Plateau> listener = changeListener;
+        changeListener = null;
+        out.defaultWriteObject();
+        changeListener = listener;
     }
 }

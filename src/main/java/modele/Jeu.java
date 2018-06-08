@@ -5,6 +5,8 @@ import modele.moves.Mouvement;
 import modele.pieces.Couleur;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Set;
@@ -88,5 +90,12 @@ public class Jeu implements Serializable {
     @NotNull
     public EnumMap<Couleur, Joueur> getJoueurs() {
         return joueurs;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        Consumer<Resultat> listener = resultatListener;
+        resultatListener = null;
+        out.defaultWriteObject();
+        resultatListener = listener;
     }
 }

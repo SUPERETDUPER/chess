@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import modele.Chargeur;
+import modele.Modele;
 import modele.joueur.Joueur;
 import modele.pieces.Couleur;
 
@@ -38,14 +40,20 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
+        Chargeur chargeur = new Chargeur();
 
-        scene.setRoot(intro);
+        if (chargeur.hasGame()) {
+            scene.setRoot(new JeuScene(new Modele(chargeur.charger(), chargeur), this::montrerIntro).getRoot());
+        } else {
+            scene.setRoot(intro);
+        }
+
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
     private void montrerJeu(EnumMap<Couleur, Joueur> joueurs) {
-        changerRoot(new JeuScene(joueurs, this::montrerIntro).getRoot());
+        changerRoot(new JeuScene(joueurs, this::montrerIntro, new Chargeur()).getRoot());
     }
 
     private void montrerIntro() {

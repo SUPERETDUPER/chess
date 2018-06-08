@@ -20,7 +20,7 @@ public class JeuScene {
 
     private final Parent root;
 
-    public JeuScene(EnumMap<Couleur, Joueur> joueurs, App.MontrerIntro goBack) {
+    public JeuScene(EnumMap<Couleur, Joueur> joueurs, App.MontrerIntro goBack, Chargeur chargeur) {
         //Créer les rois
         Roi roiNoir = new Roi(Couleur.NOIR);
         Roi roiBlanc = new Roi(Couleur.BLANC);
@@ -33,7 +33,7 @@ public class JeuScene {
 
         //Créer l'interface
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
-        fxmlLoader.setController(new JeuController(goBack, new Modele(jeu, new Chargeur())));
+        fxmlLoader.setController(new JeuController(goBack, new Modele(jeu, chargeur)));
 
         //Charger l'interface
         try {
@@ -43,6 +43,22 @@ public class JeuScene {
         }
 
         jeu.commencer();
+    }
+
+    public JeuScene(Modele modele, App.MontrerIntro goBack) {
+
+        //Créer l'interface
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/jeu.fxml"));
+        fxmlLoader.setController(new JeuController(goBack, modele));
+
+        //Charger l'interface
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        modele.getJeu().commencer();
     }
 
     public Parent getRoot() {
