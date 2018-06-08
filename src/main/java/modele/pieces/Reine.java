@@ -6,7 +6,7 @@ import modele.plateau.Offset;
 /**
  * La pièce la dame
  */
-public class Dame extends DirectionPiece {
+public class Reine extends DirectionPiece {
     private static final Offset[] OFFSET = {
             Offset.HAUT_GAUGHE,
             Offset.HAUT_CENTRE,
@@ -18,7 +18,7 @@ public class Dame extends DirectionPiece {
             Offset.BAS_DROIT
     };
 
-    public Dame(Couleur couleur) {
+    public Reine(Couleur couleur) {
         super(couleur);
     }
 

@@ -43,7 +43,7 @@ public class Plateau implements Serializable {
         plateau.ajouter(new Position(7, 0), new Tour(Couleur.BLANC));
         plateau.ajouter(new Position(7, 1), new Cavalier(Couleur.BLANC));
         plateau.ajouter(new Position(7, 2), new Fou(Couleur.BLANC));
-        plateau.ajouter(new Position(7, 3), new Dame(Couleur.BLANC));
+        plateau.ajouter(new Position(7, 3), new Reine(Couleur.BLANC));
         plateau.ajouter(new Position(7, 4), roiBlanc);
         plateau.ajouter(new Position(7, 5), new Fou(Couleur.BLANC));
         plateau.ajouter(new Position(7, 6), new Cavalier(Couleur.BLANC));
@@ -70,7 +70,7 @@ public class Plateau implements Serializable {
         plateau.ajouter(new Position(0, 0), new Tour(Couleur.NOIR));
         plateau.ajouter(new Position(0, 1), new Cavalier(Couleur.NOIR));
         plateau.ajouter(new Position(0, 2), new Fou(Couleur.NOIR));
-        plateau.ajouter(new Position(0, 3), new Dame(Couleur.NOIR));
+        plateau.ajouter(new Position(0, 3), new Reine(Couleur.NOIR));
         plateau.ajouter(new Position(0, 4), roiNoir);
         plateau.ajouter(new Position(0, 5), new Fou(Couleur.NOIR));
         plateau.ajouter(new Position(0, 6), new Cavalier(Couleur.NOIR));
