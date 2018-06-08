@@ -11,13 +11,15 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import modele.Chargeur;
-import modele.Modele;
 import modele.joueur.Joueur;
 import modele.pieces.Couleur;
 
 import java.util.EnumMap;
 
 public class App extends Application {
+
+    private Chargeur chargeur = new Chargeur();
+
     @FunctionalInterface
     public interface MontrerIntro {
         void montrerIntro();
@@ -40,10 +42,10 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
-        Chargeur chargeur = new Chargeur();
 
-        if (chargeur.hasGame()) {
-            scene.setRoot(new JeuScene(new Modele(chargeur.charger(), chargeur), this::montrerIntro).getRoot());
+        if (chargeur.peutCharger()) {
+            chargeur.chargerDuFichier();
+            scene.setRoot(new JeuScene(this::montrerIntro, chargeur).getRoot());
         } else {
             scene.setRoot(intro);
         }
@@ -53,7 +55,8 @@ public class App extends Application {
     }
 
     private void montrerJeu(EnumMap<Couleur, Joueur> joueurs) {
-        changerRoot(new JeuScene(joueurs, this::montrerIntro, new Chargeur()).getRoot());
+        chargeur.creeNouveau(joueurs);
+        changerRoot(new JeuScene(this::montrerIntro, chargeur).getRoot());
     }
 
     private void montrerIntro() {
@@ -78,7 +81,6 @@ public class App extends Application {
             nouveauRoot.setCacheHint(CacheHint.DEFAULT);
             pastRoot.setCacheHint(CacheHint.DEFAULT);
         });
-
 
         fadeOut.setOnFinished(event -> {
             scene.setRoot(nouveauRoot);

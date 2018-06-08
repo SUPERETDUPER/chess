@@ -10,8 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
+import modele.Chargeur;
 import modele.Jeu;
-import modele.Modele;
 import modele.joueur.Joueur;
 
 /**
@@ -31,14 +31,14 @@ class JeuController {
 
     private final ObservableList<Action> actions = FXCollections.observableArrayList();
 
-    JeuController(App.MontrerIntro goBack, Modele modele) {
-        this.plateauPane = new PlateauPane(modele.getJeu().getJeuData());
+    JeuController(App.MontrerIntro goBack, Chargeur chargeur) {
+        this.plateauPane = new PlateauPane(chargeur.getJeu().getJeuData());
 
-        for (Joueur joueur : modele.getJeu().getJoueurs().values()) {
+        for (Joueur joueur : chargeur.getJeu().getJoueurs().values()) {
             joueur.initializeInterface(plateauPane);
         }
 
-        modele.getJeu().setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
+        chargeur.getJeu().setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
 
         actions.add(new Action() {
             @Override
@@ -55,7 +55,7 @@ class JeuController {
         actions.add(new Action() {
             @Override
             void onClick() {
-                modele.getChargeur().sauvgarder(modele.getJeu());
+                chargeur.sauvgarder();
             }
 
             @Override
