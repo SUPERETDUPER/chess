@@ -121,7 +121,7 @@ public class PlateauPane extends Pane {
         this.getChildren().addAll(cases.getValues());
         this.getChildren().addAll(piecePanes);
 
-        this.jeuData.setChangeListener(this::replacerLesPieces); // Si il y a un changement replacer les pièces
+        this.jeuData.addChangeListener(this::replacerLesPieces); // Si il y a un changement replacer les pièces
     }
 
     /**
