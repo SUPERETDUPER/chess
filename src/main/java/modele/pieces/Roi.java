@@ -4,7 +4,6 @@ import modele.Couleur;
 import modele.moves.Mouvement;
 import modele.moves.MouvementCombine;
 import modele.moves.MouvementNormal;
-import modele.moves.MouvementNotifyDecorator;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -24,7 +23,7 @@ public class Roi extends OffsetPiece {
             Offset.BAS_DROIT
     };
 
-    private boolean hasMoved = false;
+    private int nombresDeMouvements = 0;
 
     public Roi(Couleur couleur) {
         super(couleur);
@@ -62,28 +61,25 @@ public class Roi extends OffsetPiece {
         if (plateau.getPiece(debutTour) instanceof Tour
                 && plateau.getPiece(finRoi) == null
                 && plateau.getPiece(finTour) == null
-                && !hasMoved) {
+                && nombresDeMouvements == 0) {
 
-            mouvements.add(new MouvementNotifyDecorator<>(
-                    new MouvementCombine(new Mouvement[]{
+            mouvements.add(new MouvementCombine(new Mouvement[]{
                             new MouvementNormal(this, startRoi.decaler(new Offset(0, 2))),
                             new MouvementNormal(plateau.getPiece(debutTour), startRoi.decaler(new Offset(0, 1)))
-                    }),
-                    this::onMoveApply,
-                    this::onMoveUndo
-            ));
+                    })
+            );
         }
 
         return mouvements;
     }
 
-    private Boolean onMoveApply() {
-        if (hasMoved) return false;
-        hasMoved = true;
-        return true;
+    @Override
+    public void notifyMoveCompleted(Mouvement mouvement) {
+        nombresDeMouvements += 1;
     }
 
-    private void onMoveUndo(Boolean didChangeHasMoved) {
-        if (didChangeHasMoved) hasMoved = false;
+    @Override
+    public void notifyMoveUndo(Mouvement mouvement) {
+        nombresDeMouvements -= 1;
     }
 }

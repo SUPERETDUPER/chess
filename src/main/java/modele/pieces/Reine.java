@@ -1,6 +1,7 @@
 package modele.pieces;
 
 import modele.Couleur;
+import modele.moves.Mouvement;
 import modele.plateau.Offset;
 
 /**
@@ -40,5 +41,15 @@ public class Reine extends DirectionPiece {
     @Override
     public int getValeurPositive() {
         return 8;
+    }
+
+    @Override
+    public void notifyMoveCompleted(Mouvement mouvement) {
+
+    }
+
+    @Override
+    public void notifyMoveUndo(Mouvement mouvement) {
+
     }
 }

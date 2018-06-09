@@ -1,6 +1,7 @@
 package modele.pieces;
 
 import modele.Couleur;
+import modele.moves.Mouvement;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -45,5 +46,15 @@ public class Tour extends DirectionPiece {
     @Override
     public int getValeurPositive() {
         return 5;
+    }
+
+    @Override
+    public void notifyMoveCompleted(Mouvement mouvement) {
+
+    }
+
+    @Override
+    public void notifyMoveUndo(Mouvement mouvement) {
+
     }
 }

@@ -1,6 +1,7 @@
 package modele.pieces;
 
 import modele.Couleur;
+import modele.moves.Mouvement;
 import modele.plateau.Offset;
 
 public class Cavalier extends OffsetPiece {
@@ -41,5 +42,13 @@ public class Cavalier extends OffsetPiece {
     @Override
     public int getValeurPositive() {
         return 3;
+    }
+
+    @Override
+    public void notifyMoveCompleted(Mouvement mouvement) {
+    }
+
+    @Override
+    public void notifyMoveUndo(Mouvement mouvement) {
     }
 }

@@ -32,12 +32,23 @@ public abstract class Mouvement {
      *
      * @param plateau le plateau de jeu sur lequel on applique le mouvement
      */
-    public abstract void appliquer(Plateau plateau);
+    public void appliquer(Plateau plateau) {
+        appliquerInterne(plateau);
+        piece.notifyMoveCompleted(this);
+
+    }
+
+    abstract void appliquerInterne(Plateau plateau);
 
     /**
      * Appelé pour défaire un mouvement qui vient d'être appliqué sur le plateau de jeu
      */
-    public abstract void undo(Plateau plateau);
+    public void undo(Plateau plateau) {
+        undoInterne(plateau);
+        piece.notifyMoveUndo(this);
+    }
+
+    abstract void undoInterne(Plateau plateau);
 
     /**
      * La valeur du mouvement. Une valeur négative signifie qu'une pièce blanche a été mangé

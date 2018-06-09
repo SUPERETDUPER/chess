@@ -69,6 +69,20 @@ public abstract class Piece implements Serializable {
      */
     public abstract int getValeurPositive();
 
+    /**
+     * Appelé pour signifier que le mouvement à été appliqué sur la pièce
+     *
+     * @param mouvement le mouvement qui a été appliqué sur la pièce
+     */
+    public abstract void notifyMoveCompleted(Mouvement mouvement);
+
+    /**
+     * Appelé pour signifier que le mouvement à été appliqué sur la pièce
+     *
+     * @param mouvement le mouvement qui a été appliqué sur la pièce
+     */
+    public abstract void notifyMoveUndo(Mouvement mouvement);
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "-" + (couleur == Couleur.BLANC ? "b" : "n");

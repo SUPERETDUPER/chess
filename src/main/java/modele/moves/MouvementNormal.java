@@ -11,14 +11,14 @@ public class MouvementNormal extends Mouvement {
         super(piece, end);
     }
 
-    public void appliquer(Plateau plateau) {
+    void appliquerInterne(Plateau plateau) {
         debut = plateau.removePiece(piece);
         Piece pieceEnlever = plateau.ajouter(fin, piece);
         if (pieceEnlever != null) throw new IllegalArgumentException("Une pièce est à cette position");
     }
 
     @Override
-    public void undo(Plateau plateau) {
+    void undoInterne(Plateau plateau) {
         plateau.bougerPiece(debut, piece);
     }
 

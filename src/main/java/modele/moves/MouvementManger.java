@@ -16,13 +16,13 @@ public class MouvementManger extends Mouvement {
     }
 
     @Override
-    public void appliquer(Plateau plateau) {
+    void appliquerInterne(Plateau plateau) {
         debut = plateau.removePiece(piece); //Enlève la pièce et obtient la position initiale
         morceauPris = plateau.ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
     }
 
     @Override
-    public void undo(Plateau plateau) {
+    void undoInterne(Plateau plateau) {
         plateau.bougerPiece(debut, piece);
         plateau.ajouter(fin, morceauPris);
     }
