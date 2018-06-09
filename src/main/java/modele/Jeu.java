@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Set;
+import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
@@ -32,7 +33,9 @@ public class Jeu implements Serializable {
 
     transient private Consumer<Resultat> resultatListener;
 
-    Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
+    private Stack<Mouvement> mouvements = new Stack<>();
+
+    public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;
         this.joueurs = joueurs;
 
@@ -59,10 +62,11 @@ public class Jeu implements Serializable {
      */
     private void jouer(@NotNull Mouvement mouvement) {
         mouvement.appliquer(jeuData.getPlateau()); //Jouer le mouvement
+        mouvements.push(mouvement);
 
         jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
 
-        tourA.set(tourA.getValue() == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC); //Changer le tour
+        changerLeTour();
 
         //Vérifier pour échec et mat ou match nul
         Set<Mouvement> mouvements = jeuData.getAllLegalMoves(tourA.get());
@@ -82,6 +86,20 @@ public class Jeu implements Serializable {
         } else {
             joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Notifier l'autre joueur qu'il peut joueur
         }
+    }
+
+    private void changerLeTour() {
+        tourA.set(tourA.getValue() == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC); //Changer le tour
+    }
+
+    public void undo(int tour) {
+        for (int i = 0; i < tour; i++) {
+            changerLeTour();
+            mouvements.pop().undo(jeuData.getPlateau());
+            jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
+        }
+
+        joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get());
     }
 
     public JeuData getJeuData() {

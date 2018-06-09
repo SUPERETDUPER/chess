@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import modele.Chargeur;
 import modele.Jeu;
 import modele.joueur.Joueur;
+import modele.joueur.JoueurHumain;
 
 /**
  * Controlle l'intreface de jeu
@@ -39,9 +40,17 @@ class JeuController {
     JeuController(App.MontrerIntro goBack, Chargeur chargeur) {
         this.plateauPane = new PlateauPane(chargeur.getJeu().getJeuData());
 
+        int counter = 0;
+
         for (Joueur joueur : chargeur.getJeu().getJoueurs().values()) {
             joueur.initializeInterface(plateauPane);
+
+            if (joueur instanceof JoueurHumain) {
+                counter += 1;
+            }
         }
+
+        final int joueursHumain = counter;
 
         chargeur.getJeu().setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
 
@@ -56,6 +65,24 @@ class JeuController {
                 return "Revenir au menu principal";
             }
         });
+
+        if (joueursHumain != 0) {
+            actions.add(new Action() {
+                @Override
+                void onClick() {
+                    if (joueursHumain == 2) {
+                        chargeur.getJeu().undo(1);
+                    } else {
+                        chargeur.getJeu().undo(2);
+                    }
+                }
+
+                @Override
+                String getDescription() {
+                    return "Undo";
+                }
+            });
+        }
     }
 
     @FXML
