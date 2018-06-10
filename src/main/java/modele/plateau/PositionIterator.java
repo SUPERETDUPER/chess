@@ -3,10 +3,10 @@ package modele.plateau;
 import java.util.Iterator;
 
 public class PositionIterator implements Iterator<Position> {
-    private static final Position MAX = new Position(Position.LIMITE, 0);
+    private static final Position MAX = new PositionBase(PositionBase.LIMITE, 0);
     private static final Offset ADROITE = new Offset(0, 1);
 
-    private Position position = new Position(0, 0);
+    private Position position = new PositionBase(0, 0);
 
     @Override
     public boolean hasNext() {
@@ -17,8 +17,8 @@ public class PositionIterator implements Iterator<Position> {
     public Position next() {
         Position positionToReturn = position;
 
-        if (position.getColonne() == Position.LIMITE - 1) {
-            position = new Position(position.getRangee() + 1, 0);
+        if (position.getColonne() == PositionBase.LIMITE - 1) {
+            position = new PositionBase(position.getRangee() + 1, 0);
         } else {
             position = position.decaler(ADROITE);
         }

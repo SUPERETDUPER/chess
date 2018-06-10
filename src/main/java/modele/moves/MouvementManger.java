@@ -17,14 +17,15 @@ public class MouvementManger extends Mouvement {
 
     @Override
     void appliquerInterne(Plateau plateau) {
-        debut = plateau.removePiece(piece); //Enlève la pièce et obtient la position initiale
-        morceauPris = plateau.ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
+        debut = plateau.getPosition(piece); //Obtient la position initiale
+        morceauPris = plateau.mangerPiece(fin); //Mange la pièce à la fin
+        plateau.bougerPiece(piece, fin); //bouger la pièce
     }
 
     @Override
     void undoInterne(Plateau plateau) {
-        plateau.bougerPiece(debut, piece);
-        plateau.ajouter(fin, morceauPris);
+        plateau.bougerPiece(piece, debut);
+        plateau.ajouterPiece(morceauPris, fin);
     }
 
     /**

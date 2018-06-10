@@ -5,7 +5,7 @@ import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
-import modele.plateau.Position;
+import modele.plateau.PositionBase;
 
 /**
  * Controlle un des 2 graveyards (endroits où les pièces mangées vont)
@@ -44,7 +44,7 @@ public class GraveyardController {
     }
 
     public double getTotalWidthRatio() {
-        return 2.0 / Position.LIMITE;
+        return 2.0 / PositionBase.LIMITE;
     }
 
     /**
@@ -55,11 +55,11 @@ public class GraveyardController {
             @Override
             public NumberBinding getX() {
                 ObservableNumberValue xRelatif;
-                if ((leftToRight && piecesDansGraveyard.get() < Position.LIMITE) ||
-                        (!leftToRight && piecesDansGraveyard.get() >= Position.LIMITE)) {
+                if ((leftToRight && piecesDansGraveyard.get() < PositionBase.LIMITE) ||
+                        (!leftToRight && piecesDansGraveyard.get() >= PositionBase.LIMITE)) {
                     xRelatif = new SimpleIntegerProperty(0);
                 } else {
-                    xRelatif = Bindings.divide(height, Position.LIMITE);
+                    xRelatif = Bindings.divide(height, PositionBase.LIMITE);
                 }
 
                 return Bindings.add(xRelatif, xOffset);
@@ -71,10 +71,10 @@ public class GraveyardController {
                 int piecesDansGraveyard = GraveyardController.this.piecesDansGraveyard.get();
 
                 //Le nombre de pièces dans la colonne
-                if (piecesDansGraveyard >= Position.LIMITE) piecesDansGraveyard -= Position.LIMITE;
+                if (piecesDansGraveyard >= PositionBase.LIMITE) piecesDansGraveyard -= PositionBase.LIMITE;
 
                 //La position
-                return Bindings.divide(height, Position.LIMITE).multiply(piecesDansGraveyard);
+                return Bindings.divide(height, PositionBase.LIMITE).multiply(piecesDansGraveyard);
             }
 
             @Override

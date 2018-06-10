@@ -29,12 +29,12 @@ public class Reine extends DirectionPiece {
     }
 
     @Override
-    int unicodeForWhite() {
+    public int unicodeForWhite() {
         return 9813;
     }
 
     @Override
-    int unicodeForBlack() {
+    public int unicodeForBlack() {
         return 9819;
     }
 

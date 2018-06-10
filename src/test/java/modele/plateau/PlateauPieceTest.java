@@ -6,7 +6,7 @@ import modele.pieces.Roi;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class PlateauTest {
+class PlateauPieceTest {
 
     /**
      * Vérifie que
@@ -17,14 +17,14 @@ class PlateauTest {
     @Test
     void getPosition() {
         Piece piece = new Roi(Couleur.BLANC);
-        Position positionInitiale = new Position(0, 0);
+        Position positionInitiale = new PositionBase(0, 0);
 
-        Plateau plateau = new Plateau();
-        plateau.ajouter(positionInitiale, piece);
+        PlateauPiece plateau = new PlateauPiece();
+        plateau.ajouterPiece(piece, positionInitiale);
 
         Assertions.assertEquals(positionInitiale, plateau.getPosition(piece)); //1
         Assertions.assertNull(plateau.getPosition(new Roi(Couleur.BLANC))); //2
-        Assertions.assertNotNull(plateau.getPiece(new Position(0, 0))); //3
+        Assertions.assertNotNull(plateau.getPiece(new PositionBase(0, 0))); //3
     }
 
     /**
@@ -35,24 +35,24 @@ class PlateauTest {
     @Test
     void getPiece() {
         Piece piece = new Roi(Couleur.BLANC);
-        Position positionInitiale = new Position(0, 0);
+        Position positionInitiale = new PositionBase(0, 0);
 
-        Plateau plateau = new Plateau();
-        plateau.ajouter(positionInitiale, piece);
+        PlateauPiece plateau = new PlateauPiece();
+        plateau.ajouterPiece(piece, positionInitiale);
 
         Assertions.assertEquals(piece, plateau.getPiece(positionInitiale));
-        Assertions.assertNull(plateau.getPiece(new Position(0, 1)));
+        Assertions.assertNull(plateau.getPiece(new PositionBase(0, 1)));
     }
 
     @Test
     void removePiece() {
         Piece piece = new Roi(Couleur.BLANC);
-        Position positionInitiale = new Position(0, 0);
+        Position positionInitiale = new PositionBase(0, 0);
 
-        Plateau plateau = new Plateau();
-        plateau.ajouter(positionInitiale, piece);
+        PlateauPiece plateau = new PlateauPiece();
+        plateau.ajouterPiece(piece, positionInitiale);
 
-        plateau.removePiece(positionInitiale);
+        plateau.eneleverPiece(positionInitiale);
         Assertions.assertNull(plateau.getPiece(positionInitiale));
         Assertions.assertNull(plateau.getPosition(piece));
     }

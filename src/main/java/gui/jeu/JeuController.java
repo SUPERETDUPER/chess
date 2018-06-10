@@ -38,7 +38,7 @@ class JeuController {
     private final ObservableList<Action> actions = FXCollections.observableArrayList();
 
     JeuController(App.MontrerIntro goBack, Chargeur chargeur) {
-        this.plateauPane = new PlateauPane(chargeur.getJeu().getJeuData());
+        this.plateauPane = new PlateauPane(chargeur.getJeu());
 
         int counter = 0;
 

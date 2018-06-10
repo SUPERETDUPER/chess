@@ -5,7 +5,7 @@ import modele.moves.Mouvement;
 import modele.moves.MouvementManger;
 import modele.moves.MouvementNormal;
 import modele.plateau.Offset;
-import modele.plateau.Plateau;
+import modele.plateau.PlateauPiece;
 import modele.plateau.Position;
 
 import java.util.HashSet;
@@ -20,7 +20,7 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public Set<Mouvement> generateAllMoves(Plateau plateau) {
+    public Set<Mouvement> generateAllMoves(PlateauPiece plateau) {
         Set<Mouvement> mouvements = new HashSet<>();
 
         Position currentPose = plateau.getPosition(this);
@@ -42,7 +42,7 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public boolean attaquePosition(Plateau plateau, Position position) {
+    public boolean attaquePosition(PlateauPiece plateau, Position position) {
         Position currentPosition = plateau.getPosition(this);
 
         for (Offset offset : getOffsets()) {

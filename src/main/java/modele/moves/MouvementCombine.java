@@ -14,14 +14,14 @@ public class MouvementCombine extends Mouvement {
     @Override
     void appliquerInterne(Plateau plateau) {
         for (Mouvement mouvement : mouvements) {
-            mouvement.appliquer(plateau);
+            mouvement.appliquerInterne(plateau);
         }
     }
 
     @Override
     void undoInterne(Plateau plateau) {
         for (int i = (mouvements.length - 1); i >= 0; i--) {
-            mouvements[i].undo(plateau);
+            mouvements[i].undoInterne(plateau);
         }
     }
 

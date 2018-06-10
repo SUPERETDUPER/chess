@@ -2,6 +2,7 @@ package modele.moves;
 
 import modele.pieces.Piece;
 import modele.plateau.Plateau;
+import modele.plateau.PlateauPiece;
 import modele.plateau.Position;
 
 import java.util.Objects;
@@ -43,7 +44,7 @@ public abstract class Mouvement {
     /**
      * Appelé pour défaire un mouvement qui vient d'être appliqué sur le plateau de jeu
      */
-    public void undo(Plateau plateau) {
+    public void undo(PlateauPiece plateau) {
         undoInterne(plateau);
         piece.notifyMoveUndo(this);
     }

@@ -15,15 +15,18 @@ public class MouvementPromotion extends Mouvement {
 
     @Override
     void appliquerInterne(Plateau plateau) {
-        debut = plateau.removePiece(piece);
+        debut = plateau.getPosition(piece);
+        plateau.bougerPiece(piece, fin);
+        plateau.eneleverPiece(piece);
         reine = new Reine(piece.getCouleur());
-        plateau.ajouter(fin, reine);
+        plateau.ajouterPiece(reine, fin);
     }
 
     @Override
     void undoInterne(Plateau plateau) {
-        plateau.removePiece(fin);
-        plateau.ajouter(debut, piece);
+        plateau.eneleverPiece(reine);
+        plateau.ajouterPiece(piece, fin);
+        plateau.bougerPiece(piece, debut);
     }
 
     @Override
