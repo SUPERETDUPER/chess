@@ -2,7 +2,7 @@ package modele.pieces;
 
 import modele.Couleur;
 import modele.moves.Mouvement;
-import modele.plateau.PlateauPiece;
+import modele.plateau.Plateau;
 import modele.plateau.Position;
 
 import java.io.Serializable;
@@ -42,12 +42,12 @@ public abstract class Piece implements Serializable {
     /**
      * @return le numéro unicode de la pièce blance
      */
-    public abstract int unicodeForWhite();
+    abstract int unicodeForWhite();
 
     /**
      * @return le numéro unicode de la pièce noire
      */
-    public abstract int unicodeForBlack();
+    abstract int unicodeForBlack();
 
     /**
      * Calcule tous les mouvements possibles pour cette pièce sans vérifier si le mouvement est legal (ex. roi est en train d'être attacké)
@@ -55,14 +55,14 @@ public abstract class Piece implements Serializable {
      * @param plateau le plateau avec les mouvements présentement
      * @return tous les mouvements possibles pour cette pièce
      */
-    public abstract Set<Mouvement> generateAllMoves(PlateauPiece plateau);
+    public abstract Set<Mouvement> generateAllMoves(Plateau plateau);
 
     /**
      * @param plateau
      * @param position
      * @return vrai si cette pièce attack présentement cette position
      */
-    public abstract boolean attaquePosition(PlateauPiece plateau, Position position);
+    public abstract boolean attaquePosition(Plateau plateau, Position position);
 
     /**
      * @return La valeur de la pièce indépendament de la couleur

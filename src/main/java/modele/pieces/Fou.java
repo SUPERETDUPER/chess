@@ -23,12 +23,12 @@ public class Fou extends DirectionPiece {
     }
 
     @Override
-    public int unicodeForWhite() {
+    int unicodeForWhite() {
         return 9815;
     }
 
     @Override
-    public int unicodeForBlack() {
+    int unicodeForBlack() {
         return 9821;
     }
 

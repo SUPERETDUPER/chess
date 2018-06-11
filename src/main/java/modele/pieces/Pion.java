@@ -5,9 +5,8 @@ import modele.moves.Mouvement;
 import modele.moves.MouvementManger;
 import modele.moves.MouvementNormal;
 import modele.plateau.Offset;
-import modele.plateau.PlateauPiece;
+import modele.plateau.Plateau;
 import modele.plateau.Position;
-import modele.plateau.PositionBase;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +25,7 @@ public class Pion extends Piece {
     }
 
     @Override
-    public Set<Mouvement> generateAllMoves(PlateauPiece plateau) {
+    public Set<Mouvement> generateAllMoves(Plateau plateau) {
         Set<Mouvement> mouvements = new HashSet<>();
 
         Position currentPosition = plateau.getPosition(this);
@@ -36,7 +35,7 @@ public class Pion extends Piece {
         Position fin = currentPosition.decaler(AVANCER);
 
         //Si une place de plus est valide est n'est pas promotion
-        if (fin.isValid() && fin.getRangee() != 0 && fin.getRangee() != PositionBase.LIMITE - 1) {
+        if (fin.isValid() && fin.getRangee() != 0 && fin.getRangee() != Position.LIMITE - 1) {
             //Si il y a personne on peut avancer
             if (plateau.getPiece(fin) == null) {
                 mouvements.add(new MouvementNormal(this, fin));
@@ -76,7 +75,7 @@ public class Pion extends Piece {
     }
 
     @Override
-    public boolean attaquePosition(PlateauPiece plateau, Position position) {
+    public boolean attaquePosition(Plateau plateau, Position position) {
         Position currentPosition = plateau.getPosition(this);
 
         return currentPosition.decaler(ATTAQUE_GAUCHE).equals(position) ||
@@ -84,12 +83,12 @@ public class Pion extends Piece {
     }
 
     @Override
-    public int unicodeForBlack() {
+    int unicodeForBlack() {
         return 9823;
     }
 
     @Override
-    public int unicodeForWhite() {
+    int unicodeForWhite() {
         return 9817;
     }
 

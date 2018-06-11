@@ -5,7 +5,7 @@ import modele.moves.Mouvement;
 import modele.moves.MouvementCombine;
 import modele.moves.MouvementNormal;
 import modele.plateau.Offset;
-import modele.plateau.PlateauPiece;
+import modele.plateau.Plateau;
 import modele.plateau.Position;
 
 import java.util.Set;
@@ -30,12 +30,12 @@ public class Roi extends OffsetPiece {
     }
 
     @Override
-    public int unicodeForWhite() {
+    int unicodeForWhite() {
         return 9812;
     }
 
     @Override
-    public int unicodeForBlack() {
+    int unicodeForBlack() {
         return 9818;
     }
 
@@ -50,7 +50,7 @@ public class Roi extends OffsetPiece {
     }
 
     @Override
-    public Set<Mouvement> generateAllMoves(PlateauPiece plateau) {
+    public Set<Mouvement> generateAllMoves(Plateau plateau) {
         Set<Mouvement> mouvements = super.generateAllMoves(plateau);
 
         Position startRoi = plateau.getPosition(this);

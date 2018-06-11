@@ -10,7 +10,7 @@ class PositionTest {
      */
     @Test
     void equals() {
-        Assertions.assertEquals(new PositionBase(0, 1), new PositionBase(0, 1));
-        Assertions.assertNotEquals(new PositionBase(0, 0), new PositionBase(0, 1));
+        Assertions.assertEquals(new Position(0, 1), new Position(0, 1));
+        Assertions.assertNotEquals(new Position(0, 0), new Position(0, 1));
     }
 }

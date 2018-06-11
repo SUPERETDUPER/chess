@@ -5,7 +5,6 @@ import gui.jeu.board.view.PiecePane;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
@@ -35,7 +34,7 @@ class AnimationController {
         //Si rien n'est en cours commencer la prochaine animation
         if (!isRunning) {
             isRunning = true;
-            Platform.runLater(this::commencerProchaineAnimation);
+            commencerProchaineAnimation();
         }
     }
 
@@ -67,11 +66,11 @@ class AnimationController {
             Timeline timeline = new Timeline(new KeyFrame(
                     new Duration(DUREE_DE_CHAQUE_ANIMATION),
                     new KeyValue(
-                            piecePane.getPane().layoutXProperty(),
+                            piecePane.layoutXProperty(),
                             position.getX().getValue()
                     ),
                     new KeyValue(
-                            piecePane.getPane().layoutYProperty(),
+                            piecePane.layoutYProperty(),
                             position.getY().getValue()
                     )
             ));

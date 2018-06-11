@@ -3,7 +3,7 @@ package gui.jeu.board.placement;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
-import modele.plateau.PositionBase;
+import modele.plateau.Position;
 
 /**
  * Calcule les coordonées pour une position
@@ -22,7 +22,7 @@ public abstract class PositionGraphique {
      * @return la largeur et la hauteur de la position
      */
     public ObservableValue<Number> getTaille() {
-        return Bindings.divide(hauteurDuPlateau, PositionBase.LIMITE);
+        return Bindings.divide(hauteurDuPlateau, Position.LIMITE);
     }
 
     /**

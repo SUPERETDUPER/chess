@@ -1,8 +1,6 @@
 package modele;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import modele.joueur.Joueur;
 import modele.moves.Mouvement;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Set;
+import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
@@ -34,7 +33,7 @@ public class Jeu implements Serializable {
 
     transient private Consumer<Resultat> resultatListener;
 
-    transient private ObservableList<Mouvement> mouvements = FXCollections.observableArrayList();
+    private Stack<Mouvement> mouvements = new Stack<>();
 
     public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;
@@ -63,7 +62,9 @@ public class Jeu implements Serializable {
      */
     private void jouer(@NotNull Mouvement mouvement) {
         mouvement.appliquer(jeuData.getPlateau()); //Jouer le mouvement
-        mouvements.add(mouvement);
+        mouvements.push(mouvement);
+
+        jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
 
         changerLeTour();
 
@@ -94,7 +95,8 @@ public class Jeu implements Serializable {
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
             changerLeTour();
-            mouvements.remove(mouvements.size() - 1).undo(jeuData.getPlateau());
+            mouvements.pop().undo(jeuData.getPlateau());
+            jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
         }
 
         joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get());
@@ -113,19 +115,13 @@ public class Jeu implements Serializable {
         return tourA;
     }
 
-    public ObservableList<Mouvement> getMouvements() {
-        return mouvements;
-    }
-
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeObject(tourA.get());
-        out.writeObject(mouvements.toArray());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         tourA = new ReadOnlyObjectWrapper<>((Couleur) in.readObject());
-        mouvements = FXCollections.observableArrayList((Mouvement[]) in.readObject());
     }
 }

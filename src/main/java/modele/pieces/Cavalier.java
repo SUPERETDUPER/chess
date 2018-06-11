@@ -30,12 +30,12 @@ public class Cavalier extends OffsetPiece {
     }
 
     @Override
-    public int unicodeForWhite() {
+    int unicodeForWhite() {
         return 9816;
     }
 
     @Override
-    public int unicodeForBlack() {
+    int unicodeForBlack() {
         return 9822;
     }
 

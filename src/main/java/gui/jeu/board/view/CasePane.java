@@ -42,7 +42,7 @@ public class CasePane extends Rectangle {
         this.xProperty().bind(position.getX());
         this.yProperty().bind(position.getY());
 
-        this.setOnMouseClicked(event -> clickListener.accept(position));
+        this.setOnMouseClicked(event -> clickListener.accept(position.getPosition()));
 
         setStyle(Style.NORMAL);  //Met la couleur de l'arrière plan de la case
     }

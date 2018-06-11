@@ -3,7 +3,7 @@ package modele.pieces;
 import modele.Couleur;
 import modele.moves.Mouvement;
 import modele.plateau.Offset;
-import modele.plateau.PlateauPiece;
+import modele.plateau.Plateau;
 import modele.plateau.Position;
 
 public class Tour extends DirectionPiece {
@@ -19,7 +19,7 @@ public class Tour extends DirectionPiece {
     }
 
     @Override
-    public boolean attaquePosition(PlateauPiece plateau, Position position) {
+    public boolean attaquePosition(Plateau plateau, Position position) {
         //Si la rangée ou colonne n'est pas identique on sait immédiatement que c'est faux
         Position currentPosition = plateau.getPosition(this);
         if (position.getColonne() != currentPosition.getColonne() && position.getRangee() != currentPosition.getRangee())
@@ -29,12 +29,12 @@ public class Tour extends DirectionPiece {
     }
 
     @Override
-    public int unicodeForWhite() {
+    int unicodeForWhite() {
         return 9814;
     }
 
     @Override
-    public int unicodeForBlack() {
+    int unicodeForBlack() {
         return 9820;
     }
 

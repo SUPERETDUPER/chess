@@ -12,14 +12,14 @@ public class MouvementNormal extends Mouvement {
     }
 
     void appliquerInterne(Plateau plateau) {
-        debut = plateau.getPosition(piece);
-        Piece pieceEnlever = plateau.bougerPiece(piece, fin);
+        debut = plateau.removePiece(piece);
+        Piece pieceEnlever = plateau.ajouter(fin, piece);
         if (pieceEnlever != null) throw new IllegalArgumentException("Une pièce est à cette position");
     }
 
     @Override
     void undoInterne(Plateau plateau) {
-        plateau.bougerPiece(piece, debut);
+        plateau.bougerPiece(debut, piece);
     }
 
     /**
