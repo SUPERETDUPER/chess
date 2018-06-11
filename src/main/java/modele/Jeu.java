@@ -94,9 +94,9 @@ public class Jeu implements Serializable {
 
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
-            changerLeTour();
             mouvements.pop().undo(jeuData.getPlateau());
             jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
+            changerLeTour();
         }
 
         joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get());
