@@ -2,6 +2,10 @@ package modele.mouvement;
 
 import modele.util.Plateau;
 
+/**
+ * Un mouvement qui est un ensemble d'autre mouvements
+ * La liste de mouvements est appliqué en ordre. Et la valeur est la somme
+ */
 public class MouvementCombine extends Mouvement {
     private final Mouvement[] mouvements;
     private Integer valeur;

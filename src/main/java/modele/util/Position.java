@@ -7,7 +7,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Une position du util
+ * Une position du plateau.
+ * (0,0) est en haut à gauche
  */
 public class Position implements Serializable {
     public static final int LIMITE = 8;

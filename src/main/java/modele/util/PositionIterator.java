@@ -2,6 +2,9 @@ package modele.util;
 
 import java.util.Iterator;
 
+/**
+ * Traverse toutes les positions sur le plateau
+ */
 public class PositionIterator implements Iterator<Position> {
     private static final Position MAX = new Position(Position.LIMITE, 0);
     private static final Offset ADROITE = new Offset(0, 1);

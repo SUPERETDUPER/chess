@@ -1,4 +1,4 @@
-package graphique.intro;
+package graphique;
 
 import com.jfoenix.controls.JFXComboBox;
 import graphique.jeu.plateau.JoueurHumain;
@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 /**
  * Controlle la fenêtre d'introduction
  */
-class IntroController {
+public class IntroController {
     private static final ObservableList<Joueur> OPTION_JOUEURS = FXCollections.observableArrayList(
             new JoueurHumain(),
             new JoueurOrdi(JoueurOrdi.NIVEAU_FACILE),
@@ -37,7 +37,7 @@ class IntroController {
     private final JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(OPTION_JOUEURS);
     private final JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(OPTION_JOUEURS);
 
-    IntroController(Consumer<EnumMap<Couleur, Joueur>> onJouer) {
+    public IntroController(Consumer<EnumMap<Couleur, Joueur>> onJouer) {
         this.onJouer = onJouer;
 
         //Sélectionner la première option

@@ -8,14 +8,21 @@ import modele.util.Plateau;
 import java.io.*;
 import java.util.EnumMap;
 
+/**
+ * Responsable de sauvgarder et recharger le fichier contenant le Jeu
+ */
 public class Chargeur {
-    private final File file = new File("dernierePartie.txt");
+    private final File file = new File("dernierePartie.txt"); //Le nom du fichier
     private Jeu jeu;
 
+    /**
+     * Sauvegarde le jeu
+     */
     private void sauvgarder() {
         try {
-            if (!file.exists()) file.createNewFile();
+            if (!file.exists()) file.createNewFile(); //Si le fichier de jeu n'existe pas créer le fichier
 
+            //Écrire le jeu au fichier
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(jeu);
             objectOutputStream.close();
@@ -24,15 +31,18 @@ public class Chargeur {
         }
     }
 
-    public boolean peutCharger() {
-        return file.exists();
-    }
-
+    /**
+     * charge le jeu du fichier
+     *
+     * @return Si on a chargé le jeu avec success
+     */
     public boolean chargerDuFichier() {
+        if (!file.exists()) return false; //Si aucun fichier -> échec
+
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
-            this.jeu = (Jeu) objectInputStream.readObject();
-            this.jeu.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder());
+            this.jeu = (Jeu) objectInputStream.readObject(); //Lire le jeu
+            this.jeu.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder()); //Quand le jeu change sauvegarder
             objectInputStream.close();
             return true;
         } catch (Exception e) {

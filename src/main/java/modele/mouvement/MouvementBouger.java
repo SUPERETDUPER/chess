@@ -4,10 +4,13 @@ import modele.pieces.Piece;
 import modele.util.Plateau;
 import modele.util.Position;
 
-public class MouvementNormal extends Mouvement {
+/**
+ * Un mouvement qui bouge une pièce
+ */
+public class MouvementBouger extends Mouvement {
     private Position debut;
 
-    public MouvementNormal(Piece piece, Position end) {
+    public MouvementBouger(Piece piece, Position end) {
         super(piece, end);
     }
 

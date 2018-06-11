@@ -15,7 +15,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represente le util de jeu. Permet d'acceder directement à la pièce à une position ou à la position d'une pièce
+ * Represente le plateau de jeu.
+ * Chaque pièce est attaché à une position
+ * Permet d'acceder directement à la pièce à une position ou à la position d'une pièce
  * Utilise le BiMap de Google Guava
  */
 public class Plateau implements Serializable {

@@ -1,8 +1,8 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
+import modele.mouvement.MouvementBouger;
 import modele.mouvement.MouvementCombine;
-import modele.mouvement.MouvementNormal;
 import modele.util.Couleur;
 import modele.util.Offset;
 import modele.util.Plateau;
@@ -10,7 +10,7 @@ import modele.util.Position;
 
 import java.util.Set;
 
-//TODO Implement castling
+//TODO Implement castling fully (currently only allows basic without conditions)
 public class Roi extends OffsetPiece {
     private static final Offset[] OFFSETS = {
             Offset.HAUT_GAUGHE,
@@ -23,6 +23,9 @@ public class Roi extends OffsetPiece {
             Offset.BAS_DROIT
     };
 
+    /**
+     * Le nombre de mouvements complétés sur la pièce
+     */
     private int nombresDeMouvements = 0;
 
     public Roi(Couleur couleur) {
@@ -53,6 +56,7 @@ public class Roi extends OffsetPiece {
     public Set<Mouvement> generateAllMoves(Plateau plateau) {
         Set<Mouvement> mouvements = super.generateAllMoves(plateau);
 
+        //Ajouter les options pour casteling
         Position startRoi = plateau.getPosition(this);
         Position debutTour = startRoi.decaler(new Offset(0, 3));
         Position finTour = debutTour.decaler(new Offset(0, -2));
@@ -64,8 +68,8 @@ public class Roi extends OffsetPiece {
                 && nombresDeMouvements == 0) {
 
             mouvements.add(new MouvementCombine(new Mouvement[]{
-                            new MouvementNormal(this, startRoi.decaler(new Offset(0, 2))),
-                            new MouvementNormal(plateau.getPiece(debutTour), startRoi.decaler(new Offset(0, 1)))
+                    new MouvementBouger(this, startRoi.decaler(new Offset(0, 2))),
+                    new MouvementBouger(plateau.getPiece(debutTour), startRoi.decaler(new Offset(0, 1)))
                     })
             );
         }

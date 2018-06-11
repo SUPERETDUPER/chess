@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * Une pièce de jeu
  */
+//TODO consider changing to decorator model for more flexibility and better implementation of special cases
 public abstract class Piece implements Serializable {
     final Couleur couleur;
 

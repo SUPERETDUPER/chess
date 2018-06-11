@@ -1,8 +1,8 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
+import modele.mouvement.MouvementBouger;
 import modele.mouvement.MouvementManger;
-import modele.mouvement.MouvementNormal;
 import modele.util.Couleur;
 import modele.util.Offset;
 import modele.util.Plateau;
@@ -23,20 +23,23 @@ abstract class DirectionPiece extends Piece {
     public Set<Mouvement> generateAllMoves(Plateau plateau) {
         Set<Mouvement> mouvements = new HashSet<>();
 
-        Position startingPosition = plateau.getPosition(this);
+        Position positionDebut = plateau.getPosition(this);
 
+        //Pour chaque direction
         for (Offset direction : getDirections()) {
-            Position end = startingPosition.decaler(direction);
+            Position end = positionDebut.decaler(direction);
 
+            //Chaque fois décaler la pièce dans la direction
             while (end.isValid()) {
                 Piece piece = plateau.getPiece(end);
 
-                if (piece == null) mouvements.add(new MouvementNormal(this, end));
+                if (piece == null)
+                    mouvements.add(new MouvementBouger(this, end)); //Si il n'y a rien là -> mouvement possible
                 else {
-                    if (piece.getCouleur() != couleur) {
-                        mouvements.add(new MouvementManger(this, end));
-                    }
+                    //Si il y a une pièce d'une autre couleur on peut manger
+                    if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(this, end));
 
+                    //Une pièce bloque le chemin on ne peut pas continuer dans cette direction
                     break;
                 }
 
@@ -51,19 +54,28 @@ abstract class DirectionPiece extends Piece {
     public boolean attaquePosition(Plateau plateau, Position position) {
         Position startingPosition = plateau.getPosition(this);
 
+        //Pour chaque direction
         for (Offset direction : getDirections()) {
+            //Décaler pendant que c'est possible
             Position testPosition = startingPosition.decaler(direction);
 
             while (testPosition.isValid()) {
-                if (testPosition.equals(position)) {
-                    return true;
-                }
+                Piece piece = plateau.getPiece(testPosition);
 
-                if (plateau.getPiece(testPosition) != null) break;
+                if (piece == null) {
+                    if (testPosition.equals(position)) return true;
+                } else {
+                    //Si il y a une pièce d'une autre couleur on peut manger
+                    if (piece.getCouleur() != couleur && testPosition.equals(position)) return true;
+
+                    //Une pièce bloque le chemin on ne peut pas continuer dans cette direction
+                    break;
+                }
 
                 testPosition = testPosition.decaler(direction);
             }
         }
+
         return false;
     }
 

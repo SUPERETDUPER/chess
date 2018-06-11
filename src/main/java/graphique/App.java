@@ -1,9 +1,9 @@
 package graphique;
 
-import graphique.intro.IntroRoot;
-import graphique.jeu.JeuScene;
+import graphique.jeu.JeuController;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.CacheHint;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,26 +14,27 @@ import modele.Chargeur;
 import modele.joueur.Joueur;
 import modele.util.Couleur;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.EnumMap;
 
 public class App extends Application {
-
-    private final Chargeur chargeur = new Chargeur();
-
-    @FunctionalInterface
-    public interface MontrerIntro {
-        void montrerIntro();
-    }
-
     private static final String TITRE = "Échec et Mat";
 
-    private final Scene scene = new Scene(new Pane());
-    private final Parent intro = new IntroRoot().creeRoot(this::montrerJeu);
+    /**
+     * Le chargeur de jeu
+     */
+    private final Chargeur chargeur = new Chargeur();
 
-    public static void main(String[] args) {
-        //Commencer l'interface graphique
-        launch(args);
-    }
+    /**
+     * La scene
+     */
+    private final Scene scene = new Scene(new Pane());
+
+    /**
+     * Le contenu pour la page d'intro
+     */
+    private final Parent intro = loadFromFXML(new IntroController(this::nouveauJeu), getClass().getResource("/intro.fxml"));
 
     /**
      * Commence l'interface graphique
@@ -43,25 +44,28 @@ public class App extends Application {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
 
-        if (chargeur.peutCharger() && chargeur.chargerDuFichier()) {
-            scene.setRoot(new JeuScene(this::montrerIntro, chargeur).getRoot());
+        //Si on peut charger et charger à fonctionné montrer le jeu
+        if (chargeur.chargerDuFichier()) {
+            changerRoot(loadFromFXML(new JeuController(() -> changerRoot(intro), chargeur), getClass().getResource("/jeu.fxml")));
         } else {
-            scene.setRoot(intro);
+            changerRoot(intro); //Sinon montrer l'intro
         }
 
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
-    private void montrerJeu(EnumMap<Couleur, Joueur> joueurs) {
+    /**
+     * Les joueurs pour le nouveau jeu
+     */
+    private void nouveauJeu(EnumMap<Couleur, Joueur> joueurs) {
         chargeur.creeNouveauJeu(joueurs);
-        changerRoot(new JeuScene(this::montrerIntro, chargeur).getRoot());
+        changerRoot(loadFromFXML(new JeuController(() -> changerRoot(intro), chargeur), getClass().getResource("/jeu.fxml")));
     }
 
-    private void montrerIntro() {
-        changerRoot(intro);
-    }
-
+    /**
+     * Change au nouveau root avec un fade
+     */
     private void changerRoot(Parent nouveauRoot) {
         Parent pastRoot = scene.getRoot();
         pastRoot.setCacheHint(CacheHint.SPEED);
@@ -87,5 +91,27 @@ public class App extends Application {
         });
 
         fadeOut.play();
+    }
+
+    /**
+     * @param controller le controller à attacher
+     * @param ressource  la ressource du fichier FXML
+     * @return retourne le root du FXML avec le controller
+     */
+    private static Parent loadFromFXML(Object controller, URL ressource) {
+        //Créer l'interface
+        FXMLLoader fxmlLoader = new FXMLLoader(ressource);
+        fxmlLoader.setController(controller); //Créer le controlleur
+
+        //Charger l'interface
+        try {
+            return fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args); //Commencer l'interface graphique
     }
 }

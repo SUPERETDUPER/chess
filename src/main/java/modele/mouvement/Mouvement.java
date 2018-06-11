@@ -3,16 +3,23 @@ package modele.mouvement;
 import modele.pieces.Piece;
 import modele.util.Plateau;
 import modele.util.Position;
+import org.jetbrains.annotations.Contract;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Un mouvement
- * Chaque mouvement a une position de départ et de fin
+ * Un mouvement. Représenté par une pièce qui se déplace vers une position finale
  */
 public abstract class Mouvement implements Serializable {
+    /**
+     * La pièce qui se déplace
+     */
     final Piece piece;
+
+    /**
+     * La position finale de la pièce
+     */
     final Position fin;
 
     Mouvement(Piece piece, Position fin) {
@@ -25,20 +32,19 @@ public abstract class Mouvement implements Serializable {
     }
 
     /**
-     * Appelé pour appliquer le mouvement sur un util de jeu
+     * Appelé pour appliquer le mouvement sur un plateau de jeu
      *
-     * @param plateau le util de jeu sur lequel on applique le mouvement
+     * @param plateau le plateau de jeu sur lequel on applique le mouvement
      */
     public void appliquer(Plateau plateau) {
         appliquerInterne(plateau);
         piece.notifyMoveCompleted(this);
-
     }
 
     abstract void appliquerInterne(Plateau plateau);
 
     /**
-     * Appelé pour défaire un mouvement qui vient d'être appliqué sur le util de jeu
+     * Appelé pour défaire un mouvement qui vient d'être appliqué sur le plateau de jeu
      */
     public void undo(Plateau plateau) {
         undoInterne(plateau);
@@ -54,21 +60,24 @@ public abstract class Mouvement implements Serializable {
      */
     public abstract int getValeur();
 
+    //Si le mouvement est la même pièce à la même position le mouvement est égal
+
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof MouvementNormal)) return false;
-        if (!this.piece.equals(((MouvementNormal) obj).piece)) return false;
-        return this.fin.equals(((MouvementNormal) obj).fin);
-    }
-
-    @Override
-    public String toString() {
-        return piece + " à " + fin;
+        if (!(obj instanceof MouvementBouger)) return false;
+        if (!this.piece.equals(((MouvementBouger) obj).piece)) return false;
+        return this.fin.equals(((MouvementBouger) obj).fin);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(this.piece, this.fin);
+    }
+
+    @Override
+    public String toString() {
+        return piece + " à " + fin;
     }
 }

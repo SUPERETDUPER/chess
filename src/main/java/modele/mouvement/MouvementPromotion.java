@@ -4,7 +4,10 @@ import modele.pieces.Piece;
 import modele.pieces.Reine;
 import modele.util.Position;
 
-public class MouvementPromotion extends MouvementNormal {
+/**
+ * Un mouvement qui promouvoit un pion à une reine en la bougeant
+ */
+public class MouvementPromotion extends MouvementBouger {
     public MouvementPromotion(Piece piece, Position end) {
         super(piece, end);
     }

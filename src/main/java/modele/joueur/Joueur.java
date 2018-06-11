@@ -24,6 +24,9 @@ public abstract class Joueur implements Serializable {
      */
     public abstract void initializeJeuData(JeuData jeuData);
 
+    /**
+     * @return Le nom du joueur tel que affiché sur l'interface
+     */
     protected abstract String getNom();
 
     @Override

@@ -3,7 +3,6 @@ package graphique.jeu;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
-import graphique.App;
 import graphique.jeu.plateau.JoueurHumain;
 import graphique.jeu.plateau.PlateauPane;
 import javafx.animation.Transition;
@@ -20,7 +19,7 @@ import modele.joueur.Joueur;
 /**
  * Controlle l'intreface de jeu
  */
-class JeuController {
+public class JeuController {
     @FXML
     private StackPane plateauContainer;
 
@@ -37,13 +36,15 @@ class JeuController {
 
     private final ObservableList<Action> actions = FXCollections.observableArrayList();
 
-    JeuController(App.MontrerIntro goBack, Chargeur chargeur) {
-        this.plateauPane = new PlateauPane(chargeur.getJeu().getJeuData());
+    private final Chargeur chargeur;
+
+    public JeuController(Runnable goBack, Chargeur chargeur) {
+        this.chargeur = chargeur;
+        this.plateauPane = new PlateauPane(chargeur.getJeu().getJeuData()); //Créer le plateau pane
 
         int counter = 0;
 
         for (Joueur joueur : chargeur.getJeu().getJoueurs().values()) {
-
             if (joueur instanceof JoueurHumain) {
                 ((JoueurHumain) joueur).initializeInterface(plateauPane);
                 counter += 1;
@@ -52,12 +53,14 @@ class JeuController {
 
         final int joueursHumain = counter;
 
+        //Ajouter un listener pour quand la partie fini
         chargeur.getJeu().setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
 
+        //Ajouter le button pour revenir au menu principal
         actions.add(new Action() {
             @Override
             void onClick() {
-                goBack.montrerIntro();
+                goBack.run();
             }
 
             @Override
@@ -66,6 +69,7 @@ class JeuController {
             }
         });
 
+        //Si il y a des joueurs humains, ajouter un boutton undo
         if (joueursHumain != 0) {
             actions.add(new Action() {
                 @Override
@@ -87,18 +91,19 @@ class JeuController {
 
     @FXML
     private void initialize() {
+        //Ajouter le plateau
         plateauContainer.getChildren().add(plateauPane);
 
+        //Ajouter les actions à la liste
         drawerList.setItems(actions);
 
-        //Quand la liste est appuyée executer l'option
+        //Quand la liste est appuyée executer l'option séléctionné
         drawerList.setOnMouseClicked(event -> {
             drawerList.getSelectionModel().getSelectedItem().onClick();
             drawerList.getSelectionModel().clearSelection();
         });
 
         //Animer le hamburger quand le drawer s'ouvre
-
         double animationRate = Math.abs(hamburger.getAnimation().getRate());
 
         drawer.setOnDrawerOpening((event) -> {
@@ -112,13 +117,23 @@ class JeuController {
             burgerAnimation.setRate(-animationRate);
             burgerAnimation.play();
         });
+
+        chargeur.getJeu().commencer();
     }
 
+    /**
+     * Quand le hamburger est appuyé, toggle le drawer
+     */
     @FXML
     private void handleHamburgerClick() {
         drawer.toggle();
     }
 
+    /**
+     * Quand la partie fini montrer un pop-up
+     *
+     * @param resultat le résultat de la partie
+     */
     private void handleResultat(Jeu.Resultat resultat) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         switch (resultat) {

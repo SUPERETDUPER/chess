@@ -20,7 +20,7 @@ public class Tour extends DirectionPiece {
 
     @Override
     public boolean attaquePosition(Plateau plateau, Position position) {
-        //Si la rangée ou colonne n'est pas identique on sait immédiatement que c'est faux
+        //Si la rangée ou colonne n'est pas identique on sait immédiatement que c'est faux (optimization)
         Position currentPosition = plateau.getPosition(this);
         if (position.getColonne() != currentPosition.getColonne() && position.getRangee() != currentPosition.getRangee())
             return false;
@@ -50,12 +50,10 @@ public class Tour extends DirectionPiece {
 
     @Override
     public void notifyMoveCompleted(Mouvement mouvement) {
-
     }
 
     @Override
     public void notifyMoveUndo(Mouvement mouvement) {
-
     }
 
     @Override

@@ -1,8 +1,8 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
+import modele.mouvement.MouvementBouger;
 import modele.mouvement.MouvementManger;
-import modele.mouvement.MouvementNormal;
 import modele.util.Couleur;
 import modele.util.Offset;
 import modele.util.Plateau;
@@ -25,6 +25,7 @@ abstract class OffsetPiece extends Piece {
 
         Position currentPose = plateau.getPosition(this);
 
+        //Pour chaque offset
         for (Offset offset : getOffsets()) {
             Position nextPosition = currentPose.decaler(offset);
 
@@ -33,8 +34,8 @@ abstract class OffsetPiece extends Piece {
 
             Piece piece = plateau.getPiece(nextPosition);
 
-            //si il y a une pièce de la même couleur à cette position, passer à la prochaine
-            if (piece == null) mouvements.add(new MouvementNormal(this, nextPosition));
+            //si il y a une pièce de la même couleur à cette position, passer à la prochaine sinon on peut bouger
+            if (piece == null) mouvements.add(new MouvementBouger(this, nextPosition));
             else if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(this, nextPosition));
         }
 
@@ -43,8 +44,10 @@ abstract class OffsetPiece extends Piece {
 
     @Override
     public boolean attaquePosition(Plateau plateau, Position position) {
+        //TODO Consider changing to subtract two positions and calculate offset then compare (using hashmap)
         Position currentPosition = plateau.getPosition(this);
 
+        //Pour chaque offset vérifier si c'est la position
         for (Offset offset : getOffsets()) {
             if (position.equals(currentPosition.decaler(offset))) return true;
         }
@@ -52,5 +55,8 @@ abstract class OffsetPiece extends Piece {
         return false;
     }
 
+    /**
+     * @return les offsets où la pièce peut se décaler
+     */
     abstract Offset[] getOffsets();
 }

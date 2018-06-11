@@ -3,133 +3,161 @@ package modele.joueur;
 import modele.JeuData;
 import modele.mouvement.Mouvement;
 import modele.util.Couleur;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 //TODO Upgrade algorithm to min/max with alpha-beta pruning
 //TODO Write tests because behaves weird
+//TODO consider moving pieces values (ex. pawn = 1) to this class since pieces should not be responsible for the algorithm
 
 /**
- * Un joueur qui utilise un algorithm pour trouver son prochain mouvement
+ * Un joueur qui utilise un algorithm pour trouver le prochain meilleur mouvement.
+ * L'algorithme est un algorithm recursif min-max qui utilise les valeurs des pièces (chaque pièce à une valeur)
+ *
+ * Il existe deux niveaux de difficulté (facile et difficile)
  */
 public class JoueurOrdi extends Joueur {
+    //Les niveaux de difficultés
     public static final Difficulte NIVEAU_FACILE = new Difficulte(3, "Facile");
     public static final Difficulte NIVEAU_DIFFICILE = new Difficulte(4, "Difficile");
 
+    /**
+     * Le niveau de difficulte du joueur
+     */
     private final Difficulte difficulte;
 
+    /**
+     * Le jeu data
+     */
+    @Nullable
     private JeuData jeuData;
 
+    /**
+     * @param difficulte la difficulté de l'algorithme
+     */
     public JoueurOrdi(Difficulte difficulte) {
         this.difficulte = difficulte;
     }
 
     @Override
-    public void initializeJeuData(JeuData jeuData) {
+    public void initializeJeuData(@NotNull JeuData jeuData) {
         this.jeuData = jeuData;
     }
 
     /**
-     * Trouve tous les mouvement possible puis retourne celui qui remporte le plus de points
+     * Retourne le mouvement qui retourne le plus de points
      *
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */
     @Override
     public void getMouvement(Consumer<Mouvement> callback, Couleur couleur) {
         new Thread(() ->
-                callback.accept(calculerMeilleurMouvement(new MoveSequence(), couleur).getFirst())
+                callback.accept(
+                        calculerMeilleurMouvement(new MoveSequence(), couleur)
+                                .getPremierMouvement()
+                )
         ).start();
-
     }
 
+    @Nullable
     private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
-        if (pastSequence.getLength() == difficulte.depth) return pastSequence;
+        //Si on est déjà à la profondeur maximale retourner
+        if (pastSequence.getLongeur() == difficulte.profondeur) return pastSequence;
 
-        Set<Mouvement> mouvements;
+        //Calculer les mouvements possibles
+        List<Mouvement> mouvementsPossibles = jeuData.getAllLegalMoves(couleur);
 
-        if (pastSequence.getLength() == 0) {
-            mouvements = jeuData.getAllLegalMoves(couleur);
-        } else {
-            mouvements = jeuData.plateau.getAllMoves(couleur);
-        }
+        MoveSequence meilleurMouvement = null;
 
-        MoveSequence bestMove = null;
+        for (Mouvement mouvement : mouvementsPossibles) {
+            mouvement.appliquer(jeuData.getPlateau()); //Appliquer le mouvement
 
-        for (Mouvement mouvement : mouvements) {
-            mouvement.appliquer(jeuData.getPlateau());
-            MoveSequence moveSequence = calculerMeilleurMouvement(pastSequence.addAndReturn(mouvement), oppose(couleur));
+            //Calculer la valeur du mouvement (partie récursive)
+            MoveSequence moveSequence = calculerMeilleurMouvement(new MoveSequence(pastSequence, mouvement), inverser(couleur));
 
-            if (bestMove == null) {
-                bestMove = moveSequence;
+            //Si le mouvement est meilleur que meilleurMouvement remplacer meilleurMouvement
+            //Si le mouvement à la même valeur, remplacer 50% du temps
+            if (meilleurMouvement == null) {
+                meilleurMouvement = moveSequence;
             } else {
                 if (couleur == Couleur.BLANC) {
-                    //50% du temps si le mouvement à la même valeur échanger pour avoir de la variété
-                    if (moveSequence.getValue() > bestMove.getValue()
-                            || (moveSequence.getValue() == bestMove.getValue() && Math.random() > 0.5)) {
-                        bestMove = moveSequence;
+                    if (moveSequence.getValeur() > meilleurMouvement.getValeur()
+                            || (moveSequence.getValeur() == meilleurMouvement.getValeur() && Math.random() > 0.5)) {
+                        meilleurMouvement = moveSequence;
                     }
                 } else {
-                    //50% du temps si le mouvement à la même valeur échanger pour avoir de la variété
-                    if (moveSequence.getValue() < bestMove.getValue()
-                            || (moveSequence.getValue() == bestMove.getValue() && Math.random() > 0.5)) {
-                        bestMove = moveSequence;
+                    if (moveSequence.getValeur() < meilleurMouvement.getValeur()
+                            || (moveSequence.getValeur() == meilleurMouvement.getValeur() && Math.random() > 0.5)) {
+                        meilleurMouvement = moveSequence;
                     }
                 }
             }
 
-            mouvement.undo(jeuData.getPlateau());
+            mouvement.undo(jeuData.getPlateau()); //Défaire les changements
         }
 
-        return bestMove == null ? pastSequence : bestMove;
+        return meilleurMouvement == null ? pastSequence : meilleurMouvement;
     }
 
-    private Couleur oppose(Couleur couleur) {
+    /**
+     * Si blanc retourne noir et vice-versa
+     *
+     * @param couleur la couleur à inverser
+     * @return la couleur inversée
+     */
+    private Couleur inverser(Couleur couleur) {
         return couleur == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC;
     }
 
+    /**
+     * Une classe qui représente une série de mouvements et la valeur de la série
+     */
     private class MoveSequence {
         private final List<Mouvement> mouvements;
-        private final int value;
+
+        /**
+         * La somme de la valeur de toutes les pièces
+         */
+        private final int valeur;
 
         MoveSequence() {
-            this.value = 0;
+            this.valeur = 0;
             this.mouvements = new ArrayList<>();
         }
 
-        private MoveSequence(List<Mouvement> mouvements, int value) {
-            this.mouvements = mouvements;
-            this.value = value;
+        private MoveSequence(MoveSequence moveSequence, Mouvement mouvement) {
+            this.mouvements = new ArrayList<>(moveSequence.mouvements);
+            this.mouvements.add(mouvement);
+            this.valeur = moveSequence.valeur + mouvement.getValeur();
         }
 
-        MoveSequence addAndReturn(Mouvement mouvement) {
-            List<Mouvement> newList = new ArrayList<>(mouvements);
-            newList.add(mouvement);
-            return new MoveSequence(newList, value + mouvement.getValeur());
+        int getValeur() {
+            return valeur;
         }
 
-        int getValue() {
-            return value;
-        }
-
-        int getLength() {
+        int getLongeur() {
             return mouvements.size();
         }
 
-        Mouvement getFirst() {
+        Mouvement getPremierMouvement() {
             return mouvements.get(0);
         }
     }
 
+    /**
+     * La difficulté de l'algorithm (dépendant de la profondeur)
+     */
     private static class Difficulte implements Serializable {
-        private final int depth;
+        private final int profondeur;
         private final String nom;
 
-        Difficulte(int depth, String nom) {
-            this.depth = depth;
+        Difficulte(int profondeur, String nom) {
+            this.profondeur = profondeur;
             this.nom = nom;
         }
     }

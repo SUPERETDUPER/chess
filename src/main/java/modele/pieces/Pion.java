@@ -44,7 +44,7 @@ public class Pion extends Piece {
                 if (fin.getRangee() == 0 || fin.getRangee() == Position.LIMITE - 1) {
                     mouvements.add(new MouvementPromotion(this, fin));
                 } else {
-                    mouvements.add(new MouvementNormal(this, fin));
+                    mouvements.add(new MouvementBouger(this, fin));
                 }
             }
             //Sinon on est bloqué
@@ -57,7 +57,7 @@ public class Pion extends Piece {
 
             //Si la position et valide et la postion est vide on peut
             if (fin.isValid() && plateau.getPiece(fin) == null) {
-                mouvements.add(new MouvementNormal(this, fin));
+                mouvements.add(new MouvementBouger(this, fin));
             }
         }
 

@@ -8,8 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -49,13 +50,13 @@ public class JeuData implements Serializable {
     }
 
     @NotNull
-    public Set<Mouvement> getAllLegalMoves(Couleur couleur) {
+    public List<Mouvement> getAllLegalMoves(Couleur couleur) {
         return filterOnlyLegal(plateau.getAllMoves(couleur), couleur);
     }
 
     @NotNull
-    public Set<Mouvement> filterOnlyLegal(Set<Mouvement> mouvements, Couleur verifierPour) {
-        Set<Mouvement> legalMouvements = new HashSet<>();
+    public List<Mouvement> filterOnlyLegal(Set<Mouvement> mouvements, Couleur verifierPour) {
+        List<Mouvement> legalMouvements = new ArrayList<>();
 
         Plateau tempPlateau = plateau.getCopie();
 

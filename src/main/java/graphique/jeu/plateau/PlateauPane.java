@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Controle la zone du plateau de jeu
@@ -147,7 +146,7 @@ public class PlateauPane extends Pane {
             if (pieceClicked != null && demandeDeMouvement.getCouleur() == pieceClicked.getCouleur()) {
 
                 //Calculer les mouvements possibles
-                Set<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
+                List<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
 
                 highlightController.selectionner(position, moves); //Sélectionner
             }

@@ -6,14 +6,14 @@ import modele.util.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class MouvementNormalTest {
+class MouvementBougerTest {
 
     @Test
     void equals() {
         Roi piece = new Roi(Couleur.BLANC);
         Assertions.assertEquals(
-                new MouvementNormal(piece, new Position(0, 1)),
-                new MouvementNormal(piece, new Position(0, 1))
+                new MouvementBouger(piece, new Position(0, 1)),
+                new MouvementBouger(piece, new Position(0, 1))
         );
     }
 }
