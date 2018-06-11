@@ -45,12 +45,10 @@ public class Reine extends DirectionPiece {
 
     @Override
     public void notifyMoveCompleted(Mouvement mouvement) {
-
     }
 
     @Override
     public void notifyMoveUndo(Mouvement mouvement) {
-
     }
 
     @Override

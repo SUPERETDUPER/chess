@@ -43,7 +43,7 @@ public class PiecePane extends StackPane {
         bind(position);
 
         //Ajouter le text
-        setText();
+        text.setText(Character.toString((char) this.piece.getNumeroUnicode()));
         this.getChildren().add(text);
 
         //Faire que le text reste propertionelle à la taille de la case
@@ -51,13 +51,6 @@ public class PiecePane extends StackPane {
                 (observable, oldValue, newValue) ->
                         text.setFont(new Font(newValue.doubleValue() * RAPPORT_TAILLE_FONT_SIZE))
         );
-    }
-
-    /**
-     * Met à jour le text
-     */
-    public void setText() {
-        text.setText(Character.toString((char) piece.getNumeroUnicode()));
     }
 
     public Piece getPiece() {

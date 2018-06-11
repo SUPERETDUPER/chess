@@ -173,7 +173,6 @@ public class PlateauPane extends Pane {
                 PiecePane piecePane = piecePanes.get(i);
 
                 if (piecePane != null) {
-                    piecePane.setText();
                     Position position = plateau.getPosition(piecePane.getPiece());
 
                     //Si la position existe déplacer à position
