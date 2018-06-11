@@ -64,7 +64,7 @@ public class JoueurOrdi extends Joueur {
         ).start();
     }
 
-    @Nullable
+    @NotNull
     private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Couleur couleur) {
         //Si on est déjà à la profondeur maximale retourner
         if (pastSequence.getLongeur() == difficulte.profondeur) return pastSequence;

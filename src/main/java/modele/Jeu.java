@@ -19,24 +19,46 @@ import java.util.function.Consumer;
  * Classe qui supervise les joueurs et s'assure de respecter les tours
  */
 public class Jeu implements Serializable {
+    /**
+     * Le résultat de la partie
+     */
     public enum Resultat {
         BLANC_GAGNE,
         NOIR_GAGNE,
         EGALITE
     }
 
+    /**
+     * Le plateau et les rois
+     */
     private final JeuData jeuData;
 
+    /**
+     * La liste de joueurs
+     */
     @NotNull
     private final EnumMap<Couleur, Joueur> joueurs;
 
+    /**
+     * A qui le tour
+     */
     transient private ReadOnlyObjectWrapper<Couleur> tourA = new ReadOnlyObjectWrapper<>(Couleur.BLANC);
 
+    /**
+     * le listener de resultat
+     */
     transient private Consumer<Resultat> resultatListener;
 
+    /**
+     * la liste de mouvements effectuées
+     */
     private final Stack<Mouvement> mouvements = new Stack<>();
 
-    public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
+    /**
+     * @param jeuData l'info de jeu
+     * @param joueurs les joueurs
+     */
+    Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;
         this.joueurs = joueurs;
 
@@ -49,7 +71,7 @@ public class Jeu implements Serializable {
      * Commencer la partie
      */
     public void commencer() {
-        joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get());
+        joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Demander au joueur de bouger
     }
 
     public void setResultatListener(Consumer<Resultat> resultatListener) {
@@ -63,9 +85,9 @@ public class Jeu implements Serializable {
      */
     private void jouer(@NotNull Mouvement mouvement) {
         mouvement.appliquer(jeuData.getPlateau()); //Jouer le mouvement
-        mouvements.push(mouvement);
+        mouvements.push(mouvement); //Ajouter à la liste
 
-        jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
+        jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie()); //Notifier changement
 
         changerLeTour();
 
@@ -83,6 +105,7 @@ public class Jeu implements Serializable {
                 resultatListener.accept(Resultat.EGALITE);
             }
         } else {
+            //Si la partie n'est pas fini notifier prochain joueur
             joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Notifier l'autre joueur qu'il peut joueur
         }
     }
@@ -91,6 +114,9 @@ public class Jeu implements Serializable {
         tourA.set(tourA.getValue() == Couleur.BLANC ? Couleur.NOIR : Couleur.BLANC); //Changer le tour
     }
 
+    /**
+     * @param tour le nombre de mouvements à défaire
+     */
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
             mouvements.pop().undo(jeuData.getPlateau());

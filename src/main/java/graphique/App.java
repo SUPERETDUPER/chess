@@ -46,9 +46,9 @@ public class App extends Application {
 
         //Si on peut charger et charger à fonctionné montrer le jeu
         if (chargeur.chargerDuFichier()) {
-            changerRoot(loadFromFXML(new JeuController(() -> changerRoot(intro), chargeur), getClass().getResource("/jeu.fxml")));
+            scene.setRoot(loadFromFXML(new JeuController(() -> changerRoot(intro), chargeur), getClass().getResource("/jeu.fxml")));
         } else {
-            changerRoot(intro); //Sinon montrer l'intro
+            scene.setRoot(intro); //Sinon montrer l'intro
         }
 
         primaryStage.setMaximized(true);
