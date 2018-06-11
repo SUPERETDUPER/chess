@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  */
 public class JeuData implements Serializable {
     @NotNull
-    public final Plateau plateau;
+    private final Plateau plateau;
 
     /**
      * Le listener pour quand le plateau change

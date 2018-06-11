@@ -20,7 +20,8 @@ public class Chargeur {
      */
     private void sauvgarder() {
         try {
-            if (!file.exists()) file.createNewFile(); //Si le fichier de jeu n'existe pas créer le fichier
+            if (!file.exists()) //noinspection ResultOfMethodCallIgnored
+                file.createNewFile(); //Si le fichier de jeu n'existe pas créer le fichier
 
             //Écrire le jeu au fichier
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));

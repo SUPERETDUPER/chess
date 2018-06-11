@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 /**
  * Controlle la fenêtre d'introduction
  */
-public class IntroController {
+class IntroController {
     private static final ObservableList<Joueur> OPTION_JOUEURS = FXCollections.observableArrayList(
             new JoueurHumain(),
             new JoueurOrdi(JoueurOrdi.NIVEAU_FACILE),
