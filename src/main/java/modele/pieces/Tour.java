@@ -57,4 +57,9 @@ public class Tour extends DirectionPiece {
     public void notifyMoveUndo(Mouvement mouvement) {
 
     }
+
+    @Override
+    String getNom() {
+        return "Tour";
+    }
 }

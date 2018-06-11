@@ -14,7 +14,7 @@ public class MouvementNormal extends Mouvement {
     void appliquerInterne(Plateau plateau) {
         debut = plateau.removePiece(piece);
         Piece pieceEnlever = plateau.ajouter(fin, piece);
-        if (pieceEnlever != null) throw new IllegalArgumentException("Une pièce est à cette position");
+        if (pieceEnlever != null) throw new IllegalArgumentException("Une pièce est à cette position: " + this);
     }
 
     @Override

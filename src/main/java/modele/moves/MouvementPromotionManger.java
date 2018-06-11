@@ -5,8 +5,8 @@ import modele.pieces.Reine;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
-public class MouvementPromotion extends MouvementNormal {
-    public MouvementPromotion(Piece piece, Position end) {
+public class MouvementPromotionManger extends MouvementManger {
+    public MouvementPromotionManger(Piece piece, Position end) {
         super(piece, end);
     }
 
@@ -18,6 +18,6 @@ public class MouvementPromotion extends MouvementNormal {
 
     @Override
     public int getValeur() {
-        return new Reine(piece.getCouleur()).getValeur() - piece.getValeur();
+        return super.getValeur() + new Reine(piece.getCouleur()).getValeur() - piece.getValeur();
     }
 }

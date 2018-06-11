@@ -18,6 +18,8 @@ public class PiecePane extends StackPane {
      */
     private final Piece piece;
 
+    private final Text text = new Text();
+
     /**
      * @param piece la pièce à afficher
      */
@@ -32,7 +34,7 @@ public class PiecePane extends StackPane {
         bind(position);
 
         //Ajouter le text
-        Text text = new Text(Character.toString((char) piece.getNumeroUnicode()));
+        setText();
         this.getChildren().add(text);
 
         //Faire que la displayCalculator du text reste propertionelle
@@ -40,6 +42,11 @@ public class PiecePane extends StackPane {
                 (observable, oldValue, newValue) ->
                         text.setFont(new Font(newValue.doubleValue() * RAPPORT_TAILLE_FONT_SIZE))
         );
+    }
+
+    public void setText() {
+        System.out.println("set text: " + piece);
+        text.setText(Character.toString((char) piece.getNumeroUnicode()));
     }
 
     public Piece getPiece() {

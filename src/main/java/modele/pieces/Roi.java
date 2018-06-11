@@ -82,4 +82,9 @@ public class Roi extends OffsetPiece {
     public void notifyMoveUndo(Mouvement mouvement) {
         nombresDeMouvements -= 1;
     }
+
+    @Override
+    String getNom() {
+        return "Roi";
+    }
 }

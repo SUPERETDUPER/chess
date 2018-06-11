@@ -178,11 +178,13 @@ public class PlateauPane extends Pane {
                 PiecePane piecePane = piecePanes.get(i);
 
                 if (piecePane != null) {
+                    piecePane.setText();
                     Position position = plateau.getPosition(piecePane.getPiece());
 
                     //Si la position existe déplacer à position
                     //Si la position n'existe pas déplacer à graveyard
                     if (position == null) {
+                        System.out.println(piecePane.getPiece() + " " + piecePane.getPiece().hashCode());
                         animationController.ajouterAnimation(
                                 piecePane,
                                 graveyardControllers.get(piecePane.getPiece().getCouleur()).getNextGraveyardPosition()

@@ -83,8 +83,10 @@ public abstract class Piece implements Serializable {
      */
     public abstract void notifyMoveUndo(Mouvement mouvement);
 
+    abstract String getNom();
+
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "-" + (couleur == Couleur.BLANC ? "b" : "n");
+        return getNom() + "-" + (couleur == Couleur.BLANC ? "b" : "n");
     }
 }

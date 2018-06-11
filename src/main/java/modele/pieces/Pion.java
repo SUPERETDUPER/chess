@@ -1,9 +1,7 @@
 package modele.pieces;
 
 import modele.Couleur;
-import modele.moves.Mouvement;
-import modele.moves.MouvementManger;
-import modele.moves.MouvementNormal;
+import modele.moves.*;
 import modele.plateau.Offset;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
@@ -20,12 +18,16 @@ public class Pion extends Piece {
 
     private int nombreDeMouvementsCompletes = 0;
 
+    private Piece reine = null;
+
     public Pion(Couleur couleur) {
         super(couleur);
     }
 
     @Override
     public Set<Mouvement> generateAllMoves(Plateau plateau) {
+        if (reine != null) return reine.generateAllMoves(plateau);
+
         Set<Mouvement> mouvements = new HashSet<>();
 
         Position currentPosition = plateau.getPosition(this);
@@ -35,10 +37,15 @@ public class Pion extends Piece {
         Position fin = currentPosition.decaler(AVANCER);
 
         //Si une place de plus est valide est n'est pas promotion
-        if (fin.isValid() && fin.getRangee() != 0 && fin.getRangee() != Position.LIMITE - 1) {
+        if (fin.isValid()) {
+
             //Si il y a personne on peut avancer
             if (plateau.getPiece(fin) == null) {
-                mouvements.add(new MouvementNormal(this, fin));
+                if (fin.getRangee() == 0 || fin.getRangee() == Position.LIMITE - 1) {
+                    mouvements.add(new MouvementPromotion(this, fin));
+                } else {
+                    mouvements.add(new MouvementNormal(this, fin));
+                }
             }
             //Sinon on est bloqué
             else blocked = true;
@@ -55,27 +62,29 @@ public class Pion extends Piece {
         }
 
         //On essaye de manger des pièces aux côtés
-        fin = currentPosition.decaler(ATTAQUE_GAUCHE);
-
-        if (fin.isValid()) {
-            Piece piece = plateau.getPiece(fin);
-            if (piece != null && piece.getCouleur() != couleur)
-                mouvements.add(new MouvementManger(this, fin));
-        }
-
-        fin = currentPosition.decaler(ATTAQUE_DROITE);
-
-        if (fin.isValid()) {
-            Piece piece = plateau.getPiece(fin);
-            if (piece != null && piece.getCouleur() != couleur)
-                mouvements.add(new MouvementManger(this, fin));
-        }
+        checkCanEat(plateau, mouvements, currentPosition.decaler(ATTAQUE_GAUCHE));
+        checkCanEat(plateau, mouvements, currentPosition.decaler(ATTAQUE_DROITE));
 
         return mouvements;
     }
 
+    private void checkCanEat(Plateau plateau, Set<Mouvement> mouvements, Position fin) {
+        if (fin.isValid()) {
+            Piece piece = plateau.getPiece(fin);
+            if (piece != null && piece.getCouleur() != couleur) {
+                if (fin.getRangee() == 0 || fin.getRangee() == Position.LIMITE - 1) {
+                    mouvements.add(new MouvementPromotionManger(this, fin));
+                } else {
+                    mouvements.add(new MouvementManger(this, fin));
+                }
+            }
+        }
+    }
+
     @Override
     public boolean attaquePosition(Plateau plateau, Position position) {
+        if (reine != null) return reine.attaquePosition(plateau, position);
+
         Position currentPosition = plateau.getPosition(this);
 
         return currentPosition.decaler(ATTAQUE_GAUCHE).equals(position) ||
@@ -84,26 +93,54 @@ public class Pion extends Piece {
 
     @Override
     int unicodeForBlack() {
+        if (reine != null) return reine.unicodeForBlack();
+
         return 9823;
     }
 
     @Override
     int unicodeForWhite() {
+        if (reine != null) return reine.unicodeForWhite();
         return 9817;
     }
 
     @Override
     public int getValeurPositive() {
+        if (reine != null) return reine.getValeurPositive();
+
         return 1;
     }
 
     @Override
     public void notifyMoveCompleted(Mouvement mouvement) {
+        if (mouvement instanceof MouvementPromotion || mouvement instanceof MouvementPromotionManger) {
+            reine = new Reine(couleur) {
+                @Override
+                public int hashCode() {
+                    return Pion.this.hashCode();
+                }
+
+                @Override
+                public boolean equals(Object obj) {
+                    return Pion.this.equals(obj);
+                }
+            };
+        }
+
         nombreDeMouvementsCompletes += 1;
     }
 
     @Override
     public void notifyMoveUndo(Mouvement mouvement) {
+        if (mouvement instanceof MouvementPromotion || mouvement instanceof MouvementPromotionManger) {
+            reine = null;
+        }
+
         nombreDeMouvementsCompletes -= 1;
+    }
+
+    @Override
+    String getNom() {
+        return "Pion";
     }
 }

@@ -51,4 +51,9 @@ public class Cavalier extends OffsetPiece {
     @Override
     public void notifyMoveUndo(Mouvement mouvement) {
     }
+
+    @Override
+    String getNom() {
+        return "Cavalier";
+    }
 }
