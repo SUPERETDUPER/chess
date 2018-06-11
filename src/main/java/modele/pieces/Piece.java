@@ -58,7 +58,7 @@ public abstract class Piece implements Serializable {
     public abstract Set<Mouvement> generateAllMoves(Plateau plateau);
 
     /**
-     * @param plateau le plateau
+     * @param plateau  le plateau
      * @param position la position à vérifier
      * @return vrai si cette pièce attack présentement cette position
      */
