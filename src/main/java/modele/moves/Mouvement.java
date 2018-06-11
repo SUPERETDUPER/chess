@@ -4,13 +4,14 @@ import modele.pieces.Piece;
 import modele.plateau.Plateau;
 import modele.plateau.Position;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Un mouvement
  * Chaque mouvement a une position de départ et de fin
  */
-public abstract class Mouvement {
+public abstract class Mouvement implements Serializable {
     final Piece piece;
     final Position fin;
 
