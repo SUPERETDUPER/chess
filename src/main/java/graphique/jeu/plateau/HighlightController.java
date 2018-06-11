@@ -28,7 +28,7 @@ class HighlightController {
      * Vide si rien n'est sélectionné
      */
     @NotNull
-    private HashMap<Position, Mouvement> mouvementsPossibles = new HashMap<>();
+    private final HashMap<Position, Mouvement> mouvementsPossibles = new HashMap<>();
 
     /**
      * La case présentement sélectionné

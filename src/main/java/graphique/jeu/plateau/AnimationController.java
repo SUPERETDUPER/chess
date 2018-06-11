@@ -20,7 +20,7 @@ class AnimationController {
     /**
      * La liste d'animation à effectuer
      */
-    private Queue<Pair<PiecePane, PositionGraphique>> mouvementQueue = new LinkedList<>();
+    private final Queue<Pair<PiecePane, PositionGraphique>> mouvementQueue = new LinkedList<>();
 
     private boolean isRunning = false;
 

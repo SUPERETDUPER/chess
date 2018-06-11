@@ -19,13 +19,13 @@ import java.util.Set;
  * Utilise le BiMap de Google Guava
  */
 public class Plateau implements Serializable {
-    private BiMap<Position, Piece> board;
+    private final BiMap<Position, Piece> board;
 
     public Plateau() {
         this.board = HashBiMap.create(32);
     }
 
-    public Plateau(Map<Position, Piece> startingMap) {
+    private Plateau(Map<Position, Piece> startingMap) {
         board = HashBiMap.create(startingMap);
     }
 
@@ -111,15 +111,14 @@ public class Plateau implements Serializable {
     /**
      * @param piece la pièce qui était à position
      */
-    public synchronized Piece bougerPiece(@NotNull Position position, @NotNull Piece piece) {
-        return board.forcePut(position, piece);
+    public synchronized void bougerPiece(@NotNull Position position, @NotNull Piece piece) {
+        board.forcePut(position, piece);
     }
 
     @NotNull
-    public synchronized Piece removePiece(@NotNull Position position) {
+    public synchronized void removePiece(@NotNull Position position) {
         Piece remove = board.remove(position);
         if (remove == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
-        return remove;
     }
 
     @NotNull
@@ -130,7 +129,7 @@ public class Plateau implements Serializable {
     }
 
     @NotNull
-    public Set<Piece> iteratePieces() {
+    private Set<Piece> iteratePieces() {
         return board.values();
     }
 

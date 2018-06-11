@@ -12,9 +12,9 @@ import java.util.Set;
  * Une pièce de jeu
  */
 public abstract class Piece implements Serializable {
-    Couleur couleur;
+    final Couleur couleur;
 
-    public Piece(Couleur couleur) {
+    Piece(Couleur couleur) {
         this.couleur = couleur;
     }
 
@@ -58,8 +58,8 @@ public abstract class Piece implements Serializable {
     public abstract Set<Mouvement> generateAllMoves(Plateau plateau);
 
     /**
-     * @param plateau
-     * @param position
+     * @param plateau le plateau
+     * @param position la position à vérifier
      * @return vrai si cette pièce attack présentement cette position
      */
     public abstract boolean attaquePosition(Plateau plateau, Position position);
@@ -67,7 +67,7 @@ public abstract class Piece implements Serializable {
     /**
      * @return La valeur de la pièce indépendament de la couleur
      */
-    public abstract int getValeurPositive();
+    protected abstract int getValeurPositive();
 
     /**
      * Appelé pour signifier que le mouvement à été appliqué sur la pièce

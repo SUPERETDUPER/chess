@@ -15,13 +15,13 @@ import java.util.function.Consumer;
 
 public class JeuData implements Serializable {
     @NotNull
-    public Plateau plateau;
+    public final Plateau plateau;
 
     @Nullable
     transient private Consumer<Plateau> changeListener;
 
     @NotNull
-    private EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
+    private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
     public JeuData(@NotNull Plateau plateau, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
         this.plateau = plateau;

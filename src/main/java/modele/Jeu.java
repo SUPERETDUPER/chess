@@ -25,16 +25,16 @@ public class Jeu implements Serializable {
         EGALITE
     }
 
-    private JeuData jeuData;
+    private final JeuData jeuData;
 
     @NotNull
-    private EnumMap<Couleur, Joueur> joueurs;
+    private final EnumMap<Couleur, Joueur> joueurs;
 
     transient private ReadOnlyObjectWrapper<Couleur> tourA = new ReadOnlyObjectWrapper<>(Couleur.BLANC);
 
     transient private Consumer<Resultat> resultatListener;
 
-    private Stack<Mouvement> mouvements = new Stack<>();
+    private final Stack<Mouvement> mouvements = new Stack<>();
 
     public Jeu(JeuData jeuData, @NotNull EnumMap<Couleur, Joueur> joueurs) {
         this.jeuData = jeuData;

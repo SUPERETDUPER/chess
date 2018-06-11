@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.EnumMap;
 
 public class Chargeur {
-    private File file = new File("dernierePartie.txt");
+    private final File file = new File("dernierePartie.txt");
     private Jeu jeu;
 
     private void sauvgarder() {

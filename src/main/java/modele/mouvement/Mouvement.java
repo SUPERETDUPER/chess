@@ -15,17 +15,13 @@ public abstract class Mouvement implements Serializable {
     final Piece piece;
     final Position fin;
 
-    public Mouvement(Piece piece, Position fin) {
+    Mouvement(Piece piece, Position fin) {
         this.piece = piece;
         this.fin = fin;
     }
 
     public Position getFin() {
         return fin;
-    }
-
-    public Piece getPiece() {
-        return piece;
     }
 
     /**

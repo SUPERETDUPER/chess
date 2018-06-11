@@ -21,7 +21,7 @@ public class JoueurOrdi extends Joueur {
     public static final Difficulte NIVEAU_FACILE = new Difficulte(3, "Facile");
     public static final Difficulte NIVEAU_DIFFICILE = new Difficulte(4, "Difficile");
 
-    private Difficulte difficulte;
+    private final Difficulte difficulte;
 
     private JeuData jeuData;
 
@@ -134,7 +134,7 @@ public class JoueurOrdi extends Joueur {
         private final int depth;
         private final String nom;
 
-        public Difficulte(int depth, String nom) {
+        Difficulte(int depth, String nom) {
             this.depth = depth;
             this.nom = nom;
         }

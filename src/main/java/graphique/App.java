@@ -18,7 +18,7 @@ import java.util.EnumMap;
 
 public class App extends Application {
 
-    private Chargeur chargeur = new Chargeur();
+    private final Chargeur chargeur = new Chargeur();
 
     @FunctionalInterface
     public interface MontrerIntro {

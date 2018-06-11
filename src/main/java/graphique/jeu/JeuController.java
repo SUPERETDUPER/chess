@@ -138,7 +138,7 @@ class JeuController {
     /**
      * Une action dans le drawer
      */
-    public abstract class Action {
+    abstract class Action {
         /**
          * Ce qu'il faut faire pour compléter l'action
          */

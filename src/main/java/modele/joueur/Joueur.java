@@ -21,7 +21,7 @@ public abstract class Joueur implements Serializable {
     public abstract void getMouvement(Consumer<Mouvement> callback, Couleur couleur);
 
     /**
-     * @param jeuData
+     * @param jeuData le jeu data
      */
     public abstract void initializeJeuData(JeuData jeuData);
 

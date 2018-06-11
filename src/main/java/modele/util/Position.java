@@ -12,15 +12,12 @@ import java.util.Objects;
 public class Position implements Serializable {
     public static final int LIMITE = 8;
 
-    private int rangee;
-    private int colonne;
+    private final int rangee;
+    private final int colonne;
 
     public Position(int rangee, int colonne) {
         this.rangee = rangee;
         this.colonne = colonne;
-    }
-
-    public Position() {
     }
 
     public int getColonne() {

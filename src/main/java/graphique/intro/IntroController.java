@@ -28,13 +28,13 @@ class IntroController {
     private VBox joueurNoirContainer;
 
     //Les drop-downs pour les joueurs blancs/noirs
-    private JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(FXCollections.observableArrayList(
+    private final JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(FXCollections.observableArrayList(
             new JoueurHumain(),
             new JoueurOrdi(JoueurOrdi.NIVEAU_FACILE),
             new JoueurOrdi(JoueurOrdi.NIVEAU_DIFFICILE)
     ));
 
-    private JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(FXCollections.observableArrayList(
+    private final JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(FXCollections.observableArrayList(
             new JoueurHumain(),
             new JoueurOrdi(JoueurOrdi.NIVEAU_FACILE),
             new JoueurOrdi(JoueurOrdi.NIVEAU_DIFFICILE)
