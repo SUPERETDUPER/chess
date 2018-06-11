@@ -1,12 +1,12 @@
 package modele.pieces;
 
-import modele.Couleur;
-import modele.moves.Mouvement;
-import modele.moves.MouvementManger;
-import modele.moves.MouvementNormal;
-import modele.plateau.Offset;
-import modele.plateau.Plateau;
-import modele.plateau.Position;
+import modele.mouvement.Mouvement;
+import modele.mouvement.MouvementManger;
+import modele.mouvement.MouvementNormal;
+import modele.util.Couleur;
+import modele.util.Offset;
+import modele.util.Plateau;
+import modele.util.Position;
 
 import java.util.HashSet;
 import java.util.Set;

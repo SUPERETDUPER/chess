@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="App" type="Application" factoryName="Application" singleton="true" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="gui.App" />
+    <option name="MAIN_CLASS_NAME" value="graphique.App" />
     <module name="chess" />
     <option name="VM_PARAMETERS" value="-Dprism.vsync=false" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />

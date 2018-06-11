@@ -1,9 +1,9 @@
 package modele.joueur;
 
-import gui.jeu.board.PlateauPane;
-import modele.Couleur;
+import graphique.jeu.plateau.PlateauPane;
 import modele.JeuData;
-import modele.moves.Mouvement;
+import modele.mouvement.Mouvement;
+import modele.util.Couleur;
 
 import java.io.Serializable;
 import java.util.function.Consumer;

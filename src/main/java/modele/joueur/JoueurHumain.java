@@ -1,15 +1,15 @@
 package modele.joueur;
 
-import gui.jeu.board.DemandeDeMouvement;
-import gui.jeu.board.PlateauPane;
-import modele.Couleur;
+import graphique.jeu.plateau.DemandeDeMouvement;
+import graphique.jeu.plateau.PlateauPane;
 import modele.JeuData;
-import modele.moves.Mouvement;
+import modele.mouvement.Mouvement;
+import modele.util.Couleur;
 
 import java.util.function.Consumer;
 
 /**
- * Un joueur qui utilise le plateau de jeu pour soumettre ses mouvements
+ * Un joueur qui utilise le util de jeu pour soumettre ses mouvements
  */
 public class JoueurHumain extends Joueur {
     transient private PlateauPane plateauPane;
@@ -25,7 +25,7 @@ public class JoueurHumain extends Joueur {
     }
 
     /**
-     * Quand l'on a besoin du prochain movement, l'objet crée une demande pour le plateau de jeu
+     * Quand l'on a besoin du prochain movement, l'objet crée une demande pour le util de jeu
      *
      * @param callback la méthode par laquelle l'on soumet son prochain mouvement
      */

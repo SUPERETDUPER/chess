@@ -1,8 +1,8 @@
 package modele.pieces;
 
-import modele.Couleur;
-import modele.moves.Mouvement;
-import modele.plateau.Offset;
+import modele.mouvement.Mouvement;
+import modele.util.Couleur;
+import modele.util.Offset;
 
 public class Fou extends DirectionPiece {
     private static final Offset[] DIRECTIONS = {

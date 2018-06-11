@@ -1,8 +1,8 @@
 package modele.pieces;
 
-import modele.Couleur;
-import modele.moves.Mouvement;
-import modele.plateau.Offset;
+import modele.mouvement.Mouvement;
+import modele.util.Couleur;
+import modele.util.Offset;
 
 /**
  * La pièce la dame

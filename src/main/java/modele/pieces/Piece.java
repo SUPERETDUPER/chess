@@ -1,9 +1,9 @@
 package modele.pieces;
 
-import modele.Couleur;
-import modele.moves.Mouvement;
-import modele.plateau.Plateau;
-import modele.plateau.Position;
+import modele.mouvement.Mouvement;
+import modele.util.Couleur;
+import modele.util.Plateau;
+import modele.util.Position;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -52,7 +52,7 @@ public abstract class Piece implements Serializable {
     /**
      * Calcule tous les mouvements possibles pour cette pièce sans vérifier si le mouvement est legal (ex. roi est en train d'être attacké)
      *
-     * @param plateau le plateau avec les mouvements présentement
+     * @param plateau le util avec les mouvements présentement
      * @return tous les mouvements possibles pour cette pièce
      */
     public abstract Set<Mouvement> generateAllMoves(Plateau plateau);

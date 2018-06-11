@@ -2,7 +2,8 @@ package modele;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import modele.joueur.Joueur;
-import modele.moves.Mouvement;
+import modele.mouvement.Mouvement;
+import modele.util.Couleur;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

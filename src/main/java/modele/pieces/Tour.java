@@ -1,10 +1,10 @@
 package modele.pieces;
 
-import modele.Couleur;
-import modele.moves.Mouvement;
-import modele.plateau.Offset;
-import modele.plateau.Plateau;
-import modele.plateau.Position;
+import modele.mouvement.Mouvement;
+import modele.util.Couleur;
+import modele.util.Offset;
+import modele.util.Plateau;
+import modele.util.Position;
 
 public class Tour extends DirectionPiece {
     private static final Offset[] OFFSET = {

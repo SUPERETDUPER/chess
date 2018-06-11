@@ -2,7 +2,8 @@ package modele;
 
 import modele.joueur.Joueur;
 import modele.pieces.Roi;
-import modele.plateau.Plateau;
+import modele.util.Couleur;
+import modele.util.Plateau;
 
 import java.io.*;
 import java.util.EnumMap;

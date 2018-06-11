@@ -1,8 +1,9 @@
 package modele;
 
-import modele.moves.Mouvement;
+import modele.mouvement.Mouvement;
 import modele.pieces.Roi;
-import modele.plateau.Plateau;
+import modele.util.Couleur;
+import modele.util.Plateau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
