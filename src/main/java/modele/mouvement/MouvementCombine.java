@@ -1,6 +1,6 @@
 package modele.mouvement;
 
-import modele.util.Plateau;
+import modele.JeuData;
 
 /**
  * Un mouvement qui est un ensemble d'autre mouvements
@@ -16,16 +16,16 @@ public class MouvementCombine extends Mouvement {
     }
 
     @Override
-    void appliquerInterne(Plateau plateau) {
+    void appliquerInterne(JeuData data) {
         for (Mouvement mouvement : mouvements) {
-            mouvement.appliquer(plateau);
+            mouvement.appliquer(data);
         }
     }
 
     @Override
-    void undoInterne(Plateau plateau) {
+    void undoInterne(JeuData data) {
         for (int i = (mouvements.length - 1); i >= 0; i--) {
-            mouvements[i].undo(plateau);
+            mouvements[i].undo(data);
         }
     }
 

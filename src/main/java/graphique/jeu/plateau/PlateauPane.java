@@ -112,6 +112,11 @@ public class PlateauPane extends Pane {
             }
         }
 
+        for (Piece piece : jeuData.getEatenPieces()) {
+            PiecePane piecePane = new PiecePane(piece, graveyardControllers.get(piece.getCouleur()).getNextGraveyardPosition());
+            piecePanes.add(piecePane);
+        }
+
         //Ajouter toutes pièces au util
         this.getChildren().addAll(cases.getValues());
         this.getChildren().addAll(piecePanes);

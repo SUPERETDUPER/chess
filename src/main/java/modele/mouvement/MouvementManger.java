@@ -1,7 +1,7 @@
 package modele.mouvement;
 
+import modele.JeuData;
 import modele.pieces.Piece;
-import modele.util.Plateau;
 import modele.util.Position;
 
 /**
@@ -16,15 +16,17 @@ public class MouvementManger extends Mouvement {
     }
 
     @Override
-    void appliquerInterne(Plateau plateau) {
-        debut = plateau.removePiece(piece); //Enlève la pièce et obtient la position initiale
-        morceauPris = plateau.ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
+    void appliquerInterne(JeuData data) {
+        debut = data.getPlateau().removePiece(piece); //Enlève la pièce et obtient la position initiale
+        morceauPris = data.getPlateau().ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
+        data.getEatenPieces().push(morceauPris);
     }
 
     @Override
-    void undoInterne(Plateau plateau) {
-        plateau.bougerPiece(debut, piece);
-        plateau.ajouter(fin, morceauPris);
+    void undoInterne(JeuData data) {
+        data.getEatenPieces().pop();
+        data.getPlateau().bougerPiece(debut, piece);
+        data.getPlateau().ajouter(fin, morceauPris);
     }
 
     /**

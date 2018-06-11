@@ -1,7 +1,7 @@
 package modele.mouvement;
 
+import modele.JeuData;
 import modele.pieces.Piece;
-import modele.util.Plateau;
 import modele.util.Position;
 
 /**
@@ -14,15 +14,15 @@ public class MouvementBouger extends Mouvement {
         super(piece, end);
     }
 
-    void appliquerInterne(Plateau plateau) {
-        debut = plateau.removePiece(piece);
-        Piece pieceEnlever = plateau.ajouter(fin, piece);
+    void appliquerInterne(JeuData data) {
+        debut = data.getPlateau().removePiece(piece);
+        Piece pieceEnlever = data.getPlateau().ajouter(fin, piece);
         if (pieceEnlever != null) throw new IllegalArgumentException("Une pièce est à cette position: " + this);
     }
 
     @Override
-    void undoInterne(Plateau plateau) {
-        plateau.bougerPiece(debut, piece);
+    void undoInterne(JeuData data) {
+        data.getPlateau().bougerPiece(debut, piece);
     }
 
     /**

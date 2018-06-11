@@ -84,7 +84,7 @@ public class Jeu implements Serializable {
      * @param mouvement le mouvement à jouer
      */
     private void jouer(@NotNull Mouvement mouvement) {
-        mouvement.appliquer(jeuData.getPlateau()); //Jouer le mouvement
+        mouvement.appliquer(jeuData); //Jouer le mouvement
         mouvements.push(mouvement); //Ajouter à la liste
 
         jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie()); //Notifier changement
@@ -119,7 +119,7 @@ public class Jeu implements Serializable {
      */
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
-            mouvements.pop().undo(jeuData.getPlateau());
+            mouvements.pop().undo(jeuData);
             jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
             changerLeTour();
         }

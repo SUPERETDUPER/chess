@@ -1,6 +1,7 @@
 package modele;
 
 import modele.mouvement.Mouvement;
+import modele.pieces.Piece;
 import modele.pieces.Roi;
 import modele.util.Couleur;
 import modele.util.Plateau;
@@ -8,10 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -20,6 +18,9 @@ import java.util.function.Consumer;
 public class JeuData implements Serializable {
     @NotNull
     private final Plateau plateau;
+
+    @NotNull
+    private final Stack<Piece> eatenPieces;
 
     /**
      * Le listener pour quand le plateau change
@@ -31,7 +32,16 @@ public class JeuData implements Serializable {
      * La liste de roi associé à chaque couleur
      */
     @NotNull
-    private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
+    private final EnumMap<Couleur, Roi> rois;
+
+    /**
+     * @param plateau le plateau de jeu
+     */
+    public JeuData(@NotNull Plateau plateau, @NotNull EnumMap<Couleur, Roi> rois, Stack<Piece> eatenPieces) {
+        this.plateau = plateau;
+        this.eatenPieces = eatenPieces;
+        this.rois = rois;
+    }
 
     /**
      * @param plateau     le plateau de jeu
@@ -39,10 +49,14 @@ public class JeuData implements Serializable {
      * @param deuxiemeRoi le deuxieme roi
      */
     public JeuData(@NotNull Plateau plateau, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
-        this.plateau = plateau;
+        EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
         rois.put(premierRoi.getCouleur(), premierRoi);
         rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
+
+        this.plateau = plateau;
+        this.rois = rois;
+        this.eatenPieces = new Stack<>();
     }
 
     public void setChangeListener(@NotNull Consumer<Plateau> changeListener) {
@@ -89,19 +103,28 @@ public class JeuData implements Serializable {
     public List<Mouvement> filterOnlyLegal(Set<Mouvement> mouvements, Couleur verifierPour) {
         List<Mouvement> legalMouvements = new ArrayList<>();
 
-        Plateau tempPlateau = plateau.getCopie();
+        JeuData copie = getCopie();
 
         //Pour chaque mouvement appliquer et vérifier si l'on attaque le roi
         for (Mouvement mouvement : mouvements) {
-            mouvement.appliquer(tempPlateau);
+            mouvement.appliquer(copie);
 
-            if (!tempPlateau.isPieceAttaquer(rois.get(verifierPour))) {
+            if (!copie.getPlateau().isPieceAttaquer(rois.get(verifierPour))) {
                 legalMouvements.add(mouvement);
             }
 
-            mouvement.undo(tempPlateau);
+            mouvement.undo(copie);
         }
 
         return legalMouvements;
+    }
+
+    private JeuData getCopie() {
+        return new JeuData(plateau.getCopie(), rois, eatenPieces);
+    }
+
+    @NotNull
+    public Stack<Piece> getEatenPieces() {
+        return eatenPieces;
     }
 }

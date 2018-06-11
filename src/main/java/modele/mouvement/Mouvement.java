@@ -1,7 +1,7 @@
 package modele.mouvement;
 
+import modele.JeuData;
 import modele.pieces.Piece;
-import modele.util.Plateau;
 import modele.util.Position;
 import org.jetbrains.annotations.Contract;
 
@@ -34,24 +34,24 @@ public abstract class Mouvement implements Serializable {
     /**
      * Appelé pour appliquer le mouvement sur un plateau de jeu
      *
-     * @param plateau le plateau de jeu sur lequel on applique le mouvement
+     * @param data le plateau de jeu sur lequel on applique le mouvement
      */
-    public void appliquer(Plateau plateau) {
-        appliquerInterne(plateau);
+    public void appliquer(JeuData data) {
+        appliquerInterne(data);
         piece.notifyMoveCompleted(this);
     }
 
-    abstract void appliquerInterne(Plateau plateau);
+    abstract void appliquerInterne(JeuData data);
 
     /**
      * Appelé pour défaire un mouvement qui vient d'être appliqué sur le plateau de jeu
      */
-    public void undo(Plateau plateau) {
-        undoInterne(plateau);
+    public void undo(JeuData data) {
+        undoInterne(data);
         piece.notifyMoveUndo(this);
     }
 
-    abstract void undoInterne(Plateau plateau);
+    abstract void undoInterne(JeuData data);
 
     /**
      * La valeur du mouvement. Une valeur négative signifie qu'une pièce blanche a été mangé

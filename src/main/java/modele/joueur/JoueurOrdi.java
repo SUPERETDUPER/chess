@@ -75,7 +75,7 @@ public class JoueurOrdi extends Joueur {
         MoveSequence meilleurMouvement = null;
 
         for (Mouvement mouvement : mouvementsPossibles) {
-            mouvement.appliquer(jeuData.getPlateau()); //Appliquer le mouvement
+            mouvement.appliquer(jeuData); //Appliquer le mouvement
 
             //Calculer la valeur du mouvement (partie récursive)
             MoveSequence moveSequence = calculerMeilleurMouvement(new MoveSequence(pastSequence, mouvement), inverser(couleur));
@@ -98,7 +98,7 @@ public class JoueurOrdi extends Joueur {
                 }
             }
 
-            mouvement.undo(jeuData.getPlateau()); //Défaire les changements
+            mouvement.undo(jeuData); //Défaire les changements
         }
 
         return meilleurMouvement == null ? pastSequence : meilleurMouvement;
