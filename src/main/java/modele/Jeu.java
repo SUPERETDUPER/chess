@@ -79,10 +79,8 @@ public class Jeu implements Serializable {
                 } else {
                     resultatListener.accept(Resultat.NOIR_GAGNE);
                 }
-                System.out.println("Checkmate");
             } else {
                 resultatListener.accept(Resultat.EGALITE);
-                System.out.println("Stalemate");
             }
         } else {
             joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Notifier l'autre joueur qu'il peut joueur

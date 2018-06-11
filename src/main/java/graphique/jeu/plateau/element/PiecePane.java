@@ -45,7 +45,6 @@ public class PiecePane extends StackPane {
     }
 
     public void setText() {
-        System.out.println("set text: " + piece);
         text.setText(Character.toString((char) piece.getNumeroUnicode()));
     }
 
