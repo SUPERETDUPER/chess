@@ -187,8 +187,6 @@ public class PlateauPane extends Pane {
                                 piecePane,
                                 graveyardControllers.get(piecePane.getPiece().getCouleur()).getNextGraveyardPosition()
                         );
-
-                        piecePanes.set(i, null);
                     } else {
                         animationController.ajouterAnimation(
                                 piecePane,
