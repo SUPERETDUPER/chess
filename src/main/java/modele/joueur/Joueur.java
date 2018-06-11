@@ -1,6 +1,5 @@
 package modele.joueur;
 
-import graphique.jeu.plateau.PlateauPane;
 import modele.JeuData;
 import modele.mouvement.Mouvement;
 import modele.util.Couleur;
@@ -25,9 +24,7 @@ public abstract class Joueur implements Serializable {
      */
     public abstract void initializeJeuData(JeuData jeuData);
 
-    public abstract void initializeInterface(PlateauPane plateauPane);
-
-    abstract String getNom();
+    protected abstract String getNom();
 
     @Override
     public String toString() {

@@ -10,6 +10,7 @@ import javafx.util.Pair;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Contrôle les animations des pièces. (Quand les pièces glissent d'une position à l'autre)
@@ -19,28 +20,31 @@ class AnimationController {
 
     /**
      * La liste d'animation à effectuer
+     * Chaque animation contient une pièce à déplacer et sa position finale
      */
-    private final Queue<Pair<PiecePane, PositionGraphique>> mouvementQueue = new LinkedList<>();
+    private final Queue<Pair<PiecePane, PositionGraphique>> animationsQueue = new LinkedList<>();
 
-    private boolean isRunning = false;
+    /**
+     * Si une animation est en cours
+     */
+    private final AtomicBoolean animationEnCours = new AtomicBoolean(false); //Ne peut pas juste utiliser animationQueue.isEmpty();
 
     /**
      * @param piecePane la piece à animer
      * @param position  la position où il faut bouger la pièce
      */
     void ajouterAnimation(PiecePane piecePane, PositionGraphique position) {
-        mouvementQueue.add(new Pair<>(piecePane, position));
+        animationsQueue.add(new Pair<>(piecePane, position));
 
-        //Si rien n'est en cours commencer la prochaine animation
-        if (!isRunning) {
-            isRunning = true;
+        //Si rien n'est en cours commencer la prochaine animation et marquer comme étant en cours
+        if (animationEnCours.compareAndSet(false, true)) {
             commencerProchaineAnimation();
         }
     }
 
     private void commencerProchaineAnimation() {
-        Pair<PiecePane, PositionGraphique> remove = mouvementQueue.remove();
-        animer(remove.getKey(), remove.getValue());
+        Pair<PiecePane, PositionGraphique> animation = animationsQueue.remove(); //Obtenir l'animation
+        animer(animation.getKey(), animation.getValue()); //Animer
     }
 
     /**
@@ -48,10 +52,10 @@ class AnimationController {
      * @param position  la nouvelle position de la pièce
      */
     private void onFinish(PiecePane piecePane, PositionGraphique position) {
-        piecePane.bind(position); //Attacher la pièce à sa position
+        piecePane.bind(position); //Attacher la pièce à sa position finale
 
-        if (mouvementQueue.isEmpty()) isRunning = false; //Si il n'y a plus d'animation arrêter
-        else commencerProchaineAnimation(); //Sinon commencer la prochaine
+        if (animationsQueue.isEmpty()) animationEnCours.set(false); //Si il n'y a plus d'animation arrêter
+        else commencerProchaineAnimation(); //Sinon commencer la prochaine animation
     }
 
     /**

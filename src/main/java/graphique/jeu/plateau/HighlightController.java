@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Contrôle comment les cases devraient être surlignées
  * <p>
- * Il y a toujours une case rouge et les mouvementsPossibles en blue qui sont sélectionné
+ * Il y a toujours une case rouge (la case séléctionnée) avec les mouvements possibles en blue
  */
 class HighlightController {
     /**

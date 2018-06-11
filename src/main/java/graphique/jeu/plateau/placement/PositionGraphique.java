@@ -6,11 +6,12 @@ import javafx.beans.value.ObservableValue;
 import modele.util.Position;
 
 /**
- * Calcule les coordonées pour une position
+ * Représente la position d'une pièce dans l'interface graphique
+ * Retourne les coordonées X et Y de la position
  */
 public abstract class PositionGraphique {
     /**
-     * La hauteur du util
+     * La hauteur du plateau
      */
     final ObservableNumberValue hauteurDuPlateau;
 

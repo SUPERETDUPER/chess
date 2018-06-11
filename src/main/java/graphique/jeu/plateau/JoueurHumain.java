@@ -1,8 +1,7 @@
-package modele.joueur;
+package graphique.jeu.plateau;
 
-import graphique.jeu.plateau.DemandeDeMouvement;
-import graphique.jeu.plateau.PlateauPane;
 import modele.JeuData;
+import modele.joueur.Joueur;
 import modele.mouvement.Mouvement;
 import modele.util.Couleur;
 
@@ -19,7 +18,6 @@ public class JoueurHumain extends Joueur {
 
     }
 
-    @Override
     public void initializeInterface(PlateauPane plateauPane) {
         this.plateauPane = plateauPane;
     }
@@ -35,7 +33,7 @@ public class JoueurHumain extends Joueur {
     }
 
     @Override
-    String getNom() {
+    public String getNom() {
         return "Humain";
     }
 }

@@ -6,13 +6,18 @@ import javafx.beans.value.ObservableNumberValue;
 import modele.util.Position;
 
 /**
- * La position d'une case sur le util
+ * La position d'une case sur le plateau
  */
-public class CasePosition extends PositionGraphique {
+public class PositionCase extends PositionGraphique {
     private final Position position;
     private final ObservableNumberValue xOffset;
 
-    public CasePosition(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
+    /**
+     * @param position la position de la case
+     * @param hauteur  la hauteur du plateau
+     * @param xOffset  le décalage sur l'axe des X
+     */
+    public PositionCase(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
         super(hauteur);
         this.position = position;
         this.xOffset = xOffset;

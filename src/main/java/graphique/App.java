@@ -28,7 +28,7 @@ public class App extends Application {
     private static final String TITRE = "Échec et Mat";
 
     private final Scene scene = new Scene(new Pane());
-    private final Parent intro = new IntroRoot(this::montrerJeu).getRoot();
+    private final Parent intro = new IntroRoot().creeRoot(this::montrerJeu);
 
     public static void main(String[] args) {
         //Commencer l'interface graphique

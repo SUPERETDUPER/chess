@@ -14,23 +14,21 @@ import java.util.function.Consumer;
  */
 public class IntroRoot {
 
-    private final Parent root;
-
     /**
-     * Créer la page d'intro avec le fichier fxml
+     * Créer l'interface de l'introduction
      */
-    public IntroRoot(Consumer<EnumMap<Couleur, Joueur>> montrerJeu) {
+    public Parent creeRoot(Consumer<EnumMap<Couleur, Joueur>> montrerJeu) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/intro.fxml"));
-        fxmlLoader.setController(new IntroController(montrerJeu));
+        fxmlLoader.setController(new IntroController(montrerJeu)); //Créer le controlleur
+
+        Parent root;
 
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
 
-    public Parent getRoot() {
         return root;
     }
 }

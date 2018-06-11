@@ -1,6 +1,5 @@
 package modele.joueur;
 
-import graphique.jeu.plateau.PlateauPane;
 import modele.JeuData;
 import modele.mouvement.Mouvement;
 import modele.util.Couleur;
@@ -32,11 +31,6 @@ public class JoueurOrdi extends Joueur {
     @Override
     public void initializeJeuData(JeuData jeuData) {
         this.jeuData = jeuData;
-    }
-
-    @Override
-    public void initializeInterface(PlateauPane plateauPane) {
-
     }
 
     /**
@@ -141,7 +135,7 @@ public class JoueurOrdi extends Joueur {
     }
 
     @Override
-    String getNom() {
+    public String getNom() {
         return "Ordinateur (" + difficulte.nom + ")";
     }
 }

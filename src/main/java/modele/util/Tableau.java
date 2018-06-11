@@ -24,7 +24,7 @@
 
 package modele.util;
 
-import graphique.jeu.plateau.PlateauPane;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,6 @@ import java.util.List;
 /**
  * Une structure de données pour le util du jeu d'échec
  * Permet aux autres class de garder un objet dans une position du tableau.
- * Par example le {@link PlateauPane} garde toutes les boites du util de jeu dans cette structure de données
  * <p>
  * Les classes peuvent accéder les données dans la structure à l'aide de {@link Position} sans devoir se soucier de comment les données sont organisées
  * <p>

@@ -2,8 +2,8 @@ package graphique.jeu.plateau;
 
 import graphique.jeu.plateau.element.CasePane;
 import graphique.jeu.plateau.element.PiecePane;
-import graphique.jeu.plateau.placement.CasePosition;
 import graphique.jeu.plateau.placement.GraveyardController;
+import graphique.jeu.plateau.placement.PositionCase;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Controle le util de jeu
+ * Controle la zone du plateau de jeu
  */
 public class PlateauPane extends Pane {
 
@@ -87,7 +87,7 @@ public class PlateauPane extends Pane {
         while (positionIterator.hasNext()) {
             Position position = positionIterator.next();
 
-            CasePosition positionGraphique = new CasePosition(position, this.heightProperty(), graveyardBlanc.getLargeurTotale());
+            PositionCase positionGraphique = new PositionCase(position, this.heightProperty(), graveyardBlanc.getLargeurTotale());
 
             //Créer la case
             CasePane casePane = new CasePane(
@@ -125,7 +125,7 @@ public class PlateauPane extends Pane {
      *
      * @param moveRequest l'information sur le mouvement demandé
      */
-    public void demanderMouvement(DemandeDeMouvement moveRequest) {
+    void demanderMouvement(DemandeDeMouvement moveRequest) {
         this.demandeDeMouvement = moveRequest;
     }
 
@@ -189,7 +189,7 @@ public class PlateauPane extends Pane {
                     } else {
                         animationController.ajouterAnimation(
                                 piecePane,
-                                new CasePosition(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotale())
+                                new PositionCase(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotale())
                         );
                     }
                 }

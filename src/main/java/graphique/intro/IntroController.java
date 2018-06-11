@@ -1,11 +1,12 @@
 package graphique.intro;
 
 import com.jfoenix.controls.JFXComboBox;
+import graphique.jeu.plateau.JoueurHumain;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import modele.joueur.Joueur;
-import modele.joueur.JoueurHumain;
 import modele.joueur.JoueurOrdi;
 import modele.util.Couleur;
 
@@ -13,9 +14,14 @@ import java.util.EnumMap;
 import java.util.function.Consumer;
 
 /**
- * Controlle la page d'intro
+ * Controlle la fenêtre d'introduction
  */
 class IntroController {
+    private static final ObservableList<Joueur> OPTION_JOUEURS = FXCollections.observableArrayList(
+            new JoueurHumain(),
+            new JoueurOrdi(JoueurOrdi.NIVEAU_FACILE),
+            new JoueurOrdi(JoueurOrdi.NIVEAU_DIFFICILE)
+    );
     /**
      * La méthode à appeler pour passer au jeu
      */
@@ -28,17 +34,8 @@ class IntroController {
     private VBox joueurNoirContainer;
 
     //Les drop-downs pour les joueurs blancs/noirs
-    private final JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(FXCollections.observableArrayList(
-            new JoueurHumain(),
-            new JoueurOrdi(JoueurOrdi.NIVEAU_FACILE),
-            new JoueurOrdi(JoueurOrdi.NIVEAU_DIFFICILE)
-    ));
-
-    private final JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(FXCollections.observableArrayList(
-            new JoueurHumain(),
-            new JoueurOrdi(JoueurOrdi.NIVEAU_FACILE),
-            new JoueurOrdi(JoueurOrdi.NIVEAU_DIFFICILE)
-    ));
+    private final JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(OPTION_JOUEURS);
+    private final JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(OPTION_JOUEURS);
 
     IntroController(Consumer<EnumMap<Couleur, Joueur>> onJouer) {
         this.onJouer = onJouer;
@@ -55,6 +52,9 @@ class IntroController {
         joueurNoirContainer.getChildren().add(joueursNoir);
     }
 
+    /**
+     * Appelé quand le boutton joueur est appuyé
+     */
     @FXML
     private void handleJouer() {
         //Obtenir les 2 joueurs et les mettres dans une liste
@@ -62,7 +62,7 @@ class IntroController {
         joueurs.put(Couleur.BLANC, joueursBlanc.getSelectionModel().getSelectedItem());
         joueurs.put(Couleur.NOIR, joueursNoir.getSelectionModel().getSelectedItem());
 
-        //Commencer le jeu
+        //Soumettre les joueurs
         onJouer.accept(joueurs);
     }
 }

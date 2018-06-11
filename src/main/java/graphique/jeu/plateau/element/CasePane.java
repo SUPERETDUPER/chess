@@ -1,6 +1,6 @@
 package graphique.jeu.plateau.element;
 
-import graphique.jeu.plateau.placement.CasePosition;
+import graphique.jeu.plateau.placement.PositionCase;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -33,7 +33,7 @@ public class CasePane extends Rectangle {
      * @param clickListener la fonction à appeler quand la case est appuyé
      * @param position      la position de la case
      */
-    public CasePane(boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull CasePosition position) {
+    public CasePane(boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull PositionCase position) {
         super();
         this.isBlanc = isBlanc;
 

@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * Un objet qui représente une demande de mouvement d'un joueur humain sur le util de jeu
  * Utilisé pour demander au PlateauPane de laisser le joueur humain effectuer un mouvement et capturer le résultat
  */
-public class DemandeDeMouvement {
+class DemandeDeMouvement {
     /**
      * La méthode à appeler quand le movement est décidé
      */
@@ -28,7 +28,7 @@ public class DemandeDeMouvement {
      */
     private boolean isCompleted = false;
 
-    public DemandeDeMouvement(@NotNull Consumer<Mouvement> callback, @NotNull Couleur couleur) {
+    DemandeDeMouvement(@NotNull Consumer<Mouvement> callback, @NotNull Couleur couleur) {
         this.moveCallback = callback;
         this.couleur = couleur;
     }

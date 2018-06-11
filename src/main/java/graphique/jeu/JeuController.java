@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
 import graphique.App;
+import graphique.jeu.plateau.JoueurHumain;
 import graphique.jeu.plateau.PlateauPane;
 import javafx.animation.Transition;
 import javafx.application.Platform;
@@ -15,7 +16,6 @@ import javafx.scene.layout.StackPane;
 import modele.Chargeur;
 import modele.Jeu;
 import modele.joueur.Joueur;
-import modele.joueur.JoueurHumain;
 
 /**
  * Controlle l'intreface de jeu
@@ -43,9 +43,9 @@ class JeuController {
         int counter = 0;
 
         for (Joueur joueur : chargeur.getJeu().getJoueurs().values()) {
-            joueur.initializeInterface(plateauPane);
 
             if (joueur instanceof JoueurHumain) {
+                ((JoueurHumain) joueur).initializeInterface(plateauPane);
                 counter += 1;
             }
         }

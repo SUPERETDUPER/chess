@@ -9,32 +9,51 @@ import modele.util.Position;
 
 /**
  * Controlle un des 2 graveyards (endroits où les pièces mangées vont)
+ * TODO Bouger au modele pour que les pièces mangés puivent être sauvegardées
  */
 public class GraveyardController {
+    /**
+     * Le nombre de pièces dans le graveyard
+     */
     private final ReadOnlyIntegerWrapper piecesDansGraveyard = new ReadOnlyIntegerWrapper(0);
+
+    /**
+     * Le décalage sur l'axe des X
+     */
     private final ObservableNumberValue xOffset;
-    private final boolean leftToRight;
+
+    /**
+     * Si les 2 colonnes devraient se remplir de gauche à droite ou de droite à gauche
+     */
+    private final boolean gaucheADroite;
+
+    /**
+     * La hauteur des colonnes
+     */
     private final ObservableNumberValue height;
 
+    /**
+     * La largeur totale du graveyard
+     */
     private final NumberBinding largeurTotale;
 
     /**
-     * @param height      la hauteur d'une colonne
-     * @param leftToRight si les pièces devraient être placés en colonne de gauche à droite ou pas
+     * @param height        la hauteur d'une colonne
+     * @param gaucheADroite si les pièces devraient être placés en colonne de gauche à droite ou pas
      */
-    public GraveyardController(ObservableNumberValue height, boolean leftToRight) {
-        this(height, leftToRight, new SimpleIntegerProperty(0));
+    public GraveyardController(ObservableNumberValue height, boolean gaucheADroite) {
+        this(height, gaucheADroite, new SimpleIntegerProperty(0));
     }
 
     /**
-     * @param height      la hauteur d'une colonne
-     * @param leftToRight si les pièces devraient être placés en colonne de gauche à droite ou pas
-     * @param xOffset     le offset du graveyard par rapport au contenaire
+     * @param height        la hauteur d'une colonne
+     * @param gaucheADroite si les pièces devraient être placés en colonne de gauche à droite ou pas
+     * @param xOffset       le offset du graveyard par rapport au contenaire
      */
-    public GraveyardController(ObservableNumberValue height, boolean leftToRight, ObservableNumberValue xOffset) {
+    public GraveyardController(ObservableNumberValue height, boolean gaucheADroite, ObservableNumberValue xOffset) {
         this.height = height;
         this.xOffset = xOffset;
-        this.leftToRight = leftToRight;
+        this.gaucheADroite = gaucheADroite;
 
         this.largeurTotale = Bindings.multiply(height, getTotalWidthRatio());
     }
@@ -43,26 +62,27 @@ public class GraveyardController {
         return largeurTotale;
     }
 
+    /**
+     * @return la largeur en fonction de la hauteur
+     */
     public double getTotalWidthRatio() {
         return 2.0 / Position.LIMITE;
     }
 
     /**
-     * @return la position pour la prochaine pièce à mettre dans le graveyard
+     * @return un objet qui représente la position dans la prochaine pièce à mettre dans le graveyard
      */
     public PositionGraphique getNextGraveyardPosition() {
         return new PositionGraphique(height) {
             @Override
-            public NumberBinding getX() {
-                ObservableNumberValue xRelatif;
-                if ((leftToRight && piecesDansGraveyard.get() < Position.LIMITE) ||
-                        (!leftToRight && piecesDansGraveyard.get() >= Position.LIMITE)) {
-                    xRelatif = new SimpleIntegerProperty(0);
+            public ObservableNumberValue getX() {
+                //Si c'est la colonne de gauche ou la colonne de droite
+                if ((gaucheADroite && piecesDansGraveyard.get() < Position.LIMITE) ||
+                        (!gaucheADroite && piecesDansGraveyard.get() >= Position.LIMITE)) {
+                    return xOffset;
                 } else {
-                    xRelatif = Bindings.divide(height, Position.LIMITE);
+                    return Bindings.divide(height, Position.LIMITE).add(xOffset);
                 }
-
-                return Bindings.add(xRelatif, xOffset);
             }
 
             @Override
