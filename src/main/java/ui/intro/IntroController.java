@@ -1,7 +1,6 @@
-package gui;
+package ui.intro;
 
 import com.jfoenix.controls.JFXComboBox;
-import gui.gamewindow.boardregion.HumanPlayer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,23 +8,24 @@ import javafx.scene.layout.VBox;
 import model.player.Player;
 import model.player.PlayerComputer;
 import model.util.Colour;
+import ui.game.HumanPlayer;
 
 import java.util.EnumMap;
 import java.util.function.Consumer;
 
 /**
- * Controlle la fenêtre d'introduction
+ * Controls the main menu window
  */
-class IntroController {
+public class IntroController {
+    /**
+     * The options for the two players
+     */
     private static final ObservableList<Player> PLAYER_OPTIONS = FXCollections.observableArrayList(
             new HumanPlayer(),
             new PlayerComputer(PlayerComputer.EASY),
             new PlayerComputer(PlayerComputer.HARD)
     );
 
-    /**
-     * La méthode à appeler pour passer au gamewindow
-     */
     private final Consumer<EnumMap<Colour, Player>> onStart;
 
     @FXML
@@ -38,7 +38,7 @@ class IntroController {
     private final JFXComboBox<Player> joueursBlanc = new JFXComboBox<>(PLAYER_OPTIONS);
     private final JFXComboBox<Player> joueursNoir = new JFXComboBox<>(PLAYER_OPTIONS);
 
-    IntroController(Consumer<EnumMap<Colour, Player>> onStart) {
+    public IntroController(Consumer<EnumMap<Colour, Player>> onStart) {
         this.onStart = onStart;
 
         //Sélectionner la première option

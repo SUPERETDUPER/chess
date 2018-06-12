@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represente le boardregion de gamewindow.
+ * Represente le boardregion de game.
  * Chaque pièce est attaché à une position
  * Permet d'acceder directement à la pièce à une position ou à la position d'une pièce
  * Utilise le BiMap de Google Guava

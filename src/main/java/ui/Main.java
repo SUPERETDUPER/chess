@@ -1,6 +1,5 @@
-package gui;
+package ui;
 
-import gui.gamewindow.GameController;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +12,8 @@ import javafx.util.Duration;
 import model.Loader;
 import model.player.Player;
 import model.util.Colour;
+import ui.game.GameController;
+import ui.intro.IntroController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +23,7 @@ public class Main extends Application {
     private static final String TITRE = "Échec et Mat";
 
     /**
-     * Le loader de gamewindow
+     * Le loader de game
      */
     private final Loader loader = new Loader();
 
@@ -37,14 +38,14 @@ public class Main extends Application {
     private final Parent intro = loadFromFXML(new IntroController(this::startNewGame), getClass().getResource("/intro.fxml"));
 
     /**
-     * Commence l'interface gui
+     * Commence l'interface ui
      */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
 
-        //Si on peut charger et charger à fonctionné montrer le gamewindow
+        //Si on peut charger et charger à fonctionné montrer le game
         if (loader.loadGameFromFile()) {
             scene.setRoot(loadFromFXML(new GameController(() -> switchRoot(intro), loader), getClass().getResource("/jeu.fxml")));
         } else {
@@ -56,7 +57,7 @@ public class Main extends Application {
     }
 
     /**
-     * Les joueurs pour le nouveau gamewindow
+     * Les joueurs pour le nouveau game
      */
     private void startNewGame(EnumMap<Colour, Player> joueurs) {
         loader.createNewGame(joueurs);
@@ -112,6 +113,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args); //Commencer l'interface gui
+        launch(args); //Commencer l'interface ui
     }
 }

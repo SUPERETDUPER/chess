@@ -27,7 +27,7 @@ public class Pawn extends Piece {
 
     @Override
     Move makeMoveFromPosition(BoardMap board, Position start, Position end) {
-        if (promotedQueen != null || (end.getRow() != 0 && end.getRow() != Position.LIMITE - 1))
+        if (promotedQueen != null || (end.getRow() != 0 && end.getRow() != Position.LIMIT - 1))
             return super.makeMoveFromPosition(board, start, end);
 
         return new PromotionMove(start, end);

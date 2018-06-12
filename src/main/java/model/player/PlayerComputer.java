@@ -33,7 +33,7 @@ public class PlayerComputer extends Player {
     private final Difficulty difficulty;
 
     /**
-     * Le gamewindow data
+     * Le game data
      */
     @Nullable
     private GameData gameData;

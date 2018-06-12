@@ -40,9 +40,9 @@ public abstract class Move implements Serializable {
     }
 
     /**
-     * Appelé pour apply le moves sur un boardregion de gamewindow
+     * Appelé pour apply le moves sur un boardregion de game
      *
-     * @param data le boardregion de gamewindow sur lequel on applique le moves
+     * @param data le boardregion de game sur lequel on applique le moves
      */
     public void apply(GameData data) {
         applyToGame(data);
@@ -52,7 +52,7 @@ public abstract class Move implements Serializable {
     abstract void applyToGame(GameData data);
 
     /**
-     * Appelé pour défaire un moves qui vient d'être appliqué sur le boardregion de gamewindow
+     * Appelé pour défaire un moves qui vient d'être appliqué sur le boardregion de game
      */
     public void undo(GameData data) {
         undoToGame(data);

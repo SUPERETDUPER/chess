@@ -64,7 +64,7 @@ public class Game implements Serializable {
     private final Stack<Move> pastMoves = new Stack<>();
 
     /**
-     * @param gameData l'info de gamewindow
+     * @param gameData l'info de game
      * @param players les players
      */
     Game(GameData gameData, @NotNull EnumMap<Colour, Player> players) {

@@ -20,7 +20,7 @@ public abstract class Player implements Serializable {
     public abstract void getMove(Consumer<Move> callback, Colour colour);
 
     /**
-     * @param gameData le gamewindow data
+     * @param gameData le game data
      */
     public abstract void initializeGameData(GameData gameData);
 

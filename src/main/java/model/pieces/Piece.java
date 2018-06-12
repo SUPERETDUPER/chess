@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * Une pièce de gamewindow
+ * Une pièce de game
  */
 //TODO consider changing to decorator model for more flexibility and better implementation of special cases
 public abstract class Piece implements Serializable {

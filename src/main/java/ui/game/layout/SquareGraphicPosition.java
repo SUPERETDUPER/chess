@@ -1,24 +1,24 @@
-package gui.gamewindow.boardregion.layout;
+package ui.game.layout;
 
-import gui.gamewindow.boardregion.components.PiecePane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.value.ObservableNumberValue;
 import model.util.Position;
+import ui.game.components.PiecePane;
 
 /**
- * La position d'une case sur le boardregion
+ * The position of a square
  */
-public class SquareLayout extends Layout {
+public class SquareGraphicPosition extends GraphicPosition {
     private final Position position;
     private final ObservableNumberValue xOffset;
 
     /**
-     * @param position la position de la case
-     * @param hauteur  la hauteur du boardregion
-     * @param xOffset  le décalage sur l'axe des X
+     * @param position the square's position
+     * @param hauteur  the height of the board
+     * @param xOffset  how much the board is offset on the X axis
      */
-    public SquareLayout(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
+    public SquareGraphicPosition(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
         super(hauteur);
         this.position = position;
         this.xOffset = xOffset;
@@ -26,14 +26,14 @@ public class SquareLayout extends Layout {
 
     @Override
     public NumberBinding getX() {
-        return Bindings.divide(boardHeight, Position.LIMITE)
+        return Bindings.divide(boardHeight, Position.LIMIT)
                 .multiply(position.getColumn())
                 .add(xOffset);
     }
 
     @Override
     public NumberBinding getY() {
-        return Bindings.divide(boardHeight, Position.LIMITE).multiply(position.getRow());
+        return Bindings.divide(boardHeight, Position.LIMIT).multiply(position.getRow());
     }
 
     public Position getPosition() {
@@ -51,8 +51,8 @@ public class SquareLayout extends Layout {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof SquareLayout)) return false;
-        return ((SquareLayout) obj).position.equals(this.position);
+        if (!(obj instanceof SquareGraphicPosition)) return false;
+        return ((SquareGraphicPosition) obj).position.equals(this.position);
     }
 
     @Override

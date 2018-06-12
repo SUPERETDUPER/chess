@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Une structure de données pour le util du gamewindow d'échec
+ * Une structure de données pour le util du game d'échec
  * Permet aux autres class de garder un objet dans une position du tableau.
  * <p>
  * Les classes peuvent accéder les données dans la structure à l'aide de {@link Position} sans devoir se soucier de comment les données sont organisées
@@ -48,7 +48,7 @@ public class Board<T> implements Iterable<T> {
      * La values contenant les données
      */
     @NotNull
-    private final List<T> values = new ArrayList<>(Position.LIMITE * Position.LIMITE);
+    private final List<T> values = new ArrayList<>(Position.LIMIT * Position.LIMIT);
 
     /**
      * @param position la position de la donnée désirée
@@ -70,7 +70,7 @@ public class Board<T> implements Iterable<T> {
 
     @Contract(pure = true)
     private int getIndex(int rangee, int colonne) {
-        return Position.LIMITE * rangee + colonne;
+        return Position.LIMIT * rangee + colonne;
     }
 
     /**

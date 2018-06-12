@@ -1,54 +1,57 @@
-package gui.gamewindow.boardregion.layout;
+package ui.game.layout;
 
-import gui.gamewindow.boardregion.components.PiecePane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
 import model.pieces.Piece;
 import model.util.Position;
+import ui.game.components.PiecePane;
 
 import java.util.Stack;
 
 /**
- * Controlle un des 2 graveyards (endroits où les pièces mangées vont)
+ * Controls one (of two) graveyards (region where pieces that were taken go)
  */
 //TODO cleanup
 public class GraveyardController {
     /**
-     * Le décalage sur l'axe des X
+     * How much the graveyard is offset on the X axis
      */
     private final ObservableNumberValue xOffset;
 
     /**
-     * Si les 2 colonnes devraient se remplir de gauche à droite ou de droite à gauche
+     * Whether the columns should fill left first then right or right first then left
      */
     private final boolean isLeftToRight;
 
     /**
-     * La hauteur des colonnes
+     * The height of a column
      */
     private final ObservableNumberValue height;
 
     /**
-     * La largeur totale du graveyard
+     * The total width of the graveyard
      */
     private final NumberBinding totalWidth;
 
+    /**
+     * The pieces currently in the graveyard
+     */
     private final Stack<Piece> piecesInGraveyard = new Stack<>();
 
     /**
-     * @param height        la hauteur d'une colonne
-     * @param isLeftToRight si les pièces devraient être placés en colonne de gauche à droite ou pas
+     * @param height        the height of a column
+     * @param isLeftToRight Whether the columns should fill left first then right or right first then left
      */
     public GraveyardController(ObservableNumberValue height, boolean isLeftToRight) {
         this(height, isLeftToRight, new SimpleIntegerProperty(0));
     }
 
     /**
-     * @param height        la hauteur d'une colonne
-     * @param isLeftToRight si les pièces devraient être placés en colonne de gauche à droite ou pas
-     * @param xOffset       le offset du graveyard par rapport au contenaire
+     * @param height        the height of a column
+     * @param isLeftToRight Whether the columns should fill left first then right or right first then left
+     * @param xOffset       how much the graveyard is offset on the x axis
      */
     public GraveyardController(ObservableNumberValue height, boolean isLeftToRight, ObservableNumberValue xOffset) {
         this.height = height;
@@ -63,46 +66,55 @@ public class GraveyardController {
     }
 
     /**
-     * @return la largeur en fonction de la hauteur
+     * @return the ratio of the width by the height
      */
     public double getTotalWidthRatio() {
-        return 2.0 / Position.LIMITE;
+        return 2.0 / Position.LIMIT;
     }
 
     /**
-     * @return un objet qui représente la index dans la prochaine pièce à mettre dans le graveyard
+     * @return the position of the next piece to put in the graveyard
      */
-    public Layout getNextGraveyardPosition() {
-        return new GraveyardLayout();
+    public GraphicPosition getNextGraveyardPosition() {
+        return new GraveyardGraphicPosition();
     }
 
+    /**
+     * @return true if this piece is already in the graveyard
+     */
     public boolean isInGraveyard(Piece piece) {
         return piecesInGraveyard.contains(piece);
     }
 
-    private class GraveyardLayout extends Layout {
+    /**
+     * A position in the graveyard
+     */
+    private class GraveyardGraphicPosition extends GraphicPosition {
+        /**
+         * The index of the piece (one more than the past)
+         */
         private final int index = piecesInGraveyard.size();
 
-        GraveyardLayout() {
+        GraveyardGraphicPosition() {
             super(GraveyardController.this.height);
         }
 
         @Override
         public ObservableNumberValue getX() {
-            //Si c'est la colonne de gauche ou la colonne de droite
-            if ((isLeftToRight && index < model.util.Position.LIMITE) ||
-                    (!isLeftToRight && index >= model.util.Position.LIMITE)) {
+            //True if we should use the left column (depends on index and isLeftToRight)
+            if ((isLeftToRight && index < Position.LIMIT) ||
+                    (!isLeftToRight && index >= Position.LIMIT)) {
                 return xOffset;
             } else {
-                return Bindings.divide(height, model.util.Position.LIMITE).add(xOffset);
+                return Bindings.divide(height, Position.LIMIT).add(xOffset);
             }
         }
 
         @Override
         public NumberBinding getY() {
             return Bindings
-                    .divide(height, model.util.Position.LIMITE)
-                    .multiply(index < model.util.Position.LIMITE ? index : index - model.util.Position.LIMITE);
+                    .divide(height, Position.LIMIT)
+                    .multiply(index < Position.LIMIT ? index : index - Position.LIMIT);
         }
 
         @Override
@@ -119,8 +131,8 @@ public class GraveyardController {
         @Override
         public boolean equals(Object obj) {
             if (obj == null) return false;
-            if (!(obj instanceof GraveyardLayout)) return false;
-            return ((GraveyardLayout) obj).index == this.index;
+            if (!(obj instanceof GraveyardGraphicPosition)) return false;
+            return ((GraveyardGraphicPosition) obj).index == this.index;
         }
 
         @Override

@@ -1,10 +1,8 @@
-package gui.gamewindow;
+package ui.game;
 
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
-import gui.gamewindow.boardregion.BoardPane;
-import gui.gamewindow.boardregion.HumanPlayer;
 import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,9 +13,10 @@ import javafx.scene.layout.StackPane;
 import model.Game;
 import model.Loader;
 import model.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Controlle l'intreface de gamewindow
+ * Controls the game page
  */
 public class GameController {
     @FXML
@@ -32,57 +31,68 @@ public class GameController {
     @FXML
     private JFXHamburger hamburger;
 
+    @NotNull
     private final BoardPane boardPane;
 
+    @NotNull
     private final ObservableList<Action> actions = FXCollections.observableArrayList();
 
+    /**
+     * Loads the model
+     */
+    @NotNull
     private final Loader loader;
 
-    public GameController(Runnable goBack, Loader loader) {
+    /**
+     * @param exit   the method to run to exit the game and return to the main menu
+     * @param loader the loader that loads the game
+     */
+    public GameController(Runnable exit, @NotNull Loader loader) {
         this.loader = loader;
-        this.boardPane = new BoardPane(loader.getGame()); //Créer le boardregion pane
+        this.boardPane = new BoardPane(loader.getGame()); //Create the board
 
+        //Add a listener for when the game ends
+        loader.getGame().setResultListener(result -> Platform.runLater(() -> handleResultat(result)));
+
+        //Count the number of human players
         int counter = 0;
 
         for (Player player : loader.getGame().getPlayers().values()) {
             if (player instanceof HumanPlayer) {
-                ((HumanPlayer) player).initializeInterface(boardPane);
+                ((HumanPlayer) player).attachUI(boardPane); //Attach the UI
                 counter += 1;
             }
         }
 
         final int numberOfHumans = counter;
 
-        //Ajouter un listener pour quand la partie fini
-        loader.getGame().setResultListener(result -> Platform.runLater(() -> handleResultat(result)));
-
-        //Ajouter le button pour revenir au menu principal
+        //Add an action to return to the main menu
         actions.add(new Action() {
             @Override
             void onClick() {
-                goBack.run();
+                exit.run();
             }
 
             @Override
-            String getDescription() {
+            String getName() {
                 return "Revenir au menu principal";
             }
         });
 
-        //Si il y a des joueurs humains, add un boutton undo
+        //If there are human players add an undo button
         if (numberOfHumans != 0) {
             actions.add(new Action() {
                 @Override
                 void onClick() {
                     if (numberOfHumans == 2) {
-                        loader.getGame().undo(1);
+                        loader.getGame().undo(1); //Undo 1 turn in human vs human
                     } else {
-                        loader.getGame().undo(2);
+                        loader.getGame().undo(2); //Undo 2 turns in human vs computer
                     }
                 }
 
                 @Override
-                String getDescription() {
+                String getName() {
                     return "Undo";
                 }
             });
@@ -91,19 +101,20 @@ public class GameController {
 
     @FXML
     private void initialize() {
-        //Ajouter le boardregion
+        //Add the board to its container
         boardContainer.getChildren().add(boardPane);
 
-        //Ajouter les actions à la liste
+        //Add the actions to the list
         drawerList.setItems(actions);
 
-        //Quand la liste est appuyée executer l'option séléctionné
+        //Add a click listener to the list to register when an item was pressed
+        //TODO Change because throws error if called before item is selected
         drawerList.setOnMouseClicked(event -> {
             drawerList.getSelectionModel().getSelectedItem().onClick();
             drawerList.getSelectionModel().clearSelection();
         });
 
-        //Animer le hamburger quand le drawer s'ouvre
+        //Animate the hamburger when the drawer opens/closes
         double animationRate = Math.abs(hamburger.getAnimation().getRate());
 
         drawer.setOnDrawerOpening((event) -> {
@@ -118,23 +129,20 @@ public class GameController {
             burgerAnimation.play();
         });
 
-        loader.getGame().notifyNextPlayer();
+        loader.getGame().notifyNextPlayer(); //Start the game
     }
 
-    /**
-     * Quand le hamburger est appuyé, toggle le drawer
-     */
     @FXML
     private void handleHamburgerClick() {
-        drawer.toggle();
+        drawer.toggle(); //When the hamburger is pressed open/close the drawer
     }
 
     /**
-     * Quand la partie fini montrer un pop-up
-     *
-     * @param result le résultat de la partie
+     * Called when the result of the game is obtained
      */
     private void handleResultat(Game.Result result) {
+        //Create an alert
+        //TODO Switch to material design guidelines for alert box
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         switch (result) {
             case TIE:
@@ -151,22 +159,22 @@ public class GameController {
     }
 
     /**
-     * Une action dans le drawer
+     * An action in the drawer
      */
     abstract class Action {
         /**
-         * Ce qu'il faut faire pour compléter l'action
+         * What to run when the action is clicked
          */
         abstract void onClick();
 
         /**
-         * @return Le nom de l'action
+         * @return the actions name (to be displayed)
          */
-        abstract String getDescription();
+        abstract String getName();
 
         @Override
         public String toString() {
-            return getDescription();
+            return getName(); //Defines the string to display when the item is put in the list view
         }
     }
 }

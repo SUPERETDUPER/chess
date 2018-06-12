@@ -6,7 +6,7 @@ import java.util.Iterator;
  * Traverse toutes les positions sur le boardregion
  */
 public class PositionIterator implements Iterator<Position> {
-    private static final Position MAXIMUM = new Position(Position.LIMITE, 0);
+    private static final Position MAXIMUM = new Position(Position.LIMIT, 0);
 
     private Position position = new Position(0, 0);
 
@@ -19,7 +19,7 @@ public class PositionIterator implements Iterator<Position> {
     public Position next() {
         Position positionToReturn = position;
 
-        if (position.getColumn() == Position.LIMITE - 1) {
+        if (position.getColumn() == Position.LIMIT - 1) {
             position = new Position(position.getRow() + 1, 0);
         } else {
             position = position.shift(Offset.RIGHT);

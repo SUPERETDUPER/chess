@@ -15,14 +15,14 @@ public class Loader {
     private Game game;
 
     /**
-     * Sauvegarde le gamewindow
+     * Sauvegarde le game
      */
     private void saveGame() {
         try {
             if (!file.exists()) //noinspection ResultOfMethodCallIgnored
-                file.createNewFile(); //Si le fichier de gamewindow n'existe pas créer le fichier
+                file.createNewFile(); //Si le fichier de game n'existe pas créer le fichier
 
-            //Écrire le gamewindow au fichier
+            //Écrire le game au fichier
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(game);
             objectOutputStream.close();
@@ -32,17 +32,17 @@ public class Loader {
     }
 
     /**
-     * charge le gamewindow du fichier
+     * charge le game du fichier
      *
-     * @return Si on a chargé le gamewindow avec success
+     * @return Si on a chargé le game avec success
      */
     public boolean loadGameFromFile() {
         if (!file.exists()) return false; //Si aucun fichier -> échec
 
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
-            this.game = (Game) objectInputStream.readObject(); //Lire le gamewindow
-            this.game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame()); //Quand le gamewindow change sauvegarder
+            this.game = (Game) objectInputStream.readObject(); //Lire le game
+            this.game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame()); //Quand le game change sauvegarder
             objectInputStream.close();
             return true;
         } catch (Exception e) {
@@ -54,7 +54,7 @@ public class Loader {
     public void createNewGame(EnumMap<Colour, Player> joueurs) {
         //Créer les rois
 
-        //Créer le modèle de gamewindow
+        //Créer le modèle de game
         GameData gameData = new GameData(BoardMap.createStartingBoard());
 
         //Créer et notifyNextPlayer la partie

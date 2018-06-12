@@ -1,55 +1,58 @@
-package gui.gamewindow.boardregion.components;
+package ui.game.components;
 
-import gui.gamewindow.boardregion.layout.Layout;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.pieces.Piece;
+import ui.game.layout.GraphicPosition;
 
 /**
- * Une pièce affichée sur l'écran
+ * A pane that displays a pièce
  */
 public class PiecePane extends StackPane {
     /**
-     * La taille du font du text par rapport à la case
+     * The ratio for the size of the pane to the font size
      */
     private static final float SIZE_TO_FONT_RATIO = 0.75F;
 
     /**
-     * La pièce qui se fait afficher
+     * The piece in the pane
      */
     private final Piece piece;
 
     /**
-     * Le text qui montre la pièce
+     * The text showing the piece
      */
     private final Text text = new Text();
 
-    private Layout currentPosition;
+    /**
+     * The pane's current position
+     */
+    private GraphicPosition currentPosition;
 
     /**
-     * @param piece    la pièce à afficher
-     * @param position la position de la pièce
+     * @param piece    the piece to show
+     * @param position the position of the piece
      */
-    public PiecePane(Piece piece, Layout position) {
+    public PiecePane(Piece piece, GraphicPosition position) {
         super();
 
         this.piece = piece;
         this.currentPosition = position;
 
-        //Attacher la taille de la pièce
+        //Bind the pane's width/height
         this.prefHeightProperty().bind(position.getSize());
         this.prefWidthProperty().bind(position.getSize());
 
-        //Attacher la pièce à sa position
+        //Bind the pane to it's position
         bind(position);
 
-        //Ajouter le text
+        //Add the text to the pane
         setText();
         this.getChildren().add(text);
 
-        //Faire que le text reste propertionelle à la taille de la case
+        //Bind the text's font to the pane's size
         this.prefWidthProperty().addListener(
                 (observable, oldValue, newValue) ->
                         text.setFont(new Font(newValue.doubleValue() * SIZE_TO_FONT_RATIO))
@@ -57,10 +60,10 @@ public class PiecePane extends StackPane {
     }
 
     /**
-     * Met à jour le text
+     * Update the text based on the piece (actually matters for pawn promotion where pawn becomes queen)
      */
     public void setText() {
-        text.setText(Character.toString((char) piece.getUnicode()));
+        text.setText(Character.toString((char) piece.getUnicode())); //Set the text to the unicode value of the piece
     }
 
     public Piece getPiece() {
@@ -68,18 +71,21 @@ public class PiecePane extends StackPane {
     }
 
     /**
-     * Place la pièce à la position
+     * Binds the piece to its position
      */
-    public synchronized void bind(Layout position) {
+    public synchronized void bind(GraphicPosition position) {
         this.currentPosition = position;
+
         this.layoutXProperty().bind(position.getX());
         this.layoutYProperty().bind(position.getY());
+
         position.notifyPlaced(this);
+
         this.setCacheHint(CacheHint.DEFAULT);
     }
 
     /**
-     * Détacher la pièce
+     * Unbinds the piece from it's position
      */
     public synchronized void unBind() {
         currentPosition.notifyRemoved(this);
@@ -90,13 +96,13 @@ public class PiecePane extends StackPane {
     }
 
     /**
-     * @return si la pièce est à la position
+     * @return true if the piece is at the position
      */
-    public synchronized boolean isAtPosition(Layout position) {
+    public synchronized boolean isAtPosition(GraphicPosition position) {
         return position.equals(currentPosition);
     }
 
-    public Layout getCurrentPosition() {
+    public GraphicPosition getCurrentPosition() {
         return currentPosition;
     }
 }

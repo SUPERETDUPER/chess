@@ -15,7 +15,7 @@ import java.util.EnumMap;
 import java.util.Stack;
 
 /**
- * Représente le boardregion de gamewindow et quelle pièces sont les kings
+ * Représente le boardregion de game et quelle pièces sont les kings
  */
 public class GameData implements Serializable {
     @NotNull
@@ -37,7 +37,7 @@ public class GameData implements Serializable {
     private final EnumMap<Colour, King> kings = new EnumMap<>(Colour.class);
 
     /**
-     * @param board le boardregion de gamewindow
+     * @param board le boardregion de game
      */
     public GameData(@NotNull BoardMap board) {
         for (Piece piece : board.iteratePieces()) {

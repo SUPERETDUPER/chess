@@ -11,7 +11,7 @@ import java.util.Objects;
  * (0,0) est en haut à gauche
  */
 public class Position implements Serializable {
-    public static final int LIMITE = 8;
+    public static final int LIMIT = 8;
 
     private final int row;
     private final int column;
@@ -43,7 +43,7 @@ public class Position implements Serializable {
      * @return si la position rentre dans les limites
      */
     public boolean isValid() {
-        return 0 <= row && row < LIMITE && 0 <= column && column < LIMITE;
+        return 0 <= row && row < LIMIT && 0 <= column && column < LIMIT;
     }
 
     @Override
