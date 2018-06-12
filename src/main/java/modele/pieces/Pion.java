@@ -27,6 +27,15 @@ public class Pion extends Piece {
     }
 
     @Override
+    Mouvement convertir(Plateau plateau, Position position) {
+        if (reine != null || (position.getRangee() != 0 && position.getRangee() != Position.LIMITE - 1))
+            return super.convertir(plateau, position);
+
+        if (plateau.getPiece(position) == null) return new MouvementPromotion(this, position);
+        else return new MouvementPromotionManger(this, position);
+    }
+
+    @Override
     Collection<Position> generatePosition(Plateau plateau) {
         if (reine != null) return reine.generatePosition(plateau);
 

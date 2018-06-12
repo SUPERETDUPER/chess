@@ -19,6 +19,7 @@ public class MouvementManger extends Mouvement {
     void appliquerInterne(JeuData data) {
         debut = data.getPlateau().removePiece(piece); //Enlève la pièce et obtient la position initiale
         morceauPris = data.getPlateau().ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
+        if (morceauPris == null) throw new RuntimeException("rien de pris");
         data.getEatenPieces().push(morceauPris);
     }
 
