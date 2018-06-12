@@ -17,10 +17,8 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    Collection<Position> generatePosition(Plateau plateau) {
+    Collection<Position> generatePosition(Plateau plateau, Position positionDebut) {
         Collection<Position> positions = new LinkedList<>();
-
-        Position positionDebut = plateau.getPosition(this);
 
         //Pour chaque directions
         for (Offset direction : getDirections()) {

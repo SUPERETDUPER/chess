@@ -24,9 +24,9 @@ class RoiTest {
         Collection<Mouvement> mouvements = roi.generateAllMoves(plateau);
 
         Collection<Mouvement> expected = new LinkedList<>();
-        expected.add(new MouvementNormal(roi, new Position(0, 1)));
-        expected.add(new MouvementNormal(roi, new Position(1, 0)));
-        expected.add(new MouvementNormal(roi, new Position(1, 1)));
+        expected.add(new MouvementNormal(startingPos, new Position(0, 1)));
+        expected.add(new MouvementNormal(startingPos, new Position(1, 0)));
+        expected.add(new MouvementNormal(startingPos, new Position(1, 1)));
 
         Assertions.assertEquals(expected, mouvements);
     }

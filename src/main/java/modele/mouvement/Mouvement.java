@@ -5,6 +5,7 @@ import modele.pieces.Piece;
 import modele.util.Position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -16,8 +17,11 @@ public abstract class Mouvement implements Serializable {
     /**
      * La pièce qui se déplace
      */
+    @Nullable
+    Piece piece;
+
     @NotNull
-    final Piece piece;
+    final Position debut;
 
     /**
      * La position finale de la pièce
@@ -25,11 +29,12 @@ public abstract class Mouvement implements Serializable {
     @NotNull
     final Position fin;
 
-    Mouvement(@NotNull Piece piece, @NotNull Position fin) {
-        this.piece = piece;
+    public Mouvement(@NotNull Position debut, @NotNull Position fin) {
+        this.debut = debut;
         this.fin = fin;
     }
 
+    @NotNull
     public Position getFin() {
         return fin;
     }
@@ -41,6 +46,7 @@ public abstract class Mouvement implements Serializable {
      */
     public void appliquer(JeuData data) {
         appliquerInterne(data);
+        if (piece == null) throw new RuntimeException(this.toString());
         piece.notifyMoveCompleted(this);
     }
 
@@ -70,7 +76,7 @@ public abstract class Mouvement implements Serializable {
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof Mouvement)) return false;
-        if (!this.piece.equals(((Mouvement) obj).piece)) return false;
+        if (!this.debut.equals(((Mouvement) obj).debut)) return false;
         return this.fin.equals(((Mouvement) obj).fin);
     }
 
@@ -81,6 +87,6 @@ public abstract class Mouvement implements Serializable {
 
     @Override
     public String toString() {
-        return piece + " à " + fin;
+        return debut + " à " + fin;
     }
 }

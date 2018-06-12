@@ -11,7 +11,7 @@ public class MouvementCombine extends Mouvement {
     private Integer valeur;
 
     public MouvementCombine(Mouvement[] mouvements) {
-        super(mouvements[0].piece, mouvements[0].fin);
+        super(mouvements[0].debut, mouvements[0].fin);
         this.mouvements = mouvements;
     }
 
@@ -20,6 +20,7 @@ public class MouvementCombine extends Mouvement {
         for (Mouvement mouvement : mouvements) {
             mouvement.appliquer(data);
         }
+        this.piece = mouvements[0].piece;
     }
 
     @Override

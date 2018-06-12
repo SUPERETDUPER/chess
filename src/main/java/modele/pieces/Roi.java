@@ -53,14 +53,13 @@ public class Roi extends OffsetPiece {
     }
 
     @Override
-    Collection<Position> generatePosition(Plateau plateau) {
-        Collection<Position> positions = super.generatePosition(plateau);
+    Collection<Position> generatePosition(Plateau plateau, Position positionDebut) {
+        Collection<Position> positions = super.generatePosition(plateau, positionDebut);
 
         //Ajouter les options pour casteling
-        Position startRoi = plateau.getPosition(this);
-        Position debutTour = startRoi.decaler(new Offset(0, 3));
+        Position debutTour = positionDebut.decaler(new Offset(0, 3));
         Position finTour = debutTour.decaler(new Offset(0, -2));
-        Position finRoi = startRoi.decaler(new Offset(0, 2));
+        Position finRoi = positionDebut.decaler(new Offset(0, 2));
 
         if (plateau.getPiece(debutTour) instanceof Tour
                 && plateau.getPiece(finRoi) == null
@@ -74,15 +73,14 @@ public class Roi extends OffsetPiece {
     }
 
     @Override
-    Mouvement convertir(Plateau plateau, Position position) {
-        if (position.getColonne() - plateau.getPosition(this).getColonne() == 2)
+    Mouvement convertir(Plateau plateau, Position debut, Position finale) {
+        if (finale.getColonne() - debut.getColonne() == 2)
             return new MouvementCombine(new Mouvement[]{
-                    new MouvementNormal(this, position),
-                    new MouvementNormal(plateau.getPiece(position.decaler(Offset.DROIT)), position.decaler(Offset.GAUCHE))
+                    new MouvementNormal(debut, finale),
+                    new MouvementNormal(finale.decaler(Offset.DROIT), finale.decaler(Offset.GAUCHE))
             });
 
-
-        else return super.convertir(plateau, position);
+        return super.convertir(plateau, debut, finale);
     }
 
     @Override

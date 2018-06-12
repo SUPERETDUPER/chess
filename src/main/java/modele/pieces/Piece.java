@@ -52,25 +52,26 @@ public abstract class Piece implements Serializable {
      */
     abstract int unicodeForBlack();
 
-    abstract Collection<Position> generatePosition(Plateau plateau);
+    abstract Collection<Position> generatePosition(Plateau plateau, Position positionDebut);
 
-    Mouvement convertir(Plateau plateau, Position position) {
-        return new MouvementNormal(this, position);
+    Mouvement convertir(Plateau plateau, Position debut, Position finale) {
+        return new MouvementNormal(debut, finale);
     }
 
     public Collection<Mouvement> generateAllMoves(Plateau plateau) {
-        Collection<Position> positions = generatePosition(plateau);
+        Position positionDebut = plateau.getPosition(this);
+        Collection<Position> positions = generatePosition(plateau, positionDebut);
         Collection<Mouvement> mouvements = new LinkedList<>();
 
         for (Position position : positions) {
-            mouvements.add(convertir(plateau, position));
+            mouvements.add(convertir(plateau, positionDebut, position));
         }
 
         return mouvements;
     }
 
     public boolean attaquePosition(Plateau plateau, Position position) {
-        Collection<Position> positions = generatePosition(plateau);
+        Collection<Position> positions = generatePosition(plateau, plateau.getPosition(this));
         return positions.contains(position);
     }
 

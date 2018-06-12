@@ -26,24 +26,22 @@ public class Pion extends Piece {
     }
 
     @Override
-    Mouvement convertir(Plateau plateau, Position position) {
-        if (reine != null || (position.getRangee() != 0 && position.getRangee() != Position.LIMITE - 1))
-            return super.convertir(plateau, position);
+    Mouvement convertir(Plateau plateau, Position debut, Position finale) {
+        if (reine != null || (finale.getRangee() != 0 && finale.getRangee() != Position.LIMITE - 1))
+            return super.convertir(plateau, debut, finale);
 
-        return new MouvementPromotion(this, position);
+        return new MouvementPromotion(debut, finale);
     }
 
     @Override
-    Collection<Position> generatePosition(Plateau plateau) {
-        if (reine != null) return reine.generatePosition(plateau);
+    Collection<Position> generatePosition(Plateau plateau, Position positionDebut) {
+        if (reine != null) return reine.generatePosition(plateau, positionDebut);
 
         Collection<Position> positions = new LinkedList<>();
 
-        Position currentPosition = plateau.getPosition(this);
-
         boolean blocked = false;
 
-        Position fin = currentPosition.decaler(AVANCER);
+        Position fin = positionDebut.decaler(AVANCER);
 
         //Si une place de plus est valide est n'est pas promotion
         if (fin.isValid()) {
@@ -58,7 +56,7 @@ public class Pion extends Piece {
 
         //Si on est pas blocké est on a pas déjà sauté on vérifie si on peut sauter
         if (!blocked && nombreDeMouvementsCompletes == 0) {
-            fin = currentPosition.decaler(SAUT);
+            fin = positionDebut.decaler(SAUT);
 
             //Si la position et valide et la postion est vide on peut
             if (fin.isValid() && plateau.getPiece(fin) == null) {
@@ -67,10 +65,10 @@ public class Pion extends Piece {
         }
 
         //On essaye de manger des pièces aux côtés
-        fin = currentPosition.decaler(ATTAQUE_GAUCHE);
+        fin = positionDebut.decaler(ATTAQUE_GAUCHE);
         if (canEat(plateau, fin)) positions.add(fin);
 
-        fin = currentPosition.decaler(ATTAQUE_DROITE);
+        fin = positionDebut.decaler(ATTAQUE_DROITE);
         if (canEat(plateau, fin)) positions.add(fin);
 
         return positions;

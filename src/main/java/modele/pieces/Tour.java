@@ -3,8 +3,6 @@ package modele.pieces;
 import modele.mouvement.Mouvement;
 import modele.util.Couleur;
 import modele.util.Offset;
-import modele.util.Plateau;
-import modele.util.Position;
 
 public class Tour extends DirectionPiece {
     private static final Offset[] OFFSET = {
@@ -16,16 +14,6 @@ public class Tour extends DirectionPiece {
 
     public Tour(Couleur couleur) {
         super(couleur);
-    }
-
-    @Override
-    public boolean attaquePosition(Plateau plateau, Position position) {
-        //Si la rangée ou colonne n'est pas identique on sait immédiatement que c'est faux (optimization)
-        Position currentPosition = plateau.getPosition(this);
-        if (position.getColonne() != currentPosition.getColonne() && position.getRangee() != currentPosition.getRangee())
-            return false;
-
-        return super.attaquePosition(plateau, position);
     }
 
     @Override

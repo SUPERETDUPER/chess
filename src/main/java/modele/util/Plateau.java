@@ -117,9 +117,11 @@ public class Plateau implements Serializable {
         board.forcePut(position, piece);
     }
 
-    public synchronized void removePiece(@NotNull Position position) {
+    @NotNull
+    public synchronized Piece removePiece(@NotNull Position position) {
         Piece remove = board.remove(position);
         if (remove == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
+        return remove;
     }
 
     @NotNull
