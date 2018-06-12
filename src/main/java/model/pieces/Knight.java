@@ -30,22 +30,22 @@ public class Knight extends OffsetPiece {
     }
 
     @Override
-    int unicodeForWhite() {
+    int getUnicodeWhite() {
         return 9816;
     }
 
     @Override
-    int unicodeForBlack() {
+    int getUnicodeBlack() {
         return 9822;
     }
 
     @Override
-    public int getValeurPositive() {
+    public int getUnsignedValue() {
         return 3;
     }
 
     @Override
-    public void notifyMoveCompleted(Move move) {
+    public void notifyMoveComplete(Move move) {
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Knight extends OffsetPiece {
     }
 
     @Override
-    String getNom() {
+    String getName() {
         return "Knight";
     }
 }

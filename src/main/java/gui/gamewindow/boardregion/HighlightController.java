@@ -11,16 +11,17 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * Contrôle comment les cases devraient être surlignées
+ * Contrôle comment les squares devraient être surlignées
  * <p>
  * Il y a toujours une case rouge (la case séléctionnée) avec les mouvements possibles en blue
  */
+//TODO Use positions instead of moves
 class HighlightController {
     /**
      * Chaque case
      */
     @NotNull
-    private final Board<SquarePane> cases;
+    private final Board<SquarePane> squares;
 
     /**
      * La liste de mouvements possibles pour la case sélectionné
@@ -28,7 +29,7 @@ class HighlightController {
      * Vide si rien n'est sélectionné
      */
     @NotNull
-    private final HashMap<Position, Move> mouvementsPossibles = new HashMap<>();
+    private final HashMap<Position, Move> possibleMoves = new HashMap<>();
 
     /**
      * La case présentement sélectionné
@@ -38,46 +39,46 @@ class HighlightController {
     private Position selectedPosition;
 
     /**
-     * @param cases la liste de cases
+     * @param squares la liste de squares
      */
-    HighlightController(@NotNull Board<SquarePane> cases) {
-        this.cases = cases;
+    HighlightController(@NotNull Board<SquarePane> squares) {
+        this.squares = squares;
     }
 
     /**
      * Sélectionner une case et les positions possibles
      *
      * @param position            la position de la case à sélectionner (en rouge)
-     * @param mouvementsPossibles la liste de mouvements possibles
+     * @param possibleMoves la liste de mouvements possibles
      */
-    void selectionner(@NotNull Position position, Collection<Move> mouvementsPossibles) {
-        this.deSelectionner();
+    void select(@NotNull Position position, Collection<Move> possibleMoves) {
+        this.eraseSelection();
 
         //Surligner la position de départ
         this.selectedPosition = position;
-        cases.get(position).setStyle(SquarePane.Style.ROUGE);
+        squares.get(position).setStyle(SquarePane.Style.RED);
 
-        //Surligner toutes les mouvementsPossibles
-        for (Move move : mouvementsPossibles) {
-            Position positionToDisplay = move.getFin();
+        //Surligner toutes les possibleMoves
+        for (Move move : possibleMoves) {
+            Position positionToDisplay = move.getEnd();
 
-            this.mouvementsPossibles.put(positionToDisplay, move); //Ajouter à la liste
-            cases.get(positionToDisplay).setStyle(SquarePane.Style.BLUE); //Surligner
+            this.possibleMoves.put(positionToDisplay, move); //Ajouter à la liste
+            squares.get(positionToDisplay).setStyle(SquarePane.Style.BLUE); //Surligner
         }
     }
 
     /**
      * Enlève tout le highlight et déselectionne la case séléctionnée
      */
-    void deSelectionner() {
+    void eraseSelection() {
         if (selectedPosition != null) {
-            cases.get(selectedPosition).setStyle(SquarePane.Style.NORMAL);
+            squares.get(selectedPosition).setStyle(SquarePane.Style.NORMAL);
 
-            for (Position position : mouvementsPossibles.keySet()) {
-                cases.get(position).setStyle(SquarePane.Style.NORMAL);
+            for (Position position : possibleMoves.keySet()) {
+                squares.get(position).setStyle(SquarePane.Style.NORMAL);
             }
 
-            mouvementsPossibles.clear();
+            possibleMoves.clear();
             selectedPosition = null;
         }
     }
@@ -90,15 +91,15 @@ class HighlightController {
      * @param position la position à vérifier
      * @return vrai si la position est une option
      */
-    boolean isMouvementPossible(Position position) {
-        return mouvementsPossibles.containsKey(position);
+    boolean isPossibleMove(Position position) {
+        return possibleMoves.containsKey(position);
     }
 
     /**
      * @param position la position de fin du moves
      * @return le moves associé à cette position
      */
-    Move getMouvementPossible(Position position) {
-        return mouvementsPossibles.get(position);
+    Move getPossibleMove(Position position) {
+        return possibleMoves.get(position);
     }
 }

@@ -17,16 +17,16 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    Collection<Position> generatePosition(BoardMap boardMap, Position positionDebut) {
+    Collection<Position> generatePossiblePositions(BoardMap board, Position start) {
         Collection<Position> positions = new LinkedList<>();
 
         //Pour chaque directions
         for (Offset direction : getDirections()) {
-            Position end = positionDebut.decaler(direction);
+            Position end = start.shift(direction);
 
             //Chaque fois décaler la pièce dans la direction
             while (end.isValid()) {
-                Piece piece = boardMap.getPiece(end);
+                Piece piece = board.getPiece(end);
 
                 if (piece == null)
                     positions.add(end); //Si il n'y a rien là -> moves possible
@@ -38,7 +38,7 @@ abstract class DirectionPiece extends Piece {
                     break;
                 }
 
-                end = end.decaler(direction);
+                end = end.shift(direction);
             }
         }
 

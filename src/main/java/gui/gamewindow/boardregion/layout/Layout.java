@@ -14,17 +14,17 @@ public abstract class Layout {
     /**
      * La hauteur du boardregion
      */
-    final ObservableNumberValue hauteurDuPlateau;
+    final ObservableNumberValue boardHeight;
 
-    Layout(ObservableNumberValue hauteurDuPlateau) {
-        this.hauteurDuPlateau = hauteurDuPlateau;
+    Layout(ObservableNumberValue boardHeight) {
+        this.boardHeight = boardHeight;
     }
 
     /**
      * @return la largeur et la hauteur de la position
      */
-    public ObservableValue<Number> getTaille() {
-        return Bindings.divide(hauteurDuPlateau, Position.LIMITE);
+    public ObservableValue<Number> getSize() {
+        return Bindings.divide(boardHeight, Position.LIMITE);
     }
 
     /**

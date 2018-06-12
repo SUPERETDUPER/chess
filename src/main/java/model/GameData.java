@@ -15,11 +15,11 @@ import java.util.EnumMap;
 import java.util.Stack;
 
 /**
- * Représente le boardregion de gamewindow et quelle pièces sont les rois
+ * Représente le boardregion de gamewindow et quelle pièces sont les kings
  */
 public class GameData implements Serializable {
     @NotNull
-    private final BoardMap boardMap;
+    private final BoardMap board;
 
     @NotNull
     private final Stack<Piece> eatenPieces = new Stack<>();
@@ -34,22 +34,22 @@ public class GameData implements Serializable {
      * La liste de roi associé à chaque couleur
      */
     @NotNull
-    private final EnumMap<Colour, King> rois = new EnumMap<>(Colour.class);
+    private final EnumMap<Colour, King> kings = new EnumMap<>(Colour.class);
 
     /**
-     * @param boardMap le boardregion de gamewindow
+     * @param board le boardregion de gamewindow
      */
-    public GameData(@NotNull BoardMap boardMap) {
-        for (Piece piece : boardMap.iteratePieces()) {
+    public GameData(@NotNull BoardMap board) {
+        for (Piece piece : board.iteratePieces()) {
             if (piece instanceof King) {
-                if (rois.containsKey(piece.getColour()))
-                    throw new RuntimeException("Il y a deux rois de la même couleur");
+                if (kings.containsKey(piece.getColour()))
+                    throw new RuntimeException("Il y a deux kings de la même couleur");
 
-                rois.put(piece.getColour(), (King) piece);
+                kings.put(piece.getColour(), (King) piece);
             }
         }
 
-        this.boardMap = boardMap;
+        this.board = board;
     }
 
     public void setChangeListener(@NotNull Runnable changeListener) {
@@ -64,16 +64,16 @@ public class GameData implements Serializable {
     }
 
     @NotNull
-    public BoardMap getBoardMap() {
-        return boardMap;
+    public BoardMap getBoard() {
+        return board;
     }
 
     /**
      * @param colour la colour du roi demandé
      */
     @NotNull
-    King getRoi(Colour colour) {
-        return rois.get(colour);
+    King getKing(Colour colour) {
+        return kings.get(colour);
     }
 
     /**
@@ -81,7 +81,7 @@ public class GameData implements Serializable {
      */
     @NotNull
     public Collection<Move> getAllLegalMoves(Colour colour) {
-        return filterOnlyLegal(boardMap.getAllMoves(colour), colour);
+        return filterOnlyLegal(board.getAllPossibleMoves(colour), colour);
     }
 
     /**
@@ -93,11 +93,11 @@ public class GameData implements Serializable {
     public Collection<Move> filterOnlyLegal(Collection<Move> moves, Colour verifierPour) {
         Collection<Move> legalMoves = new ArrayList<>();
 
-        //Pour chaque moves appliquer et vérifier si l'on attaque le roi
+        //Pour chaque moves apply et vérifier si l'on attaque le roi
         for (Move move : moves) {
-            move.appliquer(this);
+            move.apply(this);
 
-            if (!getBoardMap().isPieceAttaquer(rois.get(verifierPour))) {
+            if (!getBoard().isPieceAttacked(kings.get(verifierPour))) {
                 legalMoves.add(move);
             }
 

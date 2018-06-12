@@ -13,6 +13,7 @@ import java.util.Stack;
 /**
  * Controlle un des 2 graveyards (endroits où les pièces mangées vont)
  */
+//TODO cleanup
 public class GraveyardController {
     /**
      * Le décalage sur l'axe des X
@@ -22,7 +23,7 @@ public class GraveyardController {
     /**
      * Si les 2 colonnes devraient se remplir de gauche à droite ou de droite à gauche
      */
-    private final boolean gaucheADroite;
+    private final boolean isLeftToRight;
 
     /**
      * La hauteur des colonnes
@@ -32,33 +33,33 @@ public class GraveyardController {
     /**
      * La largeur totale du graveyard
      */
-    private final NumberBinding largeurTotale;
+    private final NumberBinding totalWidth;
 
     private final Stack<Piece> piecesInGraveyard = new Stack<>();
 
     /**
      * @param height        la hauteur d'une colonne
-     * @param gaucheADroite si les pièces devraient être placés en colonne de gauche à droite ou pas
+     * @param isLeftToRight si les pièces devraient être placés en colonne de gauche à droite ou pas
      */
-    public GraveyardController(ObservableNumberValue height, boolean gaucheADroite) {
-        this(height, gaucheADroite, new SimpleIntegerProperty(0));
+    public GraveyardController(ObservableNumberValue height, boolean isLeftToRight) {
+        this(height, isLeftToRight, new SimpleIntegerProperty(0));
     }
 
     /**
      * @param height        la hauteur d'une colonne
-     * @param gaucheADroite si les pièces devraient être placés en colonne de gauche à droite ou pas
+     * @param isLeftToRight si les pièces devraient être placés en colonne de gauche à droite ou pas
      * @param xOffset       le offset du graveyard par rapport au contenaire
      */
-    public GraveyardController(ObservableNumberValue height, boolean gaucheADroite, ObservableNumberValue xOffset) {
+    public GraveyardController(ObservableNumberValue height, boolean isLeftToRight, ObservableNumberValue xOffset) {
         this.height = height;
         this.xOffset = xOffset;
-        this.gaucheADroite = gaucheADroite;
+        this.isLeftToRight = isLeftToRight;
 
-        this.largeurTotale = Bindings.multiply(height, getTotalWidthRatio());
+        this.totalWidth = Bindings.multiply(height, getTotalWidthRatio());
     }
 
-    public ObservableNumberValue getLargeurTotale() {
-        return largeurTotale;
+    public ObservableNumberValue getTotalWidth() {
+        return totalWidth;
     }
 
     /**
@@ -69,7 +70,7 @@ public class GraveyardController {
     }
 
     /**
-     * @return un objet qui représente la position dans la prochaine pièce à mettre dans le graveyard
+     * @return un objet qui représente la index dans la prochaine pièce à mettre dans le graveyard
      */
     public Layout getNextGraveyardPosition() {
         return new GraveyardLayout();
@@ -80,7 +81,7 @@ public class GraveyardController {
     }
 
     private class GraveyardLayout extends Layout {
-        private final int position = piecesInGraveyard.size();
+        private final int index = piecesInGraveyard.size();
 
         GraveyardLayout() {
             super(GraveyardController.this.height);
@@ -89,8 +90,8 @@ public class GraveyardController {
         @Override
         public ObservableNumberValue getX() {
             //Si c'est la colonne de gauche ou la colonne de droite
-            if ((gaucheADroite && position < model.util.Position.LIMITE) ||
-                    (!gaucheADroite && position >= model.util.Position.LIMITE)) {
+            if ((isLeftToRight && index < model.util.Position.LIMITE) ||
+                    (!isLeftToRight && index >= model.util.Position.LIMITE)) {
                 return xOffset;
             } else {
                 return Bindings.divide(height, model.util.Position.LIMITE).add(xOffset);
@@ -101,7 +102,7 @@ public class GraveyardController {
         public NumberBinding getY() {
             return Bindings
                     .divide(height, model.util.Position.LIMITE)
-                    .multiply(position < model.util.Position.LIMITE ? position : position - model.util.Position.LIMITE);
+                    .multiply(index < model.util.Position.LIMITE ? index : index - model.util.Position.LIMITE);
         }
 
         @Override
@@ -119,12 +120,12 @@ public class GraveyardController {
         public boolean equals(Object obj) {
             if (obj == null) return false;
             if (!(obj instanceof GraveyardLayout)) return false;
-            return ((GraveyardLayout) obj).position == this.position;
+            return ((GraveyardLayout) obj).index == this.index;
         }
 
         @Override
         public String toString() {
-            return "Graveyard pos: " + position;
+            return "Graveyard index: " + index;
         }
     }
 }

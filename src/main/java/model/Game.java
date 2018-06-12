@@ -17,22 +17,22 @@ import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
- * Classe qui supervise les joueurs et s'assure de respecter les tours
+ * Classe qui supervise les players et s'assure de respecter les tours
  */
 public class Game implements Serializable {
     /**
      * Le résultat de la partie
      */
-    public enum Resultat {
-        BLANC_GAGNE,
-        NOIR_GAGNE,
-        EGALITE
+    public enum Result {
+        WHITE_WINS,
+        BLACK_WINS,
+        TIE
     }
 
     public enum Status {
-        ATTENTE_BLANC,
-        ATTENTE_NOIR,
-        INACTIF
+        WAITING_FOR_WHITE,
+        WAITING_FOR_BLACK,
+        INACTIVE
     }
 
     /**
@@ -41,100 +41,100 @@ public class Game implements Serializable {
     private final GameData gameData;
 
     /**
-     * La liste de joueurs
+     * La liste de players
      */
     @NotNull
-    private final EnumMap<Colour, Player> joueurs;
+    private final EnumMap<Colour, Player> players;
 
     /**
      * A qui le tour
      */
-    transient private ReadOnlyObjectWrapper<Colour> tourA = new ReadOnlyObjectWrapper<>(Colour.BLANC);
+    transient private ReadOnlyObjectWrapper<Colour> turnMarker = new ReadOnlyObjectWrapper<>(Colour.WHITE);
 
-    transient private ReadOnlyObjectWrapper<Status> status = new ReadOnlyObjectWrapper<>(Status.INACTIF);
+    transient private ReadOnlyObjectWrapper<Status> status = new ReadOnlyObjectWrapper<>(Status.INACTIVE);
 
     /**
      * le listener de resultat
      */
-    transient private Consumer<Resultat> resultatListener;
+    transient private Consumer<Result> resultListener;
 
     /**
-     * la liste de moves effectuées
+     * la liste de pastMoves effectuées
      */
-    private final Stack<Move> moves = new Stack<>();
+    private final Stack<Move> pastMoves = new Stack<>();
 
     /**
      * @param gameData l'info de gamewindow
-     * @param joueurs les joueurs
+     * @param players les players
      */
-    Game(GameData gameData, @NotNull EnumMap<Colour, Player> joueurs) {
+    Game(GameData gameData, @NotNull EnumMap<Colour, Player> players) {
         this.gameData = gameData;
-        this.joueurs = joueurs;
+        this.players = players;
 
-        for (Player player : joueurs.values()) {
-            player.initializeJeuData(gameData);
+        for (Player player : players.values()) {
+            player.initializeGameData(gameData);
         }
     }
 
     /**
      * Commencer la partie
      */
-    public void notifierProchainJoueur() {
+    public void notifyNextPlayer() {
         //Vérifier pour échec et mat ou match nul
-        Collection<Move> moves = gameData.getAllLegalMoves(tourA.get());
+        Collection<Move> moves = gameData.getAllLegalMoves(turnMarker.get());
 
         if (moves.isEmpty()) {
-            if (gameData.getBoardMap().isPieceAttaquer(gameData.getRoi(tourA.get()))) {
-                if (tourA.get() == Colour.NOIR) {
-                    resultatListener.accept(Resultat.BLANC_GAGNE);
+            if (gameData.getBoard().isPieceAttacked(gameData.getKing(turnMarker.get()))) {
+                if (turnMarker.get() == Colour.BLACK) {
+                    resultListener.accept(Result.WHITE_WINS);
                 } else {
-                    resultatListener.accept(Resultat.NOIR_GAGNE);
+                    resultListener.accept(Result.BLACK_WINS);
                 }
             } else {
-                resultatListener.accept(Resultat.EGALITE);
+                resultListener.accept(Result.TIE);
             }
         } else {
             //Si la partie n'est pas fini notifier prochain player
-            status.set(tourA.get() == Colour.BLANC ? Status.ATTENTE_BLANC : Status.ATTENTE_NOIR);
-            joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Demander au player de bouger
+            status.set(turnMarker.get() == Colour.WHITE ? Status.WAITING_FOR_WHITE : Status.WAITING_FOR_BLACK);
+            players.get(turnMarker.get()).getMove(this::submitMove, turnMarker.get()); //Demander au player de bouger
         }
     }
 
-    public void setResultatListener(Consumer<Resultat> resultatListener) {
-        this.resultatListener = resultatListener;
+    public void setResultListener(Consumer<Result> resultListener) {
+        this.resultListener = resultListener;
     }
 
     /**
-     * Appelé par le callback de player.getMouvement()
+     * Appelé par le callback de player.getMove()
      *
-     * @param move le moves à jouer
+     * @param move le pastMoves à submitMove
      */
-    private void jouer(@NotNull Move move) {
-        move.appliquer(gameData); //Jouer le moves
-        moves.push(move); //Ajouter à la liste
+    private void submitMove(@NotNull Move move) {
+        move.apply(gameData); //Jouer le pastMoves
+        pastMoves.push(move); //Ajouter à la liste
 
         gameData.notifyListenerOfChange(); //Notifier changement
 
-        changerLeTour();
+        switchTurn();
 
-        status.set(Status.INACTIF);
+        status.set(Status.INACTIVE);
     }
 
-    private void changerLeTour() {
-        tourA.set(tourA.getValue() == Colour.BLANC ? Colour.NOIR : Colour.BLANC); //Changer le tour
+    private void switchTurn() {
+        turnMarker.set(turnMarker.getValue() == Colour.WHITE ? Colour.BLACK : Colour.WHITE); //Changer le tour
     }
 
     /**
-     * @param tour le nombre de moves à défaire
+     * @param tour le nombre de pastMoves à défaire
      */
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
-            moves.pop().undo(gameData);
+            pastMoves.pop().undo(gameData);
             gameData.notifyListenerOfChange();
-            changerLeTour();
+            switchTurn();
         }
 
-        status.set(Status.INACTIF);
+        status.set(Status.INACTIVE);
     }
 
     public GameData getGameData() {
@@ -142,12 +142,12 @@ public class Game implements Serializable {
     }
 
     @NotNull
-    public EnumMap<Colour, Player> getJoueurs() {
-        return joueurs;
+    public EnumMap<Colour, Player> getPlayers() {
+        return players;
     }
 
-    ReadOnlyObjectProperty<Colour> tourAProperty() {
-        return tourA.getReadOnlyProperty();
+    ReadOnlyObjectProperty<Colour> turnMarkerProperty() {
+        return turnMarker.getReadOnlyProperty();
     }
 
     public ReadOnlyObjectProperty<Status> statusProperty() {
@@ -156,12 +156,12 @@ public class Game implements Serializable {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        out.writeObject(tourA.get());
+        out.writeObject(turnMarker.get());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        tourA = new ReadOnlyObjectWrapper<>((Colour) in.readObject());
-        status = new ReadOnlyObjectWrapper<>(Status.INACTIF);
+        turnMarker = new ReadOnlyObjectWrapper<>((Colour) in.readObject());
+        status = new ReadOnlyObjectWrapper<>(Status.INACTIVE);
     }
 }

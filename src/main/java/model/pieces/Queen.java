@@ -8,15 +8,15 @@ import model.util.Offset;
  * La pièce la dame
  */
 public class Queen extends DirectionPiece {
-    private static final Offset[] OFFSET = {
-            Offset.HAUT_GAUGHE,
-            Offset.HAUT,
-            Offset.HAUT_DROIT,
-            Offset.GAUCHE,
-            Offset.DROIT,
-            Offset.BAS_GAUCHE,
-            Offset.BAS,
-            Offset.BAS_DROIT
+    private static final Offset[] OFFSETS = {
+            Offset.TOP_LEFT,
+            Offset.UP,
+            Offset.TOP_RIGHT,
+            Offset.LEFT,
+            Offset.RIGHT,
+            Offset.BOTTOM_LEFT,
+            Offset.DOWN,
+            Offset.BOTTOM_RIGHT
     };
 
     public Queen(Colour colour) {
@@ -25,26 +25,26 @@ public class Queen extends DirectionPiece {
 
     @Override
     Offset[] getDirections() {
-        return OFFSET;
+        return OFFSETS;
     }
 
     @Override
-    int unicodeForWhite() {
+    int getUnicodeWhite() {
         return 9813;
     }
 
     @Override
-    int unicodeForBlack() {
+    int getUnicodeBlack() {
         return 9819;
     }
 
     @Override
-    public int getValeurPositive() {
+    public int getUnsignedValue() {
         return 8;
     }
 
     @Override
-    public void notifyMoveCompleted(Move move) {
+    public void notifyMoveComplete(Move move) {
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Queen extends DirectionPiece {
     }
 
     @Override
-    String getNom() {
+    String getName() {
         return "Queen";
     }
 }

@@ -17,28 +17,29 @@ import java.util.function.Consumer;
  * Controlle la fenêtre d'introduction
  */
 class IntroController {
-    private static final ObservableList<Player> OPTION_PLAYERS = FXCollections.observableArrayList(
+    private static final ObservableList<Player> PLAYER_OPTIONS = FXCollections.observableArrayList(
             new HumanPlayer(),
-            new PlayerComputer(PlayerComputer.NIVEAU_FACILE),
-            new PlayerComputer(PlayerComputer.NIVEAU_DIFFICILE)
+            new PlayerComputer(PlayerComputer.EASY),
+            new PlayerComputer(PlayerComputer.HARD)
     );
+
     /**
      * La méthode à appeler pour passer au gamewindow
      */
-    private final Consumer<EnumMap<Colour, Player>> onJouer;
+    private final Consumer<EnumMap<Colour, Player>> onStart;
 
     @FXML
-    private VBox joueurBlancContainer;
+    private VBox whitePlayerContainer;
 
     @FXML
-    private VBox joueurNoirContainer;
+    private VBox blackPlayerContainer;
 
     //Les drop-downs pour les joueurs blancs/noirs
-    private final JFXComboBox<Player> joueursBlanc = new JFXComboBox<>(OPTION_PLAYERS);
-    private final JFXComboBox<Player> joueursNoir = new JFXComboBox<>(OPTION_PLAYERS);
+    private final JFXComboBox<Player> joueursBlanc = new JFXComboBox<>(PLAYER_OPTIONS);
+    private final JFXComboBox<Player> joueursNoir = new JFXComboBox<>(PLAYER_OPTIONS);
 
-    IntroController(Consumer<EnumMap<Colour, Player>> onJouer) {
-        this.onJouer = onJouer;
+    IntroController(Consumer<EnumMap<Colour, Player>> onStart) {
+        this.onStart = onStart;
 
         //Sélectionner la première option
         joueursNoir.getSelectionModel().select(0);
@@ -48,21 +49,21 @@ class IntroController {
     @FXML
     private void initialize() {
         //Ajouter le drop down à l'interface
-        joueurBlancContainer.getChildren().add(joueursBlanc);
-        joueurNoirContainer.getChildren().add(joueursNoir);
+        whitePlayerContainer.getChildren().add(joueursBlanc);
+        blackPlayerContainer.getChildren().add(joueursNoir);
     }
 
     /**
      * Appelé quand le boutton player est appuyé
      */
     @FXML
-    private void handleJouer() {
+    private void handleStart() {
         //Obtenir les 2 joueurs et les mettres dans une liste
         EnumMap<Colour, Player> joueurs = new EnumMap<>(Colour.class);
-        joueurs.put(Colour.BLANC, joueursBlanc.getSelectionModel().getSelectedItem());
-        joueurs.put(Colour.NOIR, joueursNoir.getSelectionModel().getSelectedItem());
+        joueurs.put(Colour.WHITE, joueursBlanc.getSelectionModel().getSelectedItem());
+        joueurs.put(Colour.BLACK, joueursNoir.getSelectionModel().getSelectedItem());
 
         //Soumettre les joueurs
-        onJouer.accept(joueurs);
+        onStart.accept(joueurs);
     }
 }

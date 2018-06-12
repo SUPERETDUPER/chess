@@ -39,16 +39,16 @@ import java.util.List;
  * <p>
  * Les classes peuvent accéder les données dans la structure à l'aide de {@link Position} sans devoir se soucier de comment les données sont organisées
  * <p>
- * À l'interne, la structure de données une liste qui stocke toutes les données en ordre de gauche à droite puis de haut en bas
+ * À l'interne, la structure de données une values qui stocke toutes les données en ordre de gauche à droite puis de haut en bas
  *
  * @param <T> Le type de donnée stockée
  */
 public class Board<T> implements Iterable<T> {
     /**
-     * La liste contenant les données
+     * La values contenant les données
      */
     @NotNull
-    private final List<T> liste = new ArrayList<>(Position.LIMITE * Position.LIMITE);
+    private final List<T> values = new ArrayList<>(Position.LIMITE * Position.LIMITE);
 
     /**
      * @param position la position de la donnée désirée
@@ -56,16 +56,16 @@ public class Board<T> implements Iterable<T> {
      */
     @NotNull
     public T get(@NotNull Position position) {
-        return liste.get(getIndex(position));
+        return values.get(getIndex(position));
     }
 
     public void add(@NotNull Position position, @NotNull T valeur) {
-        liste.add(getIndex(position), valeur);
+        values.add(getIndex(position), valeur);
     }
 
     @Contract(pure = true)
     private int getIndex(Position position) {
-        return getIndex(position.getRangee(), position.getColonne());
+        return getIndex(position.getRow(), position.getColumn());
     }
 
     @Contract(pure = true)
@@ -95,6 +95,6 @@ public class Board<T> implements Iterable<T> {
     }
 
     public Collection<T> getValues() {
-        return liste;
+        return values;
     }
 }

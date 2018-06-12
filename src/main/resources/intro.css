@@ -2,15 +2,15 @@
     -fx-background-color: lightGray;
 }
 
-#titre {
+#title {
     -fx-font-size: 40;
 }
 
-.titreBlancNoir {
+.whiteBlackTitle {
     -fx-font-size: 20;
 }
 
-#btnJouer {
+#startBtn {
     -jfx-button-type: RAISED;
 
     -fx-background-color: blue;

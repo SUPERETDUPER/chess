@@ -8,16 +8,16 @@ import java.io.*;
 import java.util.EnumMap;
 
 /**
- * Responsable de sauvgarder et recharger le fichier contenant le Game
+ * Responsable de saveGame et recharger le fichier contenant le Game
  */
 public class Loader {
-    private final File file = new File("dernierePartie.txt"); //Le nom du fichier
+    private final File file = new File("savedGame.txt"); //Le nom du fichier
     private Game game;
 
     /**
      * Sauvegarde le gamewindow
      */
-    private void sauvgarder() {
+    private void saveGame() {
         try {
             if (!file.exists()) //noinspection ResultOfMethodCallIgnored
                 file.createNewFile(); //Si le fichier de gamewindow n'existe pas créer le fichier
@@ -36,13 +36,13 @@ public class Loader {
      *
      * @return Si on a chargé le gamewindow avec success
      */
-    public boolean chargerDuFichier() {
+    public boolean loadGameFromFile() {
         if (!file.exists()) return false; //Si aucun fichier -> échec
 
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
             this.game = (Game) objectInputStream.readObject(); //Lire le gamewindow
-            this.game.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder()); //Quand le gamewindow change sauvegarder
+            this.game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame()); //Quand le gamewindow change sauvegarder
             objectInputStream.close();
             return true;
         } catch (Exception e) {
@@ -51,15 +51,15 @@ public class Loader {
         }
     }
 
-    public void creeNouveauJeu(EnumMap<Colour, Player> joueurs) {
+    public void createNewGame(EnumMap<Colour, Player> joueurs) {
         //Créer les rois
 
         //Créer le modèle de gamewindow
-        GameData gameData = new GameData(BoardMap.creePlateauDebut());
+        GameData gameData = new GameData(BoardMap.createStartingBoard());
 
-        //Créer et notifierProchainJoueur la partie
+        //Créer et notifyNextPlayer la partie
         this.game = new Game(gameData, joueurs);
-        game.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder());
+        game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame());
     }
 
     public Game getGame() {

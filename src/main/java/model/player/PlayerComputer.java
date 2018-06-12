@@ -18,19 +18,19 @@ import java.util.function.Consumer;
 
 /**
  * Un player qui utilise un algorithm pour trouver le prochain meilleur moves.
- * L'algorithme est un algorithm recursif min-max qui utilise les valeurs des pièces (chaque pièce à une valeur)
+ * L'algorithme est un algorithm recursif min-max qui utilise les valeurs des pièces (chaque pièce à une sequenceValue)
  *
  * Il existe deux niveaux de difficulté (facile et difficile)
  */
 public class PlayerComputer extends Player {
     //Les niveaux de difficultés
-    public static final Difficulte NIVEAU_FACILE = new Difficulte(3, "Facile");
-    public static final Difficulte NIVEAU_DIFFICILE = new Difficulte(4, "Difficile");
+    public static final Difficulty EASY = new Difficulty(3, "Facile");
+    public static final Difficulty HARD = new Difficulty(4, "Difficile");
 
     /**
-     * Le niveau de difficulte du player
+     * Le niveau de difficulty du player
      */
-    private final Difficulte difficulte;
+    private final Difficulty difficulty;
 
     /**
      * Le gamewindow data
@@ -39,14 +39,14 @@ public class PlayerComputer extends Player {
     private GameData gameData;
 
     /**
-     * @param difficulte la difficulté de l'algorithme
+     * @param difficulty la difficulté de l'algorithme
      */
-    public PlayerComputer(Difficulte difficulte) {
-        this.difficulte = difficulte;
+    public PlayerComputer(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 
     @Override
-    public void initializeJeuData(@NotNull GameData gameData) {
+    public void initializeGameData(@NotNull GameData gameData) {
         this.gameData = gameData;
     }
 
@@ -56,45 +56,45 @@ public class PlayerComputer extends Player {
      * @param callback la méthode par laquelle l'on soumet son prochain moves
      */
     @Override
-    public void getMouvement(Consumer<Move> callback, Colour colour) {
+    public void getMove(Consumer<Move> callback, Colour colour) {
         new Thread(() ->
                 callback.accept(
-                        calculerMeilleurMouvement(new MoveSequence(), colour)
-                                .getPremierMouvement()
+                        calculateBestMove(new MoveSequence(), colour)
+                                .getFirstMove()
                 )
         ).start();
     }
 
     @NotNull
-    private MoveSequence calculerMeilleurMouvement(MoveSequence pastSequence, Colour colour) {
+    private MoveSequence calculateBestMove(MoveSequence pastSequence, Colour colour) {
         //Si on est déjà à la profondeur maximale retourner
-        if (pastSequence.getLongeur() == difficulte.profondeur) return pastSequence;
+        if (pastSequence.getLength() == difficulty.searchDepth) return pastSequence;
 
         //Calculer les moves possibles
-        Collection<Move> mouvementsPossibles = gameData.getAllLegalMoves(colour);
+        Collection<Move> possibleMoves = gameData.getAllLegalMoves(colour);
 
-        MoveSequence meilleurMouvement = null;
+        MoveSequence bestMove = null;
 
-        for (Move move : mouvementsPossibles) {
-            move.appliquer(gameData); //Appliquer le moves
+        for (Move move : possibleMoves) {
+            move.apply(gameData); //Appliquer le moves
 
-            //Calculer la valeur du moves (partie récursive)
-            MoveSequence moveSequence = calculerMeilleurMouvement(new MoveSequence(pastSequence, move), inverser(colour));
+            //Calculer la sequenceValue du moves (partie récursive)
+            MoveSequence moveSequence = calculateBestMove(new MoveSequence(pastSequence, move), getOppositeColour(colour));
 
-            //Si le moves est meilleur que meilleurMouvement remplacer meilleurMouvement
-            //Si le moves à la même valeur, remplacer 50% du temps
-            if (meilleurMouvement == null) {
-                meilleurMouvement = moveSequence;
+            //Si le moves est meilleur que bestMove remplacer bestMove
+            //Si le moves à la même sequenceValue, remplacer 50% du temps
+            if (bestMove == null) {
+                bestMove = moveSequence;
             } else {
-                if (colour == Colour.BLANC) {
-                    if (moveSequence.getValeur() > meilleurMouvement.getValeur()
-                            || (moveSequence.getValeur() == meilleurMouvement.getValeur() && Math.random() > 0.5)) {
-                        meilleurMouvement = moveSequence;
+                if (colour == Colour.WHITE) {
+                    if (moveSequence.getSequenceValue() > bestMove.getSequenceValue()
+                            || (moveSequence.getSequenceValue() == bestMove.getSequenceValue() && Math.random() > 0.5)) {
+                        bestMove = moveSequence;
                     }
                 } else {
-                    if (moveSequence.getValeur() < meilleurMouvement.getValeur()
-                            || (moveSequence.getValeur() == meilleurMouvement.getValeur() && Math.random() > 0.5)) {
-                        meilleurMouvement = moveSequence;
+                    if (moveSequence.getSequenceValue() < bestMove.getSequenceValue()
+                            || (moveSequence.getSequenceValue() == bestMove.getSequenceValue() && Math.random() > 0.5)) {
+                        bestMove = moveSequence;
                     }
                 }
             }
@@ -102,50 +102,50 @@ public class PlayerComputer extends Player {
             move.undo(gameData); //Défaire les changements
         }
 
-        return meilleurMouvement == null ? pastSequence : meilleurMouvement;
+        return bestMove == null ? pastSequence : bestMove;
     }
 
     /**
      * Si blanc retourne noir et vice-versa
      *
-     * @param colour la colour à inverser
+     * @param colour la colour à getOppositeColour
      * @return la colour inversée
      */
-    private Colour inverser(Colour colour) {
-        return colour == Colour.BLANC ? Colour.NOIR : Colour.BLANC;
+    private Colour getOppositeColour(Colour colour) {
+        return colour == Colour.WHITE ? Colour.BLACK : Colour.WHITE;
     }
 
     /**
-     * Une classe qui représente une série de moves et la valeur de la série
+     * Une classe qui représente une série de moves et la sequenceValue de la série
      */
     private class MoveSequence {
         private final List<Move> moves;
 
         /**
-         * La somme de la valeur de toutes les pièces
+         * La somme de la sequenceValue de toutes les pièces
          */
-        private final int valeur;
+        private final int sequenceValue;
 
         MoveSequence() {
-            this.valeur = 0;
+            this.sequenceValue = 0;
             this.moves = new ArrayList<>();
         }
 
         private MoveSequence(MoveSequence moveSequence, Move move) {
             this.moves = new ArrayList<>(moveSequence.moves);
             this.moves.add(move);
-            this.valeur = moveSequence.valeur + move.getValeur();
+            this.sequenceValue = moveSequence.sequenceValue + move.getValue();
         }
 
-        int getValeur() {
-            return valeur;
+        int getSequenceValue() {
+            return sequenceValue;
         }
 
-        int getLongeur() {
+        int getLength() {
             return moves.size();
         }
 
-        Move getPremierMouvement() {
+        Move getFirstMove() {
             return moves.get(0);
         }
     }
@@ -153,18 +153,18 @@ public class PlayerComputer extends Player {
     /**
      * La difficulté de l'algorithm (dépendant de la profondeur)
      */
-    private static class Difficulte implements Serializable {
-        private final int profondeur;
-        private final String nom;
+    private static class Difficulty implements Serializable {
+        private final int searchDepth;
+        private final String name;
 
-        Difficulte(int profondeur, String nom) {
-            this.profondeur = profondeur;
-            this.nom = nom;
+        Difficulty(int profondeur, String name) {
+            this.searchDepth = profondeur;
+            this.name = name;
         }
     }
 
     @Override
-    public String getNom() {
-        return "Ordinateur (" + difficulte.nom + ")";
+    public String getName() {
+        return "Ordinateur (" + difficulty.name + ")";
     }
 }

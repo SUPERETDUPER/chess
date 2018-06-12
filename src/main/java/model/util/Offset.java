@@ -6,14 +6,14 @@ import java.io.Serializable;
  * Un déplacement relatif
  */
 public class Offset implements Serializable {
-    public static final Offset HAUT_GAUGHE = new Offset(-1, -1);
-    public static final Offset HAUT = new Offset(-1, 0);
-    public static final Offset HAUT_DROIT = new Offset(-1, 1);
-    public static final Offset GAUCHE = new Offset(0, -1);
-    public static final Offset DROIT = new Offset(0, 1);
-    public static final Offset BAS_GAUCHE = new Offset(1, -1);
-    public static final Offset BAS = new Offset(1, 0);
-    public static final Offset BAS_DROIT = new Offset(1, 1);
+    public static final Offset TOP_LEFT = new Offset(-1, -1);
+    public static final Offset UP = new Offset(-1, 0);
+    public static final Offset TOP_RIGHT = new Offset(-1, 1);
+    public static final Offset LEFT = new Offset(0, -1);
+    public static final Offset RIGHT = new Offset(0, 1);
+    public static final Offset BOTTOM_LEFT = new Offset(1, -1);
+    public static final Offset DOWN = new Offset(1, 0);
+    public static final Offset BOTTOM_RIGHT = new Offset(1, 1);
 
     private final int[] offset = new int[2];
 
@@ -26,11 +26,11 @@ public class Offset implements Serializable {
         offset[1] = offsetHorizontal;
     }
 
-    public int getOffsetVertical() {
+    int getVerticalShift() {
         return offset[0];
     }
 
-    public int getOffsetHorizontal() {
+    int getHorizontalShift() {
         return offset[1];
     }
 }

@@ -17,20 +17,20 @@ public abstract class Player implements Serializable {
      * @param callback la méthode par laquelle l'on soumet son prochain moves
      * @param colour  la colour du moves requis
      */
-    public abstract void getMouvement(Consumer<Move> callback, Colour colour);
+    public abstract void getMove(Consumer<Move> callback, Colour colour);
 
     /**
      * @param gameData le gamewindow data
      */
-    public abstract void initializeJeuData(GameData gameData);
+    public abstract void initializeGameData(GameData gameData);
 
     /**
      * @return Le nom du player tel que affiché sur l'interface
      */
-    protected abstract String getNom();
+    protected abstract String getName();
 
     @Override
     public String toString() {
-        return getNom();
+        return getName();
     }
 }

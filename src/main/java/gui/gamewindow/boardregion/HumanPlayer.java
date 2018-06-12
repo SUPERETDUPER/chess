@@ -14,7 +14,7 @@ public class HumanPlayer extends Player {
     transient private BoardPane boardPane;
 
     @Override
-    public void initializeJeuData(GameData gameData) {
+    public void initializeGameData(GameData gameData) {
 
     }
 
@@ -28,12 +28,12 @@ public class HumanPlayer extends Player {
      * @param callback la méthode par laquelle l'on soumet son prochain moves
      */
     @Override
-    public void getMouvement(Consumer<Move> callback, Colour colour) {
-        boardPane.demanderMouvement(new MoveRequest(callback, colour));
+    public void getMove(Consumer<Move> callback, Colour colour) {
+        boardPane.requestMove(new MoveRequest(callback, colour));
     }
 
     @Override
-    public String getNom() {
+    public String getName() {
         return "Humain";
     }
 }

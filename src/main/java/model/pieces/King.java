@@ -1,7 +1,7 @@
 package model.pieces;
 
 import model.moves.BaseMove;
-import model.moves.CombineBaseMove;
+import model.moves.CombineMove;
 import model.moves.Move;
 import model.util.BoardMap;
 import model.util.Colour;
@@ -13,32 +13,32 @@ import java.util.Collection;
 //TODO Implement castling fully (currently only allows basic without conditions)
 public class King extends OffsetPiece {
     private static final Offset[] OFFSETS = {
-            Offset.HAUT_GAUGHE,
-            Offset.HAUT,
-            Offset.HAUT_DROIT,
-            Offset.GAUCHE,
-            Offset.DROIT,
-            Offset.BAS_GAUCHE,
-            Offset.BAS,
-            Offset.BAS_DROIT
+            Offset.TOP_LEFT,
+            Offset.UP,
+            Offset.TOP_RIGHT,
+            Offset.LEFT,
+            Offset.RIGHT,
+            Offset.BOTTOM_LEFT,
+            Offset.DOWN,
+            Offset.BOTTOM_RIGHT
     };
 
     /**
      * Le nombre de mouvements complétés sur la pièce
      */
-    private int nombresDeMouvements = 0;
+    private int numberOfAppliedMoves = 0;
 
     public King(Colour colour) {
         super(colour);
     }
 
     @Override
-    int unicodeForWhite() {
+    int getUnicodeWhite() {
         return 9812;
     }
 
     @Override
-    int unicodeForBlack() {
+    int getUnicodeBlack() {
         return 9818;
     }
 
@@ -48,23 +48,23 @@ public class King extends OffsetPiece {
     }
 
     @Override
-    public int getValeurPositive() {
+    public int getUnsignedValue() {
         return 1000;
     }
 
     @Override
-    Collection<Position> generatePosition(BoardMap boardMap, Position positionDebut) {
-        Collection<Position> positions = super.generatePosition(boardMap, positionDebut);
+    Collection<Position> generatePossiblePositions(BoardMap board, Position start) {
+        Collection<Position> positions = super.generatePossiblePositions(board, start);
 
         //Ajouter les options pour casteling
-        Position debutTour = positionDebut.decaler(new Offset(0, 3));
-        Position finTour = debutTour.decaler(new Offset(0, -2));
-        Position finRoi = positionDebut.decaler(new Offset(0, 2));
+        Position debutTour = start.shift(new Offset(0, 3));
+        Position finTour = debutTour.shift(new Offset(0, -2));
+        Position finRoi = start.shift(new Offset(0, 2));
 
-        if (boardMap.getPiece(debutTour) instanceof Rook
-                && boardMap.getPiece(finRoi) == null
-                && boardMap.getPiece(finTour) == null
-                && nombresDeMouvements == 0) {
+        if (board.getPiece(debutTour) instanceof Rook
+                && board.getPiece(finRoi) == null
+                && board.getPiece(finTour) == null
+                && numberOfAppliedMoves == 0) {
 
             positions.add(finRoi);
         }
@@ -73,27 +73,27 @@ public class King extends OffsetPiece {
     }
 
     @Override
-    Move convertir(BoardMap boardMap, Position debut, Position finale) {
-        if (finale.getColonne() - debut.getColonne() == 2)
-            return new CombineBaseMove(debut, finale, new Move[]{
-                    new BaseMove(finale.decaler(Offset.DROIT), finale.decaler(Offset.GAUCHE))
+    Move makeMoveFromPosition(BoardMap board, Position start, Position end) {
+        if (end.getColumn() - start.getColumn() == 2)
+            return new CombineMove(start, end, new Move[]{
+                    new BaseMove(end.shift(Offset.RIGHT), end.shift(Offset.LEFT))
             });
 
-        return super.convertir(boardMap, debut, finale);
+        return super.makeMoveFromPosition(board, start, end);
     }
 
     @Override
-    public void notifyMoveCompleted(Move move) {
-        nombresDeMouvements += 1;
+    public void notifyMoveComplete(Move move) {
+        numberOfAppliedMoves += 1;
     }
 
     @Override
     public void notifyMoveUndo(Move move) {
-        nombresDeMouvements -= 1;
+        numberOfAppliedMoves -= 1;
     }
 
     @Override
-    String getNom() {
+    String getName() {
         return "King";
     }
 }

@@ -26,7 +26,7 @@
         <content>
             <VBox>
                 <VBox alignment="CENTER" fillWidth="false" VBox.vgrow="SOMETIMES">
-                    <StackPane fx:id="plateauContainer" VBox.vgrow="SOMETIMES"/>
+                    <StackPane fx:id="boardContainer" VBox.vgrow="SOMETIMES"/>
                 </VBox>
             </VBox>
         </content>

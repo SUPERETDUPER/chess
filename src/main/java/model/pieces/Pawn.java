@@ -12,42 +12,42 @@ import java.util.LinkedList;
 
 //TODO Implement promotion and en passant
 public class Pawn extends Piece {
-    private final Offset ATTAQUE_GAUCHE = getColour() == Colour.BLANC ? Offset.HAUT_GAUGHE : Offset.BAS_GAUCHE;
-    private final Offset ATTAQUE_DROITE = getColour() == Colour.BLANC ? Offset.HAUT_DROIT : Offset.BAS_DROIT;
-    private final Offset AVANCER = getColour() == Colour.BLANC ? Offset.HAUT : Offset.BAS;
-    private final Offset SAUT = new Offset(Colour.BLANC == getColour() ? -2 : 2, 0);
+    private final Offset RIGHT_ATTACK = getColour() == Colour.WHITE ? Offset.TOP_LEFT : Offset.BOTTOM_LEFT;
+    private final Offset LEFT_ATTACK = getColour() == Colour.WHITE ? Offset.TOP_RIGHT : Offset.BOTTOM_RIGHT;
+    private final Offset FORWARD = getColour() == Colour.WHITE ? Offset.UP : Offset.DOWN;
+    private final Offset FORWARD_BY_TWO = new Offset(Colour.WHITE == getColour() ? -2 : 2, 0);
 
-    private int nombreDeMouvementsCompletes = 0;
+    private int numberOfAppliedMoves = 0;
 
-    private Piece reine = null;
+    private Piece promotedQueen = null;
 
     public Pawn(Colour colour) {
         super(colour);
     }
 
     @Override
-    Move convertir(BoardMap boardMap, Position debut, Position finale) {
-        if (reine != null || (finale.getRangee() != 0 && finale.getRangee() != Position.LIMITE - 1))
-            return super.convertir(boardMap, debut, finale);
+    Move makeMoveFromPosition(BoardMap board, Position start, Position end) {
+        if (promotedQueen != null || (end.getRow() != 0 && end.getRow() != Position.LIMITE - 1))
+            return super.makeMoveFromPosition(board, start, end);
 
-        return new PromotionMove(debut, finale);
+        return new PromotionMove(start, end);
     }
 
     @Override
-    Collection<Position> generatePosition(BoardMap boardMap, Position positionDebut) {
-        if (reine != null) return reine.generatePosition(boardMap, positionDebut);
+    Collection<Position> generatePossiblePositions(BoardMap board, Position start) {
+        if (promotedQueen != null) return promotedQueen.generatePossiblePositions(board, start);
 
         Collection<Position> positions = new LinkedList<>();
 
         boolean blocked = false;
 
-        Position fin = positionDebut.decaler(AVANCER);
+        Position fin = start.shift(FORWARD);
 
         //Si une place de plus est valide est n'est pas promotion
         if (fin.isValid()) {
 
             //Si il y a personne on peut avancer
-            if (boardMap.getPiece(fin) == null) {
+            if (board.getPiece(fin) == null) {
                 positions.add(fin);
             }
             //Sinon on est bloqué
@@ -55,21 +55,21 @@ public class Pawn extends Piece {
         }
 
         //Si on est pas blocké est on a pas déjà sauté on vérifie si on peut sauter
-        if (!blocked && nombreDeMouvementsCompletes == 0) {
-            fin = positionDebut.decaler(SAUT);
+        if (!blocked && numberOfAppliedMoves == 0) {
+            fin = start.shift(FORWARD_BY_TWO);
 
             //Si la position et valide et la postion est vide on peut
-            if (fin.isValid() && boardMap.getPiece(fin) == null) {
+            if (fin.isValid() && board.getPiece(fin) == null) {
                 positions.add(fin);
             }
         }
 
         //On essaye de manger des pièces aux côtés
-        fin = positionDebut.decaler(ATTAQUE_GAUCHE);
-        if (canEat(boardMap, fin)) positions.add(fin);
+        fin = start.shift(RIGHT_ATTACK);
+        if (canEat(board, fin)) positions.add(fin);
 
-        fin = positionDebut.decaler(ATTAQUE_DROITE);
-        if (canEat(boardMap, fin)) positions.add(fin);
+        fin = start.shift(LEFT_ATTACK);
+        if (canEat(board, fin)) positions.add(fin);
 
         return positions;
     }
@@ -84,29 +84,29 @@ public class Pawn extends Piece {
     }
 
     @Override
-    int unicodeForBlack() {
-        if (reine != null) return reine.unicodeForBlack();
+    int getUnicodeBlack() {
+        if (promotedQueen != null) return promotedQueen.getUnicodeBlack();
 
         return 9823;
     }
 
     @Override
-    int unicodeForWhite() {
-        if (reine != null) return reine.unicodeForWhite();
+    int getUnicodeWhite() {
+        if (promotedQueen != null) return promotedQueen.getUnicodeWhite();
         return 9817;
     }
 
     @Override
-    public int getValeurPositive() {
-        if (reine != null) return reine.getValeurPositive();
+    public int getUnsignedValue() {
+        if (promotedQueen != null) return promotedQueen.getUnsignedValue();
 
         return 1;
     }
 
     @Override
-    public void notifyMoveCompleted(Move move) {
+    public void notifyMoveComplete(Move move) {
         if (move instanceof PromotionMove) {
-            reine = new Queen(colour) {
+            promotedQueen = new Queen(colour) {
                 @Override
                 public int hashCode() {
                     return Pawn.this.hashCode();
@@ -119,20 +119,20 @@ public class Pawn extends Piece {
             };
         }
 
-        nombreDeMouvementsCompletes += 1;
+        numberOfAppliedMoves += 1;
     }
 
     @Override
     public void notifyMoveUndo(Move move) {
         if (move instanceof PromotionMove) {
-            reine = null;
+            promotedQueen = null;
         }
 
-        nombreDeMouvementsCompletes -= 1;
+        numberOfAppliedMoves -= 1;
     }
 
     @Override
-    String getNom() {
+    String getName() {
         return "Pawn";
     }
 }

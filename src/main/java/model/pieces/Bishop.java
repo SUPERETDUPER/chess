@@ -6,10 +6,10 @@ import model.util.Offset;
 
 public class Bishop extends DirectionPiece {
     private static final Offset[] DIRECTIONS = {
-            Offset.HAUT_GAUGHE,
-            Offset.HAUT_DROIT,
-            Offset.BAS_GAUCHE,
-            Offset.BAS_DROIT
+            Offset.TOP_LEFT,
+            Offset.TOP_RIGHT,
+            Offset.BOTTOM_LEFT,
+            Offset.BOTTOM_RIGHT
     };
 
 
@@ -23,22 +23,22 @@ public class Bishop extends DirectionPiece {
     }
 
     @Override
-    int unicodeForWhite() {
+    int getUnicodeWhite() {
         return 9815;
     }
 
     @Override
-    int unicodeForBlack() {
+    int getUnicodeBlack() {
         return 9821;
     }
 
     @Override
-    public int getValeurPositive() {
+    public int getUnsignedValue() {
         return 3;
     }
 
     @Override
-    public void notifyMoveCompleted(Move move) {
+    public void notifyMoveComplete(Move move) {
 
     }
 
@@ -48,7 +48,7 @@ public class Bishop extends DirectionPiece {
     }
 
     @Override
-    String getNom() {
+    String getName() {
         return "Bishop";
     }
 }

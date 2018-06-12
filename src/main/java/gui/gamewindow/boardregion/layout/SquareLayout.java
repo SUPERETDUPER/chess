@@ -26,14 +26,14 @@ public class SquareLayout extends Layout {
 
     @Override
     public NumberBinding getX() {
-        return Bindings.divide(hauteurDuPlateau, Position.LIMITE)
-                .multiply(position.getColonne())
+        return Bindings.divide(boardHeight, Position.LIMITE)
+                .multiply(position.getColumn())
                 .add(xOffset);
     }
 
     @Override
     public NumberBinding getY() {
-        return Bindings.divide(hauteurDuPlateau, Position.LIMITE).multiply(position.getRangee());
+        return Bindings.divide(boardHeight, Position.LIMITE).multiply(position.getRow());
     }
 
     public Position getPosition() {
@@ -57,6 +57,6 @@ public class SquareLayout extends Layout {
 
     @Override
     public String toString() {
-        return "Case: " + position;
+        return "Square: " + position;
     }
 }

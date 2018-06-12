@@ -17,18 +17,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Contrôle les animations des pièces. (Quand les pièces glissent d'une position à l'autre)
  */
 class AnimationController {
-    private static final int DUREE_DE_CHAQUE_ANIMATION = 100;
+    private static final int ANIMATION_DURATION = 100;
 
     /**
      * La liste d'animation à effectuer
      * Chaque animation contient une pièce à déplacer et sa position finale
      */
-    private final Queue<Pair<PiecePane, Layout>> animationsQueue = new LinkedList<>();
+    private final Queue<Pair<PiecePane, Layout>> animationQueue = new LinkedList<>();
 
     /**
      * Si une animation est en cours
      */
-    private final AtomicBoolean animationEnCours = new AtomicBoolean(false); //Ne peut pas juste utiliser animationQueue.isEmpty();
+    private final AtomicBoolean isRunning = new AtomicBoolean(false); //Ne peut pas juste utiliser animationQueue.isEmpty();
 
     @Nullable
     private Runnable onFinishListener;
@@ -38,31 +38,31 @@ class AnimationController {
     }
 
     /**
-     * @param piecePane la piece à animer
+     * @param piecePane la piece à animate
      * @param position  la position où il faut bouger la pièce
      */
-    void ajouterAnimation(PiecePane piecePane, Layout position) {
-        animationsQueue.add(new Pair<>(piecePane, position));
+    void addAnimation(PiecePane piecePane, Layout position) {
+        animationQueue.add(new Pair<>(piecePane, position));
 
-        //Si rien n'est en cours notifierProchainJoueur la prochaine animation et marquer comme étant en cours
-        if (animationEnCours.compareAndSet(false, true)) {
-            commencerProchaineAnimation();
+        //Si rien n'est en cours notifyNextPlayer la prochaine animation et marquer comme étant en cours
+        if (isRunning.compareAndSet(false, true)) {
+            startNextAnimation();
         }
     }
 
-    private void commencerProchaineAnimation() {
-        Pair<PiecePane, Layout> animation = animationsQueue.remove(); //Obtenir l'animation
-        animer(animation.getKey(), animation.getValue()); //Animer
+    private void startNextAnimation() {
+        Pair<PiecePane, Layout> animation = animationQueue.remove(); //Obtenir l'animation
+        animate(animation.getKey(), animation.getValue()); //Animer
     }
 
     /**
      * Anime la pièce
      */
-    private void animer(PiecePane piecePane, Layout position) {
+    private void animate(PiecePane piecePane, Layout position) {
         //Sinon
         //Créer l'animation qui change les coordonées X et Y de la pièce
         Timeline timeline = new Timeline(new KeyFrame(
-                new Duration(DUREE_DE_CHAQUE_ANIMATION),
+                new Duration(ANIMATION_DURATION),
                 new KeyValue(
                         piecePane.layoutXProperty(),
                         position.getX().getValue()
@@ -77,20 +77,19 @@ class AnimationController {
             piecePane.setText();
             piecePane.bind(position);
 
-            if (animationsQueue.isEmpty()) {
-                animationEnCours.set(false); //Si il n'y a plus d'animation arrêter
+            if (animationQueue.isEmpty()) {
+                isRunning.set(false); //Si il n'y a plus d'animation arrêter
                 if (onFinishListener != null) {
                     onFinishListener.run();
                 }
-            }
-            else commencerProchaineAnimation(); //Sinon notifierProchainJoueur la prochaine animation
+            } else startNextAnimation(); //Sinon notifyNextPlayer la prochaine animation
         });
 
         piecePane.unBind(); //Détacher la pièce de sa position
         timeline.play(); //Player l'animation
     }
 
-    AtomicBoolean getAnimationEnCours() {
-        return animationEnCours;
+    boolean isRunning() {
+        return isRunning.get();
     }
 }

@@ -13,7 +13,7 @@ public class PromotionMove extends BaseMove {
     }
 
     @Override
-    public int getValeur() {
-        return super.getValeur() + new Queen(piece.getColour()).getValeur() - piece.getValeur();
+    public int getValue() {
+        return super.getValue() + new Queen(piece.getColour()).getSignedValue() - piece.getSignedValue();
     }
 }

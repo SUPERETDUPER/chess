@@ -19,26 +19,26 @@ public class SquarePane extends Rectangle {
      */
     public enum Style {
         NORMAL,
-        ROUGE,
+        RED,
         BLUE
     }
 
     /**
      * Si la case est une case blanche ou noir (grise)
      */
-    private final boolean isBlanc;
+    private final boolean isWhite;
 
     /**
-     * @param isBlanc       si la case est blanche
+     * @param isWhite       si la case est blanche
      * @param clickListener la fonction à appeler quand la case est appuyé
      * @param position      la position de la case
      */
-    public SquarePane(boolean isBlanc, @NotNull Consumer<Layout> clickListener, @NotNull SquareLayout position) {
+    public SquarePane(boolean isWhite, @NotNull Consumer<Layout> clickListener, @NotNull SquareLayout position) {
         super();
-        this.isBlanc = isBlanc;
+        this.isWhite = isWhite;
 
-        this.widthProperty().bind(position.getTaille());
-        this.heightProperty().bind(position.getTaille());
+        this.widthProperty().bind(position.getSize());
+        this.heightProperty().bind(position.getSize());
         this.xProperty().bind(position.getX());
         this.yProperty().bind(position.getY());
 
@@ -51,7 +51,7 @@ public class SquarePane extends Rectangle {
      * @param style la nouvelle couleur de l'arrière plan de l'arrière plan
      */
     public void setStyle(@NotNull Style style) {
-        this.setFill(getCouleurFill(style));
+        this.setFill(getFillColour(style));
     }
 
     /**
@@ -59,14 +59,14 @@ public class SquarePane extends Rectangle {
      * @return la couleur de remplissage pour la case
      */
     @Contract(pure = true)
-    private Paint getCouleurFill(@NotNull Style style) {
+    private Paint getFillColour(@NotNull Style style) {
         switch (style) {
             case BLUE:
-                return isBlanc ? Color.LIGHTBLUE : Color.CORNFLOWERBLUE;
-            case ROUGE:
+                return isWhite ? Color.LIGHTBLUE : Color.CORNFLOWERBLUE;
+            case RED:
                 return Color.PALEVIOLETRED;
             case NORMAL:
-                return isBlanc ? Color.WHITE : Color.LIGHTGRAY;
+                return isWhite ? Color.WHITE : Color.LIGHTGRAY;
             default:
                 throw new IllegalArgumentException("Colour de style inconnue");
         }

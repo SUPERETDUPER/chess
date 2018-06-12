@@ -14,7 +14,7 @@ public class PiecePane extends StackPane {
     /**
      * La taille du font du text par rapport à la case
      */
-    private static final float RAPPORT_TAILLE_FONT_SIZE = 0.75F;
+    private static final float SIZE_TO_FONT_RATIO = 0.75F;
 
     /**
      * La pièce qui se fait afficher
@@ -39,8 +39,8 @@ public class PiecePane extends StackPane {
         this.currentPosition = position;
 
         //Attacher la taille de la pièce
-        this.prefHeightProperty().bind(position.getTaille());
-        this.prefWidthProperty().bind(position.getTaille());
+        this.prefHeightProperty().bind(position.getSize());
+        this.prefWidthProperty().bind(position.getSize());
 
         //Attacher la pièce à sa position
         bind(position);
@@ -52,7 +52,7 @@ public class PiecePane extends StackPane {
         //Faire que le text reste propertionelle à la taille de la case
         this.prefWidthProperty().addListener(
                 (observable, oldValue, newValue) ->
-                        text.setFont(new Font(newValue.doubleValue() * RAPPORT_TAILLE_FONT_SIZE))
+                        text.setFont(new Font(newValue.doubleValue() * SIZE_TO_FONT_RATIO))
         );
     }
 
@@ -60,7 +60,7 @@ public class PiecePane extends StackPane {
      * Met à jour le text
      */
     public void setText() {
-        text.setText(Character.toString((char) piece.getNumeroUnicode()));
+        text.setText(Character.toString((char) piece.getUnicode()));
     }
 
     public Piece getPiece() {

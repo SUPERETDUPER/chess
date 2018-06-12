@@ -21,7 +21,7 @@ import model.player.Player;
  */
 public class GameController {
     @FXML
-    private StackPane plateauContainer;
+    private StackPane boardContainer;
 
     @FXML
     private JFXDrawer drawer;
@@ -44,17 +44,17 @@ public class GameController {
 
         int counter = 0;
 
-        for (Player player : loader.getGame().getJoueurs().values()) {
+        for (Player player : loader.getGame().getPlayers().values()) {
             if (player instanceof HumanPlayer) {
                 ((HumanPlayer) player).initializeInterface(boardPane);
                 counter += 1;
             }
         }
 
-        final int joueursHumain = counter;
+        final int numberOfHumans = counter;
 
         //Ajouter un listener pour quand la partie fini
-        loader.getGame().setResultatListener(resultat -> Platform.runLater(() -> handleResultat(resultat)));
+        loader.getGame().setResultListener(result -> Platform.runLater(() -> handleResultat(result)));
 
         //Ajouter le button pour revenir au menu principal
         actions.add(new Action() {
@@ -69,12 +69,12 @@ public class GameController {
             }
         });
 
-        //Si il y a des joueurs humains, ajouter un boutton undo
-        if (joueursHumain != 0) {
+        //Si il y a des joueurs humains, add un boutton undo
+        if (numberOfHumans != 0) {
             actions.add(new Action() {
                 @Override
                 void onClick() {
-                    if (joueursHumain == 2) {
+                    if (numberOfHumans == 2) {
                         loader.getGame().undo(1);
                     } else {
                         loader.getGame().undo(2);
@@ -92,7 +92,7 @@ public class GameController {
     @FXML
     private void initialize() {
         //Ajouter le boardregion
-        plateauContainer.getChildren().add(boardPane);
+        boardContainer.getChildren().add(boardPane);
 
         //Ajouter les actions à la liste
         drawerList.setItems(actions);
@@ -118,7 +118,7 @@ public class GameController {
             burgerAnimation.play();
         });
 
-        loader.getGame().notifierProchainJoueur();
+        loader.getGame().notifyNextPlayer();
     }
 
     /**
@@ -132,18 +132,18 @@ public class GameController {
     /**
      * Quand la partie fini montrer un pop-up
      *
-     * @param resultat le résultat de la partie
+     * @param result le résultat de la partie
      */
-    private void handleResultat(Game.Resultat resultat) {
+    private void handleResultat(Game.Result result) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        switch (resultat) {
-            case EGALITE:
+        switch (result) {
+            case TIE:
                 alert.setContentText("Match nul");
                 break;
-            case NOIR_GAGNE:
+            case BLACK_WINS:
                 alert.setContentText("Les noirs ont gagnés");
                 break;
-            case BLANC_GAGNE:
+            case WHITE_WINS:
                 alert.setContentText("Les blancs ont gagnés");
         }
 

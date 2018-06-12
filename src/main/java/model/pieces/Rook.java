@@ -5,11 +5,11 @@ import model.util.Colour;
 import model.util.Offset;
 
 public class Rook extends DirectionPiece {
-    private static final Offset[] OFFSET = {
-            Offset.HAUT,
-            Offset.GAUCHE,
-            Offset.DROIT,
-            Offset.BAS
+    private static final Offset[] OFFSETS = {
+            Offset.UP,
+            Offset.LEFT,
+            Offset.RIGHT,
+            Offset.DOWN
     };
 
     public Rook(Colour colour) {
@@ -17,27 +17,27 @@ public class Rook extends DirectionPiece {
     }
 
     @Override
-    int unicodeForWhite() {
+    int getUnicodeWhite() {
         return 9814;
     }
 
     @Override
-    int unicodeForBlack() {
+    int getUnicodeBlack() {
         return 9820;
     }
 
     @Override
     Offset[] getDirections() {
-        return OFFSET;
+        return OFFSETS;
     }
 
     @Override
-    public int getValeurPositive() {
+    public int getUnsignedValue() {
         return 5;
     }
 
     @Override
-    public void notifyMoveCompleted(Move move) {
+    public void notifyMoveComplete(Move move) {
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Rook extends DirectionPiece {
     }
 
     @Override
-    String getNom() {
+    String getName() {
         return "Rook";
     }
 }

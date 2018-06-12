@@ -15,13 +15,13 @@ class KingTest {
 
     @Test
     void generateMoves() {
-        King roi = new King(Colour.BLANC);
+        King king = new King(Colour.WHITE);
 
         BoardMap boardMap = new BoardMap();
         Position startingPos = new Position(0, 0);
-        boardMap.ajouter(startingPos, roi);
+        boardMap.add(startingPos, king);
 
-        Collection<Move> moves = roi.generateAllMoves(boardMap, startingPos);
+        Collection<Move> moves = king.generateAllMoves(boardMap, startingPos);
 
         Collection<Move> expected = new LinkedList<>();
         expected.add(new BaseMove(startingPos, new Position(0, 1)));

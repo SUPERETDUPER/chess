@@ -34,7 +34,7 @@ public class Main extends Application {
     /**
      * Le contenu pour la page d'intro
      */
-    private final Parent intro = loadFromFXML(new IntroController(this::nouveauJeu), getClass().getResource("/intro.fxml"));
+    private final Parent intro = loadFromFXML(new IntroController(this::startNewGame), getClass().getResource("/intro.fxml"));
 
     /**
      * Commence l'interface gui
@@ -45,8 +45,8 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         //Si on peut charger et charger à fonctionné montrer le gamewindow
-        if (loader.chargerDuFichier()) {
-            scene.setRoot(loadFromFXML(new GameController(() -> changerRoot(intro), loader), getClass().getResource("/jeu.fxml")));
+        if (loader.loadGameFromFile()) {
+            scene.setRoot(loadFromFXML(new GameController(() -> switchRoot(intro), loader), getClass().getResource("/jeu.fxml")));
         } else {
             scene.setRoot(intro); //Sinon montrer l'intro
         }
@@ -58,15 +58,15 @@ public class Main extends Application {
     /**
      * Les joueurs pour le nouveau gamewindow
      */
-    private void nouveauJeu(EnumMap<Colour, Player> joueurs) {
-        loader.creeNouveauJeu(joueurs);
-        changerRoot(loadFromFXML(new GameController(() -> changerRoot(intro), loader), getClass().getResource("/jeu.fxml")));
+    private void startNewGame(EnumMap<Colour, Player> joueurs) {
+        loader.createNewGame(joueurs);
+        switchRoot(loadFromFXML(new GameController(() -> switchRoot(intro), loader), getClass().getResource("/jeu.fxml")));
     }
 
     /**
      * Change au nouveau root avec un fade
      */
-    private void changerRoot(Parent nouveauRoot) {
+    private void switchRoot(Parent nouveauRoot) {
         Parent pastRoot = scene.getRoot();
         pastRoot.setCacheHint(CacheHint.SPEED);
 

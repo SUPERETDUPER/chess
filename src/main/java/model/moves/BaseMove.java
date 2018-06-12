@@ -11,29 +11,29 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BaseMove extends Move {
     @Nullable
-    private Piece morceauPris;
+    private Piece pieceTaken;
 
     public BaseMove(Position debut, @NotNull Position fin) {
         super(debut, fin);
     }
 
     @Override
-    void appliquerInterne(GameData data) {
-        piece = data.getBoardMap().removePiece(debut); //Enlève la pièce et obtient la position initiale
-        morceauPris = data.getBoardMap().ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
+    void applyToGame(GameData data) {
+        piece = data.getBoard().removePiece(start); //Enlève la pièce et obtient la position initiale
+        pieceTaken = data.getBoard().add(end, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
 
-        if (morceauPris != null) {
-            data.getEatenPieces().push(morceauPris);
+        if (pieceTaken != null) {
+            data.getEatenPieces().push(pieceTaken);
         }
     }
 
     @Override
-    void undoInterne(GameData data) {
-        data.getBoardMap().bougerPiece(debut, piece);
+    void undoToGame(GameData data) {
+        data.getBoard().movePiece(start, piece);
 
-        if (morceauPris != null) {
+        if (pieceTaken != null) {
             data.getEatenPieces().pop();
-            data.getBoardMap().ajouter(fin, morceauPris);
+            data.getBoard().add(end, pieceTaken);
         }
     }
 
@@ -41,7 +41,7 @@ public class BaseMove extends Move {
      * La valeur du moves est l'opposé de la valeur de la pièce mangé
      */
     @Override
-    public int getValeur() {
-        return morceauPris == null ? 0 : -morceauPris.getValeur();
+    public int getValue() {
+        return pieceTaken == null ? 0 : -pieceTaken.getSignedValue();
     }
 }

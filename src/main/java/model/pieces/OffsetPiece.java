@@ -17,17 +17,17 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    Collection<Position> generatePosition(BoardMap boardMap, Position positionDebut) {
+    Collection<Position> generatePossiblePositions(BoardMap board, Position start) {
         Collection<Position> positions = new LinkedList<>();
 
         //Pour chaque directions
         for (Offset offset : getOffsets()) {
-            Position nextPosition = positionDebut.decaler(offset);
+            Position nextPosition = start.shift(offset);
 
             //Si la position n'est pas valide passer à la prochaine
             if (!nextPosition.isValid()) continue;
 
-            Piece piece = boardMap.getPiece(nextPosition);
+            Piece piece = board.getPiece(nextPosition);
 
             //si il y a une pièce de la même colour à cette position, passer à la prochaine sinon on peut bouger
             if (piece == null || piece.getColour() != colour) positions.add(nextPosition);

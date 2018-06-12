@@ -15,14 +15,14 @@ class BoardMapTest {
      */
     @Test
     void getPosition() {
-        Piece piece = new King(Colour.BLANC);
-        Position positionInitiale = new Position(0, 0);
+        Piece piece = new King(Colour.WHITE);
+        Position start = new Position(0, 0);
 
         BoardMap boardMap = new BoardMap();
-        boardMap.ajouter(positionInitiale, piece);
+        boardMap.add(start, piece);
 
-        Assertions.assertEquals(positionInitiale, boardMap.getPosition(piece)); //1
-        Assertions.assertNull(boardMap.getPosition(new King(Colour.BLANC))); //2
+        Assertions.assertEquals(start, boardMap.getPosition(piece)); //1
+        Assertions.assertNull(boardMap.getPosition(new King(Colour.WHITE))); //2
         Assertions.assertNotNull(boardMap.getPiece(new Position(0, 0))); //3
     }
 
@@ -33,26 +33,26 @@ class BoardMapTest {
      */
     @Test
     void getPiece() {
-        Piece piece = new King(Colour.BLANC);
-        Position positionInitiale = new Position(0, 0);
+        Piece piece = new King(Colour.WHITE);
+        Position start = new Position(0, 0);
 
         BoardMap boardMap = new BoardMap();
-        boardMap.ajouter(positionInitiale, piece);
+        boardMap.add(start, piece);
 
-        Assertions.assertEquals(piece, boardMap.getPiece(positionInitiale));
+        Assertions.assertEquals(piece, boardMap.getPiece(start));
         Assertions.assertNull(boardMap.getPiece(new Position(0, 1)));
     }
 
     @Test
     void removePiece() {
-        Piece piece = new King(Colour.BLANC);
-        Position positionInitiale = new Position(0, 0);
+        Piece piece = new King(Colour.WHITE);
+        Position start = new Position(0, 0);
 
         BoardMap boardMap = new BoardMap();
-        boardMap.ajouter(positionInitiale, piece);
+        boardMap.add(start, piece);
 
-        boardMap.removePiece(positionInitiale);
-        Assertions.assertNull(boardMap.getPiece(positionInitiale));
+        boardMap.removePiece(start);
+        Assertions.assertNull(boardMap.getPiece(start));
         Assertions.assertNull(boardMap.getPosition(piece));
     }
 }
