@@ -50,6 +50,9 @@ public class JeuData implements Serializable {
     private JeuData(@NotNull Plateau plateau, @NotNull Stack<Piece> eatenPieces) {
         for (Piece piece : plateau.iteratePieces()) {
             if (piece instanceof Roi) {
+                if (rois.containsKey(piece.getCouleur()))
+                    throw new RuntimeException("Il y a deux rois de la même couleur");
+
                 rois.put(piece.getCouleur(), (Roi) piece);
             }
         }
