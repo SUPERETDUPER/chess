@@ -1,41 +1,45 @@
 package modele.mouvement;
 
 import modele.JeuData;
+import modele.util.Position;
 
 /**
  * Un mouvement qui est un ensemble d'autre mouvements
  * La liste de mouvements est appliqué en ordre. Et la valeur est la somme
  */
-public class MouvementCombine extends Mouvement {
-    private final Mouvement[] mouvements;
+public class MouvementCombine extends MouvementNormal {
+    private final Mouvement[] mouvementsSupplementaires;
     private Integer valeur;
 
-    public MouvementCombine(Mouvement[] mouvements) {
-        super(mouvements[0].debut, mouvements[0].fin);
-        this.mouvements = mouvements;
+    public MouvementCombine(Position debut, Position fin, Mouvement[] mouvementsSupplementaires) {
+        super(debut, fin);
+        this.mouvementsSupplementaires = mouvementsSupplementaires;
     }
 
     @Override
     void appliquerInterne(JeuData data) {
-        for (Mouvement mouvement : mouvements) {
+        super.appliquerInterne(data);
+
+        for (Mouvement mouvement : mouvementsSupplementaires) {
             mouvement.appliquer(data);
         }
-        this.piece = mouvements[0].piece;
     }
 
     @Override
     void undoInterne(JeuData data) {
-        for (int i = (mouvements.length - 1); i >= 0; i--) {
-            mouvements[i].undo(data);
+        super.appliquerInterne(data);
+
+        for (int i = (mouvementsSupplementaires.length - 1); i >= 0; i--) {
+            mouvementsSupplementaires[i].undo(data);
         }
     }
 
     @Override
     public int getValeur() {
         if (valeur == null) {
-            valeur = 0;
+            valeur = super.getValeur();
 
-            for (Mouvement mouvement : mouvements) {
+            for (Mouvement mouvement : mouvementsSupplementaires) {
                 valeur += mouvement.getValeur();
             }
         }

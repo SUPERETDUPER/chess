@@ -46,7 +46,6 @@ public abstract class Mouvement implements Serializable {
      */
     public void appliquer(JeuData data) {
         appliquerInterne(data);
-        if (piece == null) throw new RuntimeException(this.toString());
         piece.notifyMoveCompleted(this);
     }
 

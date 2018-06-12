@@ -75,8 +75,7 @@ public class Roi extends OffsetPiece {
     @Override
     Mouvement convertir(Plateau plateau, Position debut, Position finale) {
         if (finale.getColonne() - debut.getColonne() == 2)
-            return new MouvementCombine(new Mouvement[]{
-                    new MouvementNormal(debut, finale),
+            return new MouvementCombine(debut, finale, new Mouvement[]{
                     new MouvementNormal(finale.decaler(Offset.DROIT), finale.decaler(Offset.GAUCHE))
             });
 

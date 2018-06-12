@@ -37,7 +37,7 @@ class IntroController {
     private final JFXComboBox<Joueur> joueursBlanc = new JFXComboBox<>(OPTION_JOUEURS);
     private final JFXComboBox<Joueur> joueursNoir = new JFXComboBox<>(OPTION_JOUEURS);
 
-    public IntroController(Consumer<EnumMap<Couleur, Joueur>> onJouer) {
+    IntroController(Consumer<EnumMap<Couleur, Joueur>> onJouer) {
         this.onJouer = onJouer;
 
         //Sélectionner la première option

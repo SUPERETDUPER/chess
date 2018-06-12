@@ -164,7 +164,7 @@ public class Plateau implements Serializable {
 
         for (Piece piece : iteratePieces()) {
             if (piece.getCouleur() == couleur) {
-                mouvements.addAll(piece.generateAllMoves(this));
+                mouvements.addAll(piece.generateAllMoves(this, this.getPosition(piece)));
             }
         }
         return mouvements;

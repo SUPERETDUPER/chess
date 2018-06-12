@@ -40,7 +40,7 @@ public class JeuController {
 
     public JeuController(Runnable goBack, Chargeur chargeur) {
         this.chargeur = chargeur;
-        this.plateauPane = new PlateauPane(chargeur.getJeu().getJeuData()); //Créer le plateau pane
+        this.plateauPane = new PlateauPane(chargeur.getJeu()); //Créer le plateau pane
 
         int counter = 0;
 

@@ -7,6 +7,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -28,6 +29,13 @@ class AnimationController {
      * Si une animation est en cours
      */
     private final AtomicBoolean animationEnCours = new AtomicBoolean(false); //Ne peut pas juste utiliser animationQueue.isEmpty();
+
+    @Nullable
+    private Runnable onFinishListener;
+
+    void setOnFinishListener(@Nullable Runnable onFinishListener) {
+        this.onFinishListener = onFinishListener;
+    }
 
     /**
      * @param piecePane la piece à animer
@@ -69,7 +77,12 @@ class AnimationController {
             piecePane.setText();
             piecePane.bind(position);
 
-            if (animationsQueue.isEmpty()) animationEnCours.set(false); //Si il n'y a plus d'animation arrêter
+            if (animationsQueue.isEmpty()) {
+                animationEnCours.set(false); //Si il n'y a plus d'animation arrêter
+                if (onFinishListener != null) {
+                    onFinishListener.run();
+                }
+            }
             else commencerProchaineAnimation(); //Sinon notifierProchainJoueur la prochaine animation
         });
 

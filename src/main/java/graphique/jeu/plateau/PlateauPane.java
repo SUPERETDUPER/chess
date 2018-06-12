@@ -9,6 +9,7 @@ import graphique.jeu.plateau.placement.PositionCase;
 import graphique.jeu.plateau.placement.PositionGraphique;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
+import modele.Jeu;
 import modele.JeuData;
 import modele.mouvement.Mouvement;
 import modele.pieces.Piece;
@@ -59,10 +60,10 @@ public class PlateauPane extends Pane {
     private DemandeDeMouvement demandeDeMouvement;
 
     /**
-     * @param jeuData le util de jeu
+     * @param jeu le modele
      */
-    public PlateauPane(@NotNull JeuData jeuData) {
-        this.jeuData = jeuData;
+    public PlateauPane(@NotNull Jeu jeu) {
+        this.jeuData = jeu.getJeuData();
 
         //Créer les graveyards et les ajouter à la liste
         GraveyardController graveyardBlanc = new GraveyardController(
@@ -125,6 +126,14 @@ public class PlateauPane extends Pane {
         this.getChildren().addAll(piecePanes.values());
 
         this.jeuData.setChangeListener(this::replacerLesPieces); // Si il y a un changement replacer les pièces
+
+        jeu.statusProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Jeu.Status.INACTIF) {
+                if (animationController.getAnimationEnCours().get())
+                    animationController.setOnFinishListener(jeu::notifierProchainJoueur);
+                else jeu.notifierProchainJoueur();
+            }
+        });
     }
 
     /**
@@ -158,7 +167,7 @@ public class PlateauPane extends Pane {
             if (pieceClicked != null && demandeDeMouvement.getCouleur() == pieceClicked.getCouleur()) {
 
                 //Calculer les mouvements possibles
-                Collection<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
+                Collection<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau(), position), pieceClicked.getCouleur());
 
                 highlightController.selectionner(position, moves); //Sélectionner
             }

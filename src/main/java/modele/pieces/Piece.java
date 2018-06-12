@@ -58,8 +58,7 @@ public abstract class Piece implements Serializable {
         return new MouvementNormal(debut, finale);
     }
 
-    public Collection<Mouvement> generateAllMoves(Plateau plateau) {
-        Position positionDebut = plateau.getPosition(this);
+    public Collection<Mouvement> generateAllMoves(Plateau plateau, Position positionDebut) {
         Collection<Position> positions = generatePosition(plateau, positionDebut);
         Collection<Mouvement> mouvements = new LinkedList<>();
 

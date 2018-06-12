@@ -1,5 +1,6 @@
 package modele;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import modele.joueur.Joueur;
 import modele.mouvement.Mouvement;
@@ -28,6 +29,12 @@ public class Jeu implements Serializable {
         EGALITE
     }
 
+    public enum Status {
+        ATTENTE_BLANC,
+        ATTENTE_NOIR,
+        INACTIF
+    }
+
     /**
      * Le plateau et les rois
      */
@@ -43,6 +50,8 @@ public class Jeu implements Serializable {
      * A qui le tour
      */
     transient private ReadOnlyObjectWrapper<Couleur> tourA = new ReadOnlyObjectWrapper<>(Couleur.BLANC);
+
+    transient private ReadOnlyObjectWrapper<Status> status = new ReadOnlyObjectWrapper<>(Status.INACTIF);
 
     /**
      * le listener de resultat
@@ -71,6 +80,7 @@ public class Jeu implements Serializable {
      * Commencer la partie
      */
     public void notifierProchainJoueur() {
+        status.set(tourA.get() == Couleur.BLANC ? Status.ATTENTE_BLANC : Status.ATTENTE_NOIR);
         joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Demander au joueur de bouger
     }
 
@@ -106,7 +116,7 @@ public class Jeu implements Serializable {
             }
         } else {
             //Si la partie n'est pas fini notifier prochain joueur
-            notifierProchainJoueur();
+            status.set(Status.INACTIF);
         }
     }
 
@@ -124,7 +134,7 @@ public class Jeu implements Serializable {
             changerLeTour();
         }
 
-        notifierProchainJoueur();
+        status.set(Status.INACTIF);
     }
 
     public JeuData getJeuData() {
@@ -136,8 +146,12 @@ public class Jeu implements Serializable {
         return joueurs;
     }
 
-    ReadOnlyObjectWrapper<Couleur> tourAProperty() {
-        return tourA;
+    ReadOnlyObjectProperty<Couleur> tourAProperty() {
+        return tourA.getReadOnlyProperty();
+    }
+
+    public ReadOnlyObjectProperty<Status> statusProperty() {
+        return status.getReadOnlyProperty();
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -148,5 +162,6 @@ public class Jeu implements Serializable {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         tourA = new ReadOnlyObjectWrapper<>((Couleur) in.readObject());
+        status = new ReadOnlyObjectWrapper<>(Status.INACTIF);
     }
 }
