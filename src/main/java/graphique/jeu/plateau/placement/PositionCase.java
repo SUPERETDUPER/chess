@@ -1,5 +1,6 @@
 package graphique.jeu.plateau.placement;
 
+import graphique.jeu.plateau.element.PiecePane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.value.ObservableNumberValue;
@@ -25,7 +26,9 @@ public class PositionCase extends PositionGraphique {
 
     @Override
     public NumberBinding getX() {
-        return Bindings.divide(hauteurDuPlateau, Position.LIMITE).multiply(position.getColonne()).add(xOffset);
+        return Bindings.divide(hauteurDuPlateau, Position.LIMITE)
+                .multiply(position.getColonne())
+                .add(xOffset);
     }
 
     @Override
@@ -38,6 +41,17 @@ public class PositionCase extends PositionGraphique {
     }
 
     @Override
-    public void notifyPlaced() {
+    public void notifyPlaced(PiecePane piecePane) {
+    }
+
+    @Override
+    public void notifyRemoved(PiecePane piecePane) {
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof PositionCase)) return false;
+        return ((PositionCase) obj).position == this.position;
     }
 }

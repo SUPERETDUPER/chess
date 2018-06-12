@@ -1,22 +1,18 @@
 package graphique.jeu.plateau.placement;
 
+import graphique.jeu.plateau.element.PiecePane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
 import modele.util.Position;
 
+import java.util.Stack;
+
 /**
  * Controlle un des 2 graveyards (endroits où les pièces mangées vont)
- * TODO Bouger au modele pour que les pièces mangés puivent être sauvegardées
  */
 public class GraveyardController {
-    /**
-     * Le nombre de pièces dans le graveyard
-     */
-    private final ReadOnlyIntegerWrapper piecesDansGraveyard = new ReadOnlyIntegerWrapper(0);
-
     /**
      * Le décalage sur l'axe des X
      */
@@ -36,6 +32,8 @@ public class GraveyardController {
      * La largeur totale du graveyard
      */
     private final NumberBinding largeurTotale;
+
+    private final Stack<PiecePane> piecesInGraveyard = new Stack<>();
 
     /**
      * @param height        la hauteur d'une colonne
@@ -77,8 +75,8 @@ public class GraveyardController {
             @Override
             public ObservableNumberValue getX() {
                 //Si c'est la colonne de gauche ou la colonne de droite
-                if ((gaucheADroite && piecesDansGraveyard.get() < Position.LIMITE) ||
-                        (!gaucheADroite && piecesDansGraveyard.get() >= Position.LIMITE)) {
+                if ((gaucheADroite && piecesInGraveyard.size() < Position.LIMITE) ||
+                        (!gaucheADroite && piecesInGraveyard.size() >= Position.LIMITE)) {
                     return xOffset;
                 } else {
                     return Bindings.divide(height, Position.LIMITE).add(xOffset);
@@ -88,7 +86,7 @@ public class GraveyardController {
             @Override
             public NumberBinding getY() {
                 //Le nombre de pièces déjà là
-                int piecesDansGraveyard = GraveyardController.this.piecesDansGraveyard.get();
+                int piecesDansGraveyard = GraveyardController.this.piecesInGraveyard.size();
 
                 //Le nombre de pièces dans la colonne
                 if (piecesDansGraveyard >= Position.LIMITE) piecesDansGraveyard -= Position.LIMITE;
@@ -98,10 +96,19 @@ public class GraveyardController {
             }
 
             @Override
-            public void notifyPlaced() {
-                //Augmenter le nombre de pièces par 1
-                piecesDansGraveyard.set(piecesDansGraveyard.get() + 1);
+            public void notifyPlaced(PiecePane piecePane) {
+                piecesInGraveyard.push(piecePane);
+            }
+
+            @Override
+            public void notifyRemoved(PiecePane piecePane) {
+                PiecePane piecePanePoped = piecesInGraveyard.pop();
+                if (piecePanePoped != piecePane) throw new RuntimeException("Piece removed not last in stack");
             }
         };
+    }
+
+    public boolean isInGraveyard(PiecePane piecePane) {
+        return piecesInGraveyard.contains(piecePane);
     }
 }

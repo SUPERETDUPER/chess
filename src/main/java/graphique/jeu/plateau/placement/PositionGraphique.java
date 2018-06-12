@@ -1,5 +1,6 @@
 package graphique.jeu.plateau.placement;
 
+import graphique.jeu.plateau.element.PiecePane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
@@ -39,5 +40,7 @@ public abstract class PositionGraphique {
     /**
      * Appelé pour indiquer qu'une pièce à été placé à cette position
      */
-    public abstract void notifyPlaced();
+    public abstract void notifyPlaced(PiecePane piecePane);
+
+    public abstract void notifyRemoved(PiecePane piecePane);
 }

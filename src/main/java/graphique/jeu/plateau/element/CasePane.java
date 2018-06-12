@@ -1,10 +1,10 @@
 package graphique.jeu.plateau.element;
 
 import graphique.jeu.plateau.placement.PositionCase;
+import graphique.jeu.plateau.placement.PositionGraphique;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import modele.util.Position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +33,7 @@ public class CasePane extends Rectangle {
      * @param clickListener la fonction à appeler quand la case est appuyé
      * @param position      la position de la case
      */
-    public CasePane(boolean isBlanc, @NotNull Consumer<Position> clickListener, @NotNull PositionCase position) {
+    public CasePane(boolean isBlanc, @NotNull Consumer<PositionGraphique> clickListener, @NotNull PositionCase position) {
         super();
         this.isBlanc = isBlanc;
 
@@ -42,7 +42,7 @@ public class CasePane extends Rectangle {
         this.xProperty().bind(position.getX());
         this.yProperty().bind(position.getY());
 
-        this.setOnMouseClicked(event -> clickListener.accept(position.getPosition()));
+        this.setOnMouseClicked(event -> clickListener.accept(position));
 
         setStyle(Style.NORMAL);  //Met la couleur de l'arrière plan de la case
     }

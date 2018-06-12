@@ -26,6 +26,8 @@ public class PiecePane extends StackPane {
      */
     private final Text text = new Text();
 
+    private PositionGraphique currentPosition;
+
     /**
      * @param piece    la pièce à afficher
      * @param position la position de la pièce
@@ -34,6 +36,7 @@ public class PiecePane extends StackPane {
         super();
 
         this.piece = piece;
+        this.currentPosition = position;
 
         //Attacher la taille de la pièce
         this.prefHeightProperty().bind(position.getTaille());
@@ -61,9 +64,10 @@ public class PiecePane extends StackPane {
      * Place la pièce à la position
      */
     public void bind(PositionGraphique position) {
+        this.currentPosition = position;
         this.layoutXProperty().bind(position.getX());
         this.layoutYProperty().bind(position.getY());
-        position.notifyPlaced();
+        position.notifyPlaced(this);
         this.setCacheHint(CacheHint.DEFAULT);
     }
 
@@ -71,6 +75,8 @@ public class PiecePane extends StackPane {
      * Détacher la pièce
      */
     public void unBind() {
+        currentPosition.notifyRemoved(this);
+        this.currentPosition = null;
         this.setCacheHint(CacheHint.SPEED);
         this.layoutXProperty().unbind();
         this.layoutYProperty().unbind();
@@ -86,6 +92,11 @@ public class PiecePane extends StackPane {
         return this.layoutXProperty().isBound() &&
                 this.layoutYProperty().isBound() &&
                 this.getLayoutX() == position.getX().getValue().doubleValue() &&
-                this.getLayoutY() == position.getY().getValue().doubleValue();
+                this.getLayoutY() == position.getY().getValue().doubleValue() &&
+                position.equals(currentPosition);
+    }
+
+    public PositionGraphique getCurrentPosition() {
+        return currentPosition;
     }
 }

@@ -4,6 +4,7 @@ import graphique.jeu.plateau.element.CasePane;
 import graphique.jeu.plateau.element.PiecePane;
 import graphique.jeu.plateau.placement.GraveyardController;
 import graphique.jeu.plateau.placement.PositionCase;
+import graphique.jeu.plateau.placement.PositionGraphique;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
@@ -105,7 +106,7 @@ public class PlateauPane extends Pane {
                 PiecePane piecePane = new PiecePane(piece, positionGraphique);
 
                 //Ajouter les listeners
-                piecePane.setOnMousePressed(event -> handleClick(jeuData.getPlateau().getPosition(piece)));
+                piecePane.setOnMousePressed(event -> handleClick(piecePane.getCurrentPosition()));
 
                 //Ajouter la pièce à la liste de pièce
                 piecePanes.add(piecePane);
@@ -114,6 +115,8 @@ public class PlateauPane extends Pane {
 
         for (Piece piece : jeuData.getEatenPieces()) {
             PiecePane piecePane = new PiecePane(piece, graveyardControllers.get(piece.getCouleur()).getNextGraveyardPosition());
+            piecePane.setOnMouseClicked(event -> this.handleClick(piecePane.getCurrentPosition()));
+
             piecePanes.add(piecePane);
         }
 
@@ -136,9 +139,13 @@ public class PlateauPane extends Pane {
     /**
      * Quand une position est appuyé
      *
-     * @param position la position est appuyé
+     * @param positionGraphique la position est appuyé
      */
-    private void handleClick(Position position) {
+    private void handleClick(PositionGraphique positionGraphique) {
+        if (!(positionGraphique instanceof PositionCase)) return;
+
+        Position position = ((PositionCase) positionGraphique).getPosition();
+
         //Si aucune demandeDeMouvement ne rien faire
         if (demandeDeMouvement == null || demandeDeMouvement.isCompleted()) return;
 
@@ -183,10 +190,12 @@ public class PlateauPane extends Pane {
                     //Si la position existe déplacer à position
                     //Si la position n'existe pas déplacer à graveyard
                     if (position == null) {
-                        animationController.ajouterAnimation(
-                                piecePane,
-                                graveyardControllers.get(piecePane.getPiece().getCouleur()).getNextGraveyardPosition()
-                        );
+                        if (!graveyardControllers.get(piecePane.getPiece().getCouleur()).isInGraveyard(piecePane)) {
+                            animationController.ajouterAnimation(
+                                    piecePane,
+                                    graveyardControllers.get(piecePane.getPiece().getCouleur()).getNextGraveyardPosition()
+                            );
+                        }
                     } else {
                         animationController.ajouterAnimation(
                                 piecePane,
