@@ -118,7 +118,7 @@ public class JeuController {
             burgerAnimation.play();
         });
 
-        chargeur.getJeu().commencer();
+        chargeur.getJeu().notifierProchainJoueur();
     }
 
     /**

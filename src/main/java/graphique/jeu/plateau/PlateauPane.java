@@ -1,11 +1,12 @@
 package graphique.jeu.plateau;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import graphique.jeu.plateau.element.CasePane;
 import graphique.jeu.plateau.element.PiecePane;
 import graphique.jeu.plateau.placement.GraveyardController;
 import graphique.jeu.plateau.placement.PositionCase;
 import graphique.jeu.plateau.placement.PositionGraphique;
-import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
 import modele.JeuData;
@@ -15,10 +16,8 @@ import modele.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.List;
 
 /**
  * Controle la zone du plateau de jeu
@@ -35,7 +34,7 @@ public class PlateauPane extends Pane {
      * La liste de pièces
      */
     @NotNull
-    private final List<PiecePane> piecePanes = new ArrayList<>();
+    private final BiMap<Piece, PiecePane> piecePanes = HashBiMap.create(32);
 
     /**
      * La controlleur d'animation
@@ -110,7 +109,7 @@ public class PlateauPane extends Pane {
                 piecePane.setOnMousePressed(event -> handleClick(piecePane.getCurrentPosition()));
 
                 //Ajouter la pièce à la liste de pièce
-                piecePanes.add(piecePane);
+                piecePanes.put(piece, piecePane);
             }
         }
 
@@ -118,12 +117,12 @@ public class PlateauPane extends Pane {
             PiecePane piecePane = new PiecePane(piece, graveyardControllers.get(piece.getCouleur()).getNextGraveyardPosition());
             piecePane.setOnMouseClicked(event -> this.handleClick(piecePane.getCurrentPosition()));
 
-            piecePanes.add(piecePane);
+            piecePanes.put(piece, piecePane);
         }
 
         //Ajouter toutes pièces au util
         this.getChildren().addAll(cases.getValues());
-        this.getChildren().addAll(piecePanes);
+        this.getChildren().addAll(piecePanes.values());
 
         this.jeuData.setChangeListener(this::replacerLesPieces); // Si il y a un changement replacer les pièces
     }
@@ -178,35 +177,31 @@ public class PlateauPane extends Pane {
     /**
      * Pour chaque case afficher la pièce à cette case
      */
-    private void replacerLesPieces(Plateau plateau) {
-        //Sur le FX Thread
-        Platform.runLater(() -> {
-            //Pour chaque pieces déplacer à position
-            for (int i = 0; i < piecePanes.size(); i++) {
-                PiecePane piecePane = piecePanes.get(i);
+    private synchronized void replacerLesPieces(Plateau plateau) {
+//        while (animationController.getAnimationEnCours().get()) Thread.yield();
 
-                if (piecePane != null) {
-                    piecePane.setText();
-                    Position position = plateau.getPosition(piecePane.getPiece());
+        for (Piece piece : plateau.iteratePieces()) {
+            Position position = plateau.getPosition(piece);
 
-                    //Si la position existe déplacer à position
-                    //Si la position n'existe pas déplacer à graveyard
-                    if (position == null) {
-                        if (!graveyardControllers.get(piecePane.getPiece().getCouleur()).isInGraveyard(piecePane)) {
-                            animationController.ajouterAnimation(
-                                    piecePane,
-                                    graveyardControllers.get(piecePane.getPiece().getCouleur()).getNextGraveyardPosition()
-                            );
-                        }
-                    } else {
-                        animationController.ajouterAnimation(
-                                piecePane,
-                                new PositionCase(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotale())
-                        );
-                    }
-                }
+            PositionCase positionGraphique = new PositionCase(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotale());
+            PiecePane piecePane = piecePanes.get(piece);
+
+            if (!piecePane.isAtPosition(positionGraphique)) {
+                animationController.ajouterAnimation(piecePane,
+                        positionGraphique
+                );
             }
-        });
+        }
+
+        for (Piece piece : jeuData.getEatenPieces()) {
+            PiecePane piecePane = piecePanes.get(piece);
+            if (!graveyardControllers.get(piece.getCouleur()).isInGraveyard(piece)) {
+                animationController.ajouterAnimation(
+                        piecePane,
+                        graveyardControllers.get(piece.getCouleur()).getNextGraveyardPosition()
+                );
+            }
+        }
     }
 
     @Override

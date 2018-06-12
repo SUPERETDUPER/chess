@@ -5,6 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
+import modele.pieces.Piece;
 import modele.util.Position;
 
 import java.util.Stack;
@@ -33,7 +34,7 @@ public class GraveyardController {
      */
     private final NumberBinding largeurTotale;
 
-    private final Stack<PiecePane> piecesInGraveyard = new Stack<>();
+    private final Stack<Piece> piecesInGraveyard = new Stack<>();
 
     /**
      * @param height        la hauteur d'une colonne
@@ -71,44 +72,59 @@ public class GraveyardController {
      * @return un objet qui représente la position dans la prochaine pièce à mettre dans le graveyard
      */
     public PositionGraphique getNextGraveyardPosition() {
-        return new PositionGraphique(height) {
-            @Override
-            public ObservableNumberValue getX() {
-                //Si c'est la colonne de gauche ou la colonne de droite
-                if ((gaucheADroite && piecesInGraveyard.size() < Position.LIMITE) ||
-                        (!gaucheADroite && piecesInGraveyard.size() >= Position.LIMITE)) {
-                    return xOffset;
-                } else {
-                    return Bindings.divide(height, Position.LIMITE).add(xOffset);
-                }
-            }
-
-            @Override
-            public NumberBinding getY() {
-                //Le nombre de pièces déjà là
-                int piecesDansGraveyard = GraveyardController.this.piecesInGraveyard.size();
-
-                //Le nombre de pièces dans la colonne
-                if (piecesDansGraveyard >= Position.LIMITE) piecesDansGraveyard -= Position.LIMITE;
-
-                //La position
-                return Bindings.divide(height, Position.LIMITE).multiply(piecesDansGraveyard);
-            }
-
-            @Override
-            public void notifyPlaced(PiecePane piecePane) {
-                piecesInGraveyard.push(piecePane);
-            }
-
-            @Override
-            public void notifyRemoved(PiecePane piecePane) {
-                PiecePane piecePanePoped = piecesInGraveyard.pop();
-                if (piecePanePoped != piecePane) throw new RuntimeException("Piece removed not last in stack");
-            }
-        };
+        return new Emplacement();
     }
 
-    public boolean isInGraveyard(PiecePane piecePane) {
-        return piecesInGraveyard.contains(piecePane);
+    public boolean isInGraveyard(Piece piece) {
+        return piecesInGraveyard.contains(piece);
+    }
+
+    private class Emplacement extends PositionGraphique {
+        private final int position = piecesInGraveyard.size();
+
+        Emplacement() {
+            super(GraveyardController.this.height);
+        }
+
+        @Override
+        public ObservableNumberValue getX() {
+            //Si c'est la colonne de gauche ou la colonne de droite
+            if ((gaucheADroite && position < modele.util.Position.LIMITE) ||
+                    (!gaucheADroite && position >= modele.util.Position.LIMITE)) {
+                return xOffset;
+            } else {
+                return Bindings.divide(height, modele.util.Position.LIMITE).add(xOffset);
+            }
+        }
+
+        @Override
+        public NumberBinding getY() {
+            return Bindings
+                    .divide(height, modele.util.Position.LIMITE)
+                    .multiply(position < modele.util.Position.LIMITE ? position : position - modele.util.Position.LIMITE);
+        }
+
+        @Override
+        public void notifyPlaced(PiecePane piecePane) {
+            piecesInGraveyard.push(piecePane.getPiece());
+        }
+
+        @Override
+        public void notifyRemoved(PiecePane piecePane) {
+            Piece piecePoped = piecesInGraveyard.pop();
+            if (piecePoped != piecePane.getPiece()) throw new RuntimeException("Piece removed not last in stack");
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) return false;
+            if (!(obj instanceof Emplacement)) return false;
+            return ((Emplacement) obj).position == this.position;
+        }
+
+        @Override
+        public String toString() {
+            return "Graveyard pos: " + position;
+        }
     }
 }

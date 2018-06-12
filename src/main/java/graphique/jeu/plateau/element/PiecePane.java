@@ -70,7 +70,7 @@ public class PiecePane extends StackPane {
     /**
      * Place la pièce à la position
      */
-    public void bind(PositionGraphique position) {
+    public synchronized void bind(PositionGraphique position) {
         this.currentPosition = position;
         this.layoutXProperty().bind(position.getX());
         this.layoutYProperty().bind(position.getY());
@@ -81,7 +81,7 @@ public class PiecePane extends StackPane {
     /**
      * Détacher la pièce
      */
-    public void unBind() {
+    public synchronized void unBind() {
         currentPosition.notifyRemoved(this);
         this.currentPosition = null;
         this.setCacheHint(CacheHint.SPEED);
@@ -90,17 +90,10 @@ public class PiecePane extends StackPane {
     }
 
     /**
-     * ATTENTION : Si les coordonées X, Y sont identiques mais la fonction binding est différente retourne vraie
-     * Ex. Si tout à une hauteur et largeur de 0 retourne vrai
-     *
      * @return si la pièce est à la position
      */
-    public boolean isAtPosition(PositionGraphique position) {
-        return this.layoutXProperty().isBound() &&
-                this.layoutYProperty().isBound() &&
-                this.getLayoutX() == position.getX().getValue().doubleValue() &&
-                this.getLayoutY() == position.getY().getValue().doubleValue() &&
-                position.equals(currentPosition);
+    public synchronized boolean isAtPosition(PositionGraphique position) {
+        return position.equals(currentPosition);
     }
 
     public PositionGraphique getCurrentPosition() {

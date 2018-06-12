@@ -60,7 +60,7 @@ public class Chargeur {
         //Créer le modèle de jeu
         JeuData jeuData = new JeuData(Plateau.creePlateauDebut(roiNoir, roiBlanc), roiBlanc, roiNoir);
 
-        //Créer et commencer la partie
+        //Créer et notifierProchainJoueur la partie
         this.jeu = new Jeu(jeuData, joueurs);
         jeu.tourAProperty().addListener((observable, oldValue, newValue) -> sauvgarder());
     }

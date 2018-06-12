@@ -70,7 +70,7 @@ public class Jeu implements Serializable {
     /**
      * Commencer la partie
      */
-    public void commencer() {
+    public void notifierProchainJoueur() {
         joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Demander au joueur de bouger
     }
 
@@ -106,7 +106,7 @@ public class Jeu implements Serializable {
             }
         } else {
             //Si la partie n'est pas fini notifier prochain joueur
-            joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Notifier l'autre joueur qu'il peut joueur
+            notifierProchainJoueur();
         }
     }
 
@@ -124,7 +124,7 @@ public class Jeu implements Serializable {
             changerLeTour();
         }
 
-        joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get());
+        notifierProchainJoueur();
     }
 
     public JeuData getJeuData() {

@@ -36,7 +36,7 @@ class AnimationController {
     void ajouterAnimation(PiecePane piecePane, PositionGraphique position) {
         animationsQueue.add(new Pair<>(piecePane, position));
 
-        //Si rien n'est en cours commencer la prochaine animation et marquer comme étant en cours
+        //Si rien n'est en cours notifierProchainJoueur la prochaine animation et marquer comme étant en cours
         if (animationEnCours.compareAndSet(false, true)) {
             commencerProchaineAnimation();
         }
@@ -48,41 +48,36 @@ class AnimationController {
     }
 
     /**
-     * @param piecePane la pièce qui a été bougé
-     * @param position  la nouvelle position de la pièce
-     */
-    private void onFinish(PiecePane piecePane, PositionGraphique position) {
-        piecePane.bind(position); //Attacher la pièce à sa position finale
-
-        if (animationsQueue.isEmpty()) animationEnCours.set(false); //Si il n'y a plus d'animation arrêter
-        else commencerProchaineAnimation(); //Sinon commencer la prochaine animation
-    }
-
-    /**
      * Anime la pièce
      */
     private void animer(PiecePane piecePane, PositionGraphique position) {
-        if (piecePane.isAtPosition(position))
-            onFinish(piecePane, position); //Si la pièce est déjà à la position ne rien faire
-        else {
-            //Sinon
-            //Créer l'animation qui change les coordonées X et Y de la pièce
-            Timeline timeline = new Timeline(new KeyFrame(
-                    new Duration(DUREE_DE_CHAQUE_ANIMATION),
-                    new KeyValue(
-                            piecePane.layoutXProperty(),
-                            position.getX().getValue()
-                    ),
-                    new KeyValue(
-                            piecePane.layoutYProperty(),
-                            position.getY().getValue()
-                    )
-            ));
+        //Sinon
+        //Créer l'animation qui change les coordonées X et Y de la pièce
+        Timeline timeline = new Timeline(new KeyFrame(
+                new Duration(DUREE_DE_CHAQUE_ANIMATION),
+                new KeyValue(
+                        piecePane.layoutXProperty(),
+                        position.getX().getValue()
+                ),
+                new KeyValue(
+                        piecePane.layoutYProperty(),
+                        position.getY().getValue()
+                )
+        ));
 
-            timeline.setOnFinished(event -> onFinish(piecePane, position));
+        timeline.setOnFinished(event -> {
+            piecePane.setText();
+            piecePane.bind(position);
 
-            piecePane.unBind(); //Détacher la pièce de sa position
-            timeline.play(); //Joueur l'animation
-        }
+            if (animationsQueue.isEmpty()) animationEnCours.set(false); //Si il n'y a plus d'animation arrêter
+            else commencerProchaineAnimation(); //Sinon notifierProchainJoueur la prochaine animation
+        });
+
+        piecePane.unBind(); //Détacher la pièce de sa position
+        timeline.play(); //Joueur l'animation
+    }
+
+    AtomicBoolean getAnimationEnCours() {
+        return animationEnCours;
     }
 }

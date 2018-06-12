@@ -52,6 +52,11 @@ public class PositionCase extends PositionGraphique {
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof PositionCase)) return false;
-        return ((PositionCase) obj).position == this.position;
+        return ((PositionCase) obj).position.equals(this.position);
+    }
+
+    @Override
+    public String toString() {
+        return "Case: " + position;
     }
 }

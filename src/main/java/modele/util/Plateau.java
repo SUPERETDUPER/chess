@@ -130,7 +130,7 @@ public class Plateau implements Serializable {
     }
 
     @NotNull
-    private Set<Piece> iteratePieces() {
+    public Set<Piece> iteratePieces() {
         return board.values();
     }
 
