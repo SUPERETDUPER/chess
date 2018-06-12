@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -92,7 +92,7 @@ public class Jeu implements Serializable {
         changerLeTour();
 
         //Vérifier pour échec et mat ou match nul
-        List<Mouvement> mouvements = jeuData.getAllLegalMoves(tourA.get());
+        Collection<Mouvement> mouvements = jeuData.getAllLegalMoves(tourA.get());
 
         if (mouvements.isEmpty()) {
             if (jeuData.getPlateau().isPieceAttaquer(jeuData.getRoi(tourA.get()))) {

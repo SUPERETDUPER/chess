@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -70,7 +71,7 @@ public class JoueurOrdi extends Joueur {
         if (pastSequence.getLongeur() == difficulte.profondeur) return pastSequence;
 
         //Calculer les mouvements possibles
-        List<Mouvement> mouvementsPossibles = jeuData.getAllLegalMoves(couleur);
+        Collection<Mouvement> mouvementsPossibles = jeuData.getAllLegalMoves(couleur);
 
         MoveSequence meilleurMouvement = null;
 

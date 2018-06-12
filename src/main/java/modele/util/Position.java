@@ -40,6 +40,13 @@ public class Position implements Serializable {
     }
 
     /**
+     * This - position
+     */
+    public Offset getDistance(Position position) {
+        return new Offset(rangee - position.getRangee(), colonne - position.getColonne());
+    }
+
+    /**
      * @return si la position rentre dans les limites
      */
     public boolean isValid() {

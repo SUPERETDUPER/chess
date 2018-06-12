@@ -10,12 +10,12 @@ import modele.util.Offset;
 public class Reine extends DirectionPiece {
     private static final Offset[] OFFSET = {
             Offset.HAUT_GAUGHE,
-            Offset.HAUT_CENTRE,
+            Offset.HAUT,
             Offset.HAUT_DROIT,
-            Offset.MILIEU_GAUCHE,
-            Offset.MILIEU_DROIT,
+            Offset.GAUCHE,
+            Offset.DROIT,
             Offset.BAS_GAUCHE,
-            Offset.BAS_CENTRE,
+            Offset.BAS,
             Offset.BAS_DROIT
     };
 

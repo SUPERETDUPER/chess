@@ -7,8 +7,8 @@ import modele.util.Tableau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Contrôle comment les cases devraient être surlignées
@@ -50,7 +50,7 @@ class HighlightController {
      * @param position            la position de la case à sélectionner (en rouge)
      * @param mouvementsPossibles la liste de mouvements possibles
      */
-    void selectionner(@NotNull Position position, List<Mouvement> mouvementsPossibles) {
+    void selectionner(@NotNull Position position, Collection<Mouvement> mouvementsPossibles) {
         this.deSelectionner();
 
         //Surligner la position de départ

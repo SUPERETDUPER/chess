@@ -8,10 +8,10 @@ import modele.util.Position;
 
 public class Tour extends DirectionPiece {
     private static final Offset[] OFFSET = {
-            Offset.HAUT_CENTRE,
-            Offset.MILIEU_GAUCHE,
-            Offset.MILIEU_DROIT,
-            Offset.BAS_CENTRE
+            Offset.HAUT,
+            Offset.GAUCHE,
+            Offset.DROIT,
+            Offset.BAS
     };
 
     public Tour(Couleur couleur) {

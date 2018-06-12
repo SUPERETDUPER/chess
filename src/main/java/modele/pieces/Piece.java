@@ -1,12 +1,15 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
+import modele.mouvement.MouvementBouger;
+import modele.mouvement.MouvementManger;
 import modele.util.Couleur;
 import modele.util.Plateau;
 import modele.util.Position;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Une pièce de jeu
@@ -50,20 +53,28 @@ public abstract class Piece implements Serializable {
      */
     abstract int unicodeForBlack();
 
-    /**
-     * Calcule tous les mouvements possibles pour cette pièce sans vérifier si le mouvement est legal (ex. roi est en train d'être attacké)
-     *
-     * @param plateau le util avec les mouvements présentement
-     * @return tous les mouvements possibles pour cette pièce
-     */
-    public abstract Set<Mouvement> generateAllMoves(Plateau plateau);
+    abstract Collection<Position> generatePosition(Plateau plateau);
 
-    /**
-     * @param plateau  le plateau
-     * @param position la position à vérifier
-     * @return vrai si cette pièce attack présentement cette position
-     */
-    public abstract boolean attaquePosition(Plateau plateau, Position position);
+    Mouvement convertir(Plateau plateau, Position position) {
+        if (plateau.getPiece(position) == null) return new MouvementBouger(this, position);
+        else return new MouvementManger(this, position);
+    }
+
+    public Collection<Mouvement> generateAllMoves(Plateau plateau) {
+        Collection<Position> positions = generatePosition(plateau);
+        Collection<Mouvement> mouvements = new LinkedList<>();
+
+        for (Position position : positions) {
+            mouvements.add(convertir(plateau, position));
+        }
+
+        return mouvements;
+    }
+
+    public boolean attaquePosition(Plateau plateau, Position position) {
+        Collection<Position> positions = generatePosition(plateau);
+        return positions.contains(position);
+    }
 
     /**
      * @return La valeur de la pièce indépendament de la couleur

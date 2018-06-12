@@ -8,18 +8,18 @@ import modele.util.Offset;
 import modele.util.Plateau;
 import modele.util.Position;
 
-import java.util.Set;
+import java.util.Collection;
 
 //TODO Implement castling fully (currently only allows basic without conditions)
 public class Roi extends OffsetPiece {
     private static final Offset[] OFFSETS = {
             Offset.HAUT_GAUGHE,
-            Offset.HAUT_CENTRE,
+            Offset.HAUT,
             Offset.HAUT_DROIT,
-            Offset.MILIEU_GAUCHE,
-            Offset.MILIEU_DROIT,
+            Offset.GAUCHE,
+            Offset.DROIT,
             Offset.BAS_GAUCHE,
-            Offset.BAS_CENTRE,
+            Offset.BAS,
             Offset.BAS_DROIT
     };
 
@@ -53,8 +53,8 @@ public class Roi extends OffsetPiece {
     }
 
     @Override
-    public Set<Mouvement> generateAllMoves(Plateau plateau) {
-        Set<Mouvement> mouvements = super.generateAllMoves(plateau);
+    Collection<Position> generatePosition(Plateau plateau) {
+        Collection<Position> positions = super.generatePosition(plateau);
 
         //Ajouter les options pour casteling
         Position startRoi = plateau.getPosition(this);
@@ -67,14 +67,22 @@ public class Roi extends OffsetPiece {
                 && plateau.getPiece(finTour) == null
                 && nombresDeMouvements == 0) {
 
-            mouvements.add(new MouvementCombine(new Mouvement[]{
-                    new MouvementBouger(this, startRoi.decaler(new Offset(0, 2))),
-                    new MouvementBouger(plateau.getPiece(debutTour), startRoi.decaler(new Offset(0, 1)))
-                    })
-            );
+            positions.add(finRoi);
         }
 
-        return mouvements;
+        return positions;
+    }
+
+    @Override
+    Mouvement convertir(Plateau plateau, Position position) {
+        if (position.getColonne() - plateau.getPosition(this).getColonne() == 2)
+            return new MouvementCombine(new Mouvement[]{
+                    new MouvementBouger(this, position),
+                    new MouvementBouger(plateau.getPiece(position.decaler(Offset.DROIT)), position.decaler(Offset.GAUCHE))
+            });
+
+
+        else return super.convertir(plateau, position);
     }
 
     @Override
