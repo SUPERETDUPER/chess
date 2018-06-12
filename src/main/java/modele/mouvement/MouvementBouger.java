@@ -3,6 +3,7 @@ package modele.mouvement;
 import modele.JeuData;
 import modele.pieces.Piece;
 import modele.util.Position;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Un mouvement qui bouge une pièce
@@ -10,7 +11,7 @@ import modele.util.Position;
 public class MouvementBouger extends Mouvement {
     private Position debut;
 
-    public MouvementBouger(Piece piece, Position end) {
+    public MouvementBouger(@NotNull Piece piece, @NotNull Position end) {
         super(piece, end);
     }
 

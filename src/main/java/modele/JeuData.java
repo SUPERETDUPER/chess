@@ -9,7 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
@@ -90,7 +93,7 @@ public class JeuData implements Serializable {
      * @return la liste mouvements possible et légal pour cette couleur
      */
     @NotNull
-    public List<Mouvement> getAllLegalMoves(Couleur couleur) {
+    public Collection<Mouvement> getAllLegalMoves(Couleur couleur) {
         return filterOnlyLegal(plateau.getAllMoves(couleur), couleur);
     }
 
@@ -100,8 +103,8 @@ public class JeuData implements Serializable {
      * @return la liste de mouvements avec que les mouvements légals
      */
     @NotNull
-    public List<Mouvement> filterOnlyLegal(Set<Mouvement> mouvements, Couleur verifierPour) {
-        List<Mouvement> legalMouvements = new ArrayList<>();
+    public Collection<Mouvement> filterOnlyLegal(Collection<Mouvement> mouvements, Couleur verifierPour) {
+        Collection<Mouvement> legalMouvements = new ArrayList<>();
 
         JeuData copie = getCopie();
 

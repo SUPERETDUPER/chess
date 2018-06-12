@@ -1,15 +1,12 @@
 package modele.pieces;
 
-import modele.mouvement.Mouvement;
-import modele.mouvement.MouvementBouger;
-import modele.mouvement.MouvementManger;
 import modele.util.Couleur;
 import modele.util.Offset;
 import modele.util.Plateau;
 import modele.util.Position;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Un morceau qui peut attacker les positions à ses côtés (Ex. cavalier, roi)
@@ -20,14 +17,14 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    public Set<Mouvement> generateAllMoves(Plateau plateau) {
-        Set<Mouvement> mouvements = new HashSet<>();
+    Collection<Position> generatePosition(Plateau plateau) {
+        Collection<Position> positions = new LinkedList<>();
 
-        Position currentPose = plateau.getPosition(this);
+        Position positionDebut = plateau.getPosition(this);
 
-        //Pour chaque offset
+        //Pour chaque directions
         for (Offset offset : getOffsets()) {
-            Position nextPosition = currentPose.decaler(offset);
+            Position nextPosition = positionDebut.decaler(offset);
 
             //Si la position n'est pas valide passer à la prochaine
             if (!nextPosition.isValid()) continue;
@@ -35,24 +32,10 @@ abstract class OffsetPiece extends Piece {
             Piece piece = plateau.getPiece(nextPosition);
 
             //si il y a une pièce de la même couleur à cette position, passer à la prochaine sinon on peut bouger
-            if (piece == null) mouvements.add(new MouvementBouger(this, nextPosition));
-            else if (piece.getCouleur() != couleur) mouvements.add(new MouvementManger(this, nextPosition));
+            if (piece == null || piece.getCouleur() != couleur) positions.add(nextPosition);
         }
 
-        return mouvements;
-    }
-
-    @Override
-    public boolean attaquePosition(Plateau plateau, Position position) {
-        //TODO Consider changing to subtract two positions and calculate offset then compare (using hashmap)
-        Position currentPosition = plateau.getPosition(this);
-
-        //Pour chaque offset vérifier si c'est la position
-        for (Offset offset : getOffsets()) {
-            if (position.equals(currentPosition.decaler(offset))) return true;
-        }
-
-        return false;
+        return positions;
     }
 
     /**

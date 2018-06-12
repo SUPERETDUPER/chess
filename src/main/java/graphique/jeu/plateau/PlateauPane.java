@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -158,7 +159,7 @@ public class PlateauPane extends Pane {
             if (pieceClicked != null && demandeDeMouvement.getCouleur() == pieceClicked.getCouleur()) {
 
                 //Calculer les mouvements possibles
-                List<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
+                Collection<Mouvement> moves = jeuData.filterOnlyLegal(pieceClicked.generateAllMoves(jeuData.getPlateau()), pieceClicked.getCouleur());
 
                 highlightController.selectionner(position, moves); //Sélectionner
             }

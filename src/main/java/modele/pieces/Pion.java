@@ -1,21 +1,19 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
-import modele.mouvement.MouvementBouger;
-import modele.mouvement.MouvementManger;
 import modele.util.Couleur;
 import modele.util.Offset;
 import modele.util.Plateau;
 import modele.util.Position;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.LinkedList;
 
 //TODO Implement promotion and en passant
 public class Pion extends Piece {
     private final Offset ATTAQUE_GAUCHE = getCouleur() == Couleur.BLANC ? Offset.HAUT_GAUGHE : Offset.BAS_GAUCHE;
     private final Offset ATTAQUE_DROITE = getCouleur() == Couleur.BLANC ? Offset.HAUT_DROIT : Offset.BAS_DROIT;
-    private final Offset AVANCER = getCouleur() == Couleur.BLANC ? Offset.HAUT_CENTRE : Offset.BAS_CENTRE;
+    private final Offset AVANCER = getCouleur() == Couleur.BLANC ? Offset.HAUT : Offset.BAS;
     private final Offset SAUT = new Offset(Couleur.BLANC == getCouleur() ? -2 : 2, 0);
 
     private int nombreDeMouvementsCompletes = 0;
@@ -25,8 +23,8 @@ public class Pion extends Piece {
     }
 
     @Override
-    public Set<Mouvement> generateAllMoves(Plateau plateau) {
-        Set<Mouvement> mouvements = new HashSet<>();
+    Collection<Position> generatePosition(Plateau plateau) {
+        Collection<Position> positions = new LinkedList<>();
 
         Position currentPosition = plateau.getPosition(this);
 
@@ -39,7 +37,7 @@ public class Pion extends Piece {
 
             //Si il y a personne on peut avancer
             if (plateau.getPiece(fin) == null) {
-                mouvements.add(new MouvementBouger(this, fin));
+                positions.add(fin);
             }
             //Sinon on est bloqué
             else blocked = true;
@@ -51,32 +49,27 @@ public class Pion extends Piece {
 
             //Si la position et valide et la postion est vide on peut
             if (fin.isValid() && plateau.getPiece(fin) == null) {
-                mouvements.add(new MouvementBouger(this, fin));
+                positions.add(fin);
             }
         }
 
         //On essaye de manger des pièces aux côtés
-        checkCanEat(plateau, mouvements, currentPosition.decaler(ATTAQUE_GAUCHE));
-        checkCanEat(plateau, mouvements, currentPosition.decaler(ATTAQUE_DROITE));
+        fin = currentPosition.decaler(ATTAQUE_GAUCHE);
+        if (canEat(plateau, fin)) positions.add(fin);
 
-        return mouvements;
+        fin = currentPosition.decaler(ATTAQUE_DROITE);
+        if (canEat(plateau, fin)) positions.add(fin);
+
+        return positions;
     }
 
-    private void checkCanEat(Plateau plateau, Set<Mouvement> mouvements, Position fin) {
+    private boolean canEat(Plateau plateau, Position fin) {
         if (fin.isValid()) {
             Piece piece = plateau.getPiece(fin);
-            if (piece != null && piece.getCouleur() != couleur) {
-                mouvements.add(new MouvementManger(this, fin));
-            }
+            return piece != null && piece.getCouleur() != couleur;
         }
-    }
 
-    @Override
-    public boolean attaquePosition(Plateau plateau, Position position) {
-        Position currentPosition = plateau.getPosition(this);
-
-        return currentPosition.decaler(ATTAQUE_GAUCHE).equals(position) ||
-                currentPosition.decaler(ATTAQUE_DROITE).equals(position);
+        return false;
     }
 
     @Override

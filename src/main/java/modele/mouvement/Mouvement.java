@@ -4,6 +4,7 @@ import modele.JeuData;
 import modele.pieces.Piece;
 import modele.util.Position;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -15,14 +16,16 @@ public abstract class Mouvement implements Serializable {
     /**
      * La pièce qui se déplace
      */
+    @NotNull
     final Piece piece;
 
     /**
      * La position finale de la pièce
      */
+    @NotNull
     final Position fin;
 
-    Mouvement(Piece piece, Position fin) {
+    Mouvement(@NotNull Piece piece, @NotNull Position fin) {
         this.piece = piece;
         this.fin = fin;
     }
