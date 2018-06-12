@@ -27,11 +27,11 @@ public class MouvementCombine extends MouvementNormal {
 
     @Override
     void undoInterne(JeuData data) {
-        super.appliquerInterne(data);
-
         for (int i = (mouvementsSupplementaires.length - 1); i >= 0; i--) {
             mouvementsSupplementaires[i].undo(data);
         }
+
+        super.undoInterne(data);
     }
 
     @Override

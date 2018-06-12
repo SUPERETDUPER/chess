@@ -22,7 +22,7 @@ public class JeuData implements Serializable {
     private final Plateau plateau;
 
     @NotNull
-    private final Stack<Piece> eatenPieces;
+    private final Stack<Piece> eatenPieces = new Stack<>();
 
     /**
      * Le listener pour quand le plateau change
@@ -37,17 +37,9 @@ public class JeuData implements Serializable {
     private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
 
     /**
-     * @param plateau     le plateau de jeu
-     *
-     */
-    public JeuData(@NotNull Plateau plateau) {
-        this(plateau, new Stack<>());
-    }
-
-    /**
      * @param plateau le plateau de jeu
      */
-    private JeuData(@NotNull Plateau plateau, @NotNull Stack<Piece> eatenPieces) {
+    public JeuData(@NotNull Plateau plateau) {
         for (Piece piece : plateau.iteratePieces()) {
             if (piece instanceof Roi) {
                 if (rois.containsKey(piece.getCouleur()))
@@ -58,7 +50,6 @@ public class JeuData implements Serializable {
         }
 
         this.plateau = plateau;
-        this.eatenPieces = eatenPieces;
     }
 
     public void setChangeListener(@NotNull Runnable changeListener) {
@@ -102,24 +93,18 @@ public class JeuData implements Serializable {
     public Collection<Mouvement> filterOnlyLegal(Collection<Mouvement> mouvements, Couleur verifierPour) {
         Collection<Mouvement> legalMouvements = new ArrayList<>();
 
-        JeuData copie = getCopie();
-
         //Pour chaque mouvement appliquer et vérifier si l'on attaque le roi
         for (Mouvement mouvement : mouvements) {
-            mouvement.appliquer(copie);
+            mouvement.appliquer(this);
 
-            if (!copie.getPlateau().isPieceAttaquer(rois.get(verifierPour))) {
+            if (!getPlateau().isPieceAttaquer(rois.get(verifierPour))) {
                 legalMouvements.add(mouvement);
             }
 
-            mouvement.undo(copie);
+            mouvement.undo(this);
         }
 
         return legalMouvements;
-    }
-
-    private JeuData getCopie() {
-        return new JeuData(plateau.getCopie(), eatenPieces);
     }
 
     @NotNull
