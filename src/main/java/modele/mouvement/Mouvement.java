@@ -69,9 +69,9 @@ public abstract class Mouvement implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof MouvementBouger)) return false;
-        if (!this.piece.equals(((MouvementBouger) obj).piece)) return false;
-        return this.fin.equals(((MouvementBouger) obj).fin);
+        if (!(obj instanceof Mouvement)) return false;
+        if (!this.piece.equals(((Mouvement) obj).piece)) return false;
+        return this.fin.equals(((Mouvement) obj).fin);
     }
 
     @Override

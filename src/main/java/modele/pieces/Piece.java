@@ -1,8 +1,7 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
-import modele.mouvement.MouvementBouger;
-import modele.mouvement.MouvementManger;
+import modele.mouvement.MouvementNormal;
 import modele.util.Couleur;
 import modele.util.Plateau;
 import modele.util.Position;
@@ -56,8 +55,7 @@ public abstract class Piece implements Serializable {
     abstract Collection<Position> generatePosition(Plateau plateau);
 
     Mouvement convertir(Plateau plateau, Position position) {
-        if (plateau.getPiece(position) == null) return new MouvementBouger(this, position);
-        else return new MouvementManger(this, position);
+        return new MouvementNormal(this, position);
     }
 
     public Collection<Mouvement> generateAllMoves(Plateau plateau) {

@@ -2,7 +2,6 @@ package modele.pieces;
 
 import modele.mouvement.Mouvement;
 import modele.mouvement.MouvementPromotion;
-import modele.mouvement.MouvementPromotionManger;
 import modele.util.Couleur;
 import modele.util.Offset;
 import modele.util.Plateau;
@@ -31,8 +30,7 @@ public class Pion extends Piece {
         if (reine != null || (position.getRangee() != 0 && position.getRangee() != Position.LIMITE - 1))
             return super.convertir(plateau, position);
 
-        if (plateau.getPiece(position) == null) return new MouvementPromotion(this, position);
-        else return new MouvementPromotionManger(this, position);
+        return new MouvementPromotion(this, position);
     }
 
     @Override
@@ -109,7 +107,7 @@ public class Pion extends Piece {
 
     @Override
     public void notifyMoveCompleted(Mouvement mouvement) {
-        if (mouvement instanceof MouvementPromotion || mouvement instanceof MouvementPromotionManger) {
+        if (mouvement instanceof MouvementPromotion) {
             reine = new Reine(couleur) {
                 @Override
                 public int hashCode() {
@@ -128,7 +126,7 @@ public class Pion extends Piece {
 
     @Override
     public void notifyMoveUndo(Mouvement mouvement) {
-        if (mouvement instanceof MouvementPromotion || mouvement instanceof MouvementPromotionManger) {
+        if (mouvement instanceof MouvementPromotion) {
             reine = null;
         }
 

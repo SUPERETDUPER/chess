@@ -1,8 +1,8 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
-import modele.mouvement.MouvementBouger;
 import modele.mouvement.MouvementCombine;
+import modele.mouvement.MouvementNormal;
 import modele.util.Couleur;
 import modele.util.Offset;
 import modele.util.Plateau;
@@ -77,8 +77,8 @@ public class Roi extends OffsetPiece {
     Mouvement convertir(Plateau plateau, Position position) {
         if (position.getColonne() - plateau.getPosition(this).getColonne() == 2)
             return new MouvementCombine(new Mouvement[]{
-                    new MouvementBouger(this, position),
-                    new MouvementBouger(plateau.getPiece(position.decaler(Offset.DROIT)), position.decaler(Offset.GAUCHE))
+                    new MouvementNormal(this, position),
+                    new MouvementNormal(plateau.getPiece(position.decaler(Offset.DROIT)), position.decaler(Offset.GAUCHE))
             });
 
 

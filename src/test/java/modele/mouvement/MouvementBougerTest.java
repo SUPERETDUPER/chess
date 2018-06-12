@@ -12,8 +12,8 @@ class MouvementBougerTest {
     void equals() {
         Roi piece = new Roi(Couleur.BLANC);
         Assertions.assertEquals(
-                new MouvementBouger(piece, new Position(0, 1)),
-                new MouvementBouger(piece, new Position(0, 1))
+                new MouvementNormal(piece, new Position(0, 1)),
+                new MouvementNormal(piece, new Position(0, 1))
         );
     }
 }

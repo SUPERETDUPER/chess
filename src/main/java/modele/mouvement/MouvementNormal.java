@@ -3,15 +3,18 @@ package modele.mouvement;
 import modele.JeuData;
 import modele.pieces.Piece;
 import modele.util.Position;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Un mouvement qui mange une pièce
  */
-public class MouvementManger extends Mouvement {
+public class MouvementNormal extends Mouvement {
+    @Nullable
     private Piece morceauPris;
+
     private Position debut;
 
-    public MouvementManger(Piece piece, Position end) {
+    public MouvementNormal(Piece piece, Position end) {
         super(piece, end);
     }
 
@@ -19,15 +22,23 @@ public class MouvementManger extends Mouvement {
     void appliquerInterne(JeuData data) {
         debut = data.getPlateau().removePiece(piece); //Enlève la pièce et obtient la position initiale
         morceauPris = data.getPlateau().ajouter(fin, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
-        if (morceauPris == null) throw new RuntimeException("rien de pris");
-        data.getEatenPieces().push(morceauPris);
+
+        if (morceauPris != null) {
+            data.getEatenPieces().push(morceauPris);
+        }
     }
 
     @Override
     void undoInterne(JeuData data) {
-        data.getEatenPieces().pop();
+        if (morceauPris != null) {
+            data.getEatenPieces().pop();
+        }
+
         data.getPlateau().bougerPiece(debut, piece);
-        data.getPlateau().ajouter(fin, morceauPris);
+
+        if (morceauPris != null) {
+            data.getPlateau().ajouter(fin, morceauPris);
+        }
     }
 
     /**
@@ -35,6 +46,6 @@ public class MouvementManger extends Mouvement {
      */
     @Override
     public int getValeur() {
-        return -morceauPris.getValeur();
+        return morceauPris == null ? 0 : -morceauPris.getValeur();
     }
 }

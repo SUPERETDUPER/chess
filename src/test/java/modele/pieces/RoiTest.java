@@ -1,7 +1,7 @@
 package modele.pieces;
 
 import modele.mouvement.Mouvement;
-import modele.mouvement.MouvementBouger;
+import modele.mouvement.MouvementNormal;
 import modele.util.Couleur;
 import modele.util.Plateau;
 import modele.util.Position;
@@ -24,9 +24,9 @@ class RoiTest {
         Collection<Mouvement> mouvements = roi.generateAllMoves(plateau);
 
         Collection<Mouvement> expected = new LinkedList<>();
-        expected.add(new MouvementBouger(roi, new Position(0, 1)));
-        expected.add(new MouvementBouger(roi, new Position(1, 0)));
-        expected.add(new MouvementBouger(roi, new Position(1, 1)));
+        expected.add(new MouvementNormal(roi, new Position(0, 1)));
+        expected.add(new MouvementNormal(roi, new Position(1, 0)));
+        expected.add(new MouvementNormal(roi, new Position(1, 1)));
 
         Assertions.assertEquals(expected, mouvements);
     }
