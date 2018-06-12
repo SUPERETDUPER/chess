@@ -133,8 +133,10 @@ public class BoardPane extends Pane {
         game.statusProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Game.Status.INACTIVE) {
                 if (animationController.isRunning())
-                    //TODO remove listener when done
-                    animationController.setOnFinishListener(game::notifyNextPlayer);
+                    animationController.setOnFinishListener(() -> {
+                        animationController.setOnFinishListener(null);
+                        game.notifyNextPlayer();
+                    });
                 else game.notifyNextPlayer();
             }
         });
