@@ -1,7 +1,6 @@
 package modele;
 
 import modele.joueur.Joueur;
-import modele.pieces.Roi;
 import modele.util.Couleur;
 import modele.util.Plateau;
 
@@ -54,11 +53,9 @@ public class Chargeur {
 
     public void creeNouveauJeu(EnumMap<Couleur, Joueur> joueurs) {
         //Créer les rois
-        Roi roiNoir = new Roi(Couleur.NOIR);
-        Roi roiBlanc = new Roi(Couleur.BLANC);
 
         //Créer le modèle de jeu
-        JeuData jeuData = new JeuData(Plateau.creePlateauDebut(roiNoir, roiBlanc), roiBlanc, roiNoir);
+        JeuData jeuData = new JeuData(Plateau.creePlateauDebut());
 
         //Créer et notifierProchainJoueur la partie
         this.jeu = new Jeu(jeuData, joueurs);

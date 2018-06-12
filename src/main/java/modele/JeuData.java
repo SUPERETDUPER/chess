@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Stack;
-import java.util.function.Consumer;
 
 /**
  * Représente le plateau de jeu et quelle pièces sont les rois
@@ -29,51 +28,45 @@ public class JeuData implements Serializable {
      * Le listener pour quand le plateau change
      */
     @Nullable
-    transient private Consumer<Plateau> changeListener;
+    transient private Runnable changeListener;
 
     /**
      * La liste de roi associé à chaque couleur
      */
     @NotNull
-    private final EnumMap<Couleur, Roi> rois;
+    private final EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
+
+    /**
+     * @param plateau     le plateau de jeu
+     *
+     */
+    public JeuData(@NotNull Plateau plateau) {
+        this(plateau, new Stack<>());
+    }
 
     /**
      * @param plateau le plateau de jeu
      */
-    public JeuData(@NotNull Plateau plateau, @NotNull EnumMap<Couleur, Roi> rois, Stack<Piece> eatenPieces) {
+    private JeuData(@NotNull Plateau plateau, @NotNull Stack<Piece> eatenPieces) {
+        for (Piece piece : plateau.iteratePieces()) {
+            if (piece instanceof Roi) {
+                rois.put(piece.getCouleur(), (Roi) piece);
+            }
+        }
+
         this.plateau = plateau;
         this.eatenPieces = eatenPieces;
-        this.rois = rois;
     }
 
-    /**
-     * @param plateau     le plateau de jeu
-     * @param premierRoi  le premier roi
-     * @param deuxiemeRoi le deuxieme roi
-     */
-    public JeuData(@NotNull Plateau plateau, @NotNull Roi premierRoi, @NotNull Roi deuxiemeRoi) {
-        EnumMap<Couleur, Roi> rois = new EnumMap<>(Couleur.class);
-
-        rois.put(premierRoi.getCouleur(), premierRoi);
-        rois.put(deuxiemeRoi.getCouleur(), deuxiemeRoi);
-
-        this.plateau = plateau;
-        this.rois = rois;
-        this.eatenPieces = new Stack<>();
-    }
-
-    public void setChangeListener(@NotNull Consumer<Plateau> changeListener) {
+    public void setChangeListener(@NotNull Runnable changeListener) {
         this.changeListener = changeListener;
     }
 
     /**
      * Appelé par {@link Jeu} pour notifier qu'un mouvement sur le plateau a été effectué
-     *
-     * @param plateau le plateau après le mouvement
      */
-    //TODO Ne devraient pas contenir plateau comme paramettre. Il faut que le prochain joueur calcule le mouvement seulement quand l'interface décide
-    void notifyListenerOfChange(Plateau plateau) {
-        changeListener.accept(plateau);
+    void notifyListenerOfChange() {
+        changeListener.run();
     }
 
     @NotNull
@@ -123,7 +116,7 @@ public class JeuData implements Serializable {
     }
 
     private JeuData getCopie() {
-        return new JeuData(plateau.getCopie(), rois, eatenPieces);
+        return new JeuData(plateau.getCopie(), eatenPieces);
     }
 
     @NotNull

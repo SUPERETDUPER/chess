@@ -80,27 +80,6 @@ public class Jeu implements Serializable {
      * Commencer la partie
      */
     public void notifierProchainJoueur() {
-        status.set(tourA.get() == Couleur.BLANC ? Status.ATTENTE_BLANC : Status.ATTENTE_NOIR);
-        joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Demander au joueur de bouger
-    }
-
-    public void setResultatListener(Consumer<Resultat> resultatListener) {
-        this.resultatListener = resultatListener;
-    }
-
-    /**
-     * Appelé par le callback de joueur.getMouvement()
-     *
-     * @param mouvement le mouvement à jouer
-     */
-    private void jouer(@NotNull Mouvement mouvement) {
-        mouvement.appliquer(jeuData); //Jouer le mouvement
-        mouvements.push(mouvement); //Ajouter à la liste
-
-        jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie()); //Notifier changement
-
-        changerLeTour();
-
         //Vérifier pour échec et mat ou match nul
         Collection<Mouvement> mouvements = jeuData.getAllLegalMoves(tourA.get());
 
@@ -116,8 +95,29 @@ public class Jeu implements Serializable {
             }
         } else {
             //Si la partie n'est pas fini notifier prochain joueur
-            status.set(Status.INACTIF);
+            status.set(tourA.get() == Couleur.BLANC ? Status.ATTENTE_BLANC : Status.ATTENTE_NOIR);
+            joueurs.get(tourA.get()).getMouvement(this::jouer, tourA.get()); //Demander au joueur de bouger
         }
+    }
+
+    public void setResultatListener(Consumer<Resultat> resultatListener) {
+        this.resultatListener = resultatListener;
+    }
+
+    /**
+     * Appelé par le callback de joueur.getMouvement()
+     *
+     * @param mouvement le mouvement à jouer
+     */
+    private void jouer(@NotNull Mouvement mouvement) {
+        mouvement.appliquer(jeuData); //Jouer le mouvement
+        mouvements.push(mouvement); //Ajouter à la liste
+
+        jeuData.notifyListenerOfChange(); //Notifier changement
+
+        changerLeTour();
+
+        status.set(Status.INACTIF);
     }
 
     private void changerLeTour() {
@@ -130,7 +130,7 @@ public class Jeu implements Serializable {
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
             mouvements.pop().undo(jeuData);
-            jeuData.notifyListenerOfChange(jeuData.getPlateau().getCopie());
+            jeuData.notifyListenerOfChange();
             changerLeTour();
         }
 

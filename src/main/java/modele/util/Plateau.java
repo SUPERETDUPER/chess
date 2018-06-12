@@ -34,18 +34,16 @@ public class Plateau implements Serializable {
     /**
      * Retourne un nouveau util avec la position du début
      *
-     * @param roiNoir  le roi noir à utiliser
-     * @param roiBlanc le roi blanc à utiliser
      * @return le util en position initiale
      */
     @NotNull
-    public static Plateau creePlateauDebut(Roi roiNoir, Roi roiBlanc) {
+    public static Plateau creePlateauDebut() {
         Plateau plateau = new Plateau();
         plateau.ajouter(new Position(7, 0), new Tour(Couleur.BLANC));
         plateau.ajouter(new Position(7, 1), new Cavalier(Couleur.BLANC));
         plateau.ajouter(new Position(7, 2), new Fou(Couleur.BLANC));
         plateau.ajouter(new Position(7, 3), new Reine(Couleur.BLANC));
-        plateau.ajouter(new Position(7, 4), roiBlanc);
+        plateau.ajouter(new Position(7, 4), new Roi(Couleur.BLANC));
         plateau.ajouter(new Position(7, 5), new Fou(Couleur.BLANC));
         plateau.ajouter(new Position(7, 6), new Cavalier(Couleur.BLANC));
         plateau.ajouter(new Position(7, 7), new Tour(Couleur.BLANC));
@@ -72,7 +70,7 @@ public class Plateau implements Serializable {
         plateau.ajouter(new Position(0, 1), new Cavalier(Couleur.NOIR));
         plateau.ajouter(new Position(0, 2), new Fou(Couleur.NOIR));
         plateau.ajouter(new Position(0, 3), new Reine(Couleur.NOIR));
-        plateau.ajouter(new Position(0, 4), roiNoir);
+        plateau.ajouter(new Position(0, 4), new Roi(Couleur.NOIR));
         plateau.ajouter(new Position(0, 5), new Fou(Couleur.NOIR));
         plateau.ajouter(new Position(0, 6), new Cavalier(Couleur.NOIR));
         plateau.ajouter(new Position(0, 7), new Tour(Couleur.NOIR));

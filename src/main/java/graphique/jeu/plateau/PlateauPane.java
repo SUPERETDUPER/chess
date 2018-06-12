@@ -13,7 +13,10 @@ import modele.Jeu;
 import modele.JeuData;
 import modele.mouvement.Mouvement;
 import modele.pieces.Piece;
-import modele.util.*;
+import modele.util.Couleur;
+import modele.util.Position;
+import modele.util.PositionIterator;
+import modele.util.Tableau;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -186,11 +189,11 @@ public class PlateauPane extends Pane {
     /**
      * Pour chaque case afficher la pièce à cette case
      */
-    private synchronized void replacerLesPieces(Plateau plateau) {
+    private synchronized void replacerLesPieces() {
 //        while (animationController.getAnimationEnCours().get()) Thread.yield();
 
-        for (Piece piece : plateau.iteratePieces()) {
-            Position position = plateau.getPosition(piece);
+        for (Piece piece : jeuData.getPlateau().iteratePieces()) {
+            Position position = jeuData.getPlateau().getPosition(piece);
 
             PositionCase positionGraphique = new PositionCase(position, this.heightProperty(), graveyardControllers.get(Couleur.BLANC).getLargeurTotale());
             PiecePane piecePane = piecePanes.get(piece);
