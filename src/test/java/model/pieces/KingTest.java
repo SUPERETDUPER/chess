@@ -21,7 +21,7 @@ class KingTest {
         Position startingPos = new Position(0, 0);
         boardMap.add(startingPos, king);
 
-        Collection<Move> moves = king.generateAllMoves(boardMap, startingPos);
+        Collection<Move> moves = king.generatePossibleMoves(boardMap, startingPos);
 
         Collection<Move> expected = new LinkedList<>();
         expected.add(new BaseMove(startingPos, new Position(0, 1)));

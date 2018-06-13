@@ -1,7 +1,7 @@
 package model.util;
 
 /**
- * Les couleurs des pièces ou des joueurs
+ * The colours of the players and/or pieces
  */
 public enum Colour {
     WHITE,

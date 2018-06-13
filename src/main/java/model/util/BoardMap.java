@@ -14,11 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represente le boardregion de game.
- * Chaque pièce est attaché à une position
- * Permet d'acceder directement à la pièce à une position ou à la position d'une pièce
- * Utilise le BiMap de Google Guava
+ * Represents a mapping of pieces and their position on the board.
+ * Uses {@link BiMap} from Google Guava to allow quick access in both directions (find position of piece or find piece at position)
  */
+//TODO review usage of synchronised
 public class BoardMap implements Serializable {
     private final BiMap<Position, Piece> board;
 
@@ -27,9 +26,7 @@ public class BoardMap implements Serializable {
     }
 
     /**
-     * Retourne un nouveau util avec la position du début
-     *
-     * @return le util en position initiale
+     * @return a new board map with the initial (starting) layout of pieces
      */
     @NotNull
     public static BoardMap createStartingBoard() {
@@ -74,10 +71,11 @@ public class BoardMap implements Serializable {
     }
 
     /**
-     * @return vrai si la pièce peut se faire manger par une pièce de l'autre couleur
+     * @return true if the piece is being attacked by another piece
      */
     public boolean isPieceAttacked(Piece piece) {
         for (Piece attacker : iteratePieces()) {
+            //If piece opposite color check if attacks position
             if (attacker.getColour() != piece.getColour() && attacker.isAttackingPosition(this, getPosition(piece))) {
                 return true;
             }
@@ -97,30 +95,30 @@ public class BoardMap implements Serializable {
     }
 
     /**
-     * @return la pièce qui était à position
+     * @return the piece that was at this position before the new piece was added
      */
     public Piece add(@NotNull Position position, @NotNull Piece piece) {
         return board.put(position, piece);
     }
 
     /**
-     * @param piece la pièce qui était à position
+     * @param piece the piece that was at the destination before the piece was moved
      */
-    public synchronized void movePiece(@NotNull Position position, @NotNull Piece piece) {
-        board.forcePut(position, piece);
+    public synchronized void movePiece(@NotNull Position destination, @NotNull Piece piece) {
+        board.forcePut(destination, piece);
     }
 
     @NotNull
     public synchronized Piece removePiece(@NotNull Position position) {
         Piece remove = board.remove(position);
-        if (remove == null) throw new IllegalArgumentException("Aucune pièce à: " + position);
+        if (remove == null) throw new IllegalArgumentException("No piece at: " + position);
         return remove;
     }
 
     @NotNull
     public synchronized Position removePiece(@NotNull Piece piece) {
         Position position = board.inverse().remove(piece);
-        if (position == null) throw new IllegalArgumentException("Aucune pièce à: " + piece);
+        if (position == null) throw new IllegalArgumentException("Piece not on the board: piece:" + piece);
         return position;
     }
 
@@ -149,7 +147,7 @@ public class BoardMap implements Serializable {
 
         for (Piece piece : iteratePieces()) {
             if (piece.getColour() == colour) {
-                moves.addAll(piece.generateAllMoves(this, this.getPosition(piece)));
+                moves.addAll(piece.generatePossibleMoves(this, this.getPosition(piece)));
             }
         }
         return moves;

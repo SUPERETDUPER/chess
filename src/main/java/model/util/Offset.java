@@ -3,7 +3,7 @@ package model.util;
 import java.io.Serializable;
 
 /**
- * Un déplacement relatif
+ * Un relative shift in position
  */
 public class Offset implements Serializable {
     public static final Offset TOP_LEFT = new Offset(-1, -1);
@@ -17,13 +17,9 @@ public class Offset implements Serializable {
 
     private final int[] offset = new int[2];
 
-    /**
-     * @param offsetVertical   montant à se déplacer vers le bas
-     * @param offsetHorizontal montant à se déplacer vers la droite
-     */
-    public Offset(int offsetVertical, int offsetHorizontal) {
-        offset[0] = offsetVertical;
-        offset[1] = offsetHorizontal;
+    public Offset(int verticalOffset, int horizontalOffset) {
+        offset[0] = verticalOffset;
+        offset[1] = horizontalOffset;
     }
 
     int getVerticalShift() {

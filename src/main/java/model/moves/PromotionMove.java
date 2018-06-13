@@ -5,7 +5,7 @@ import model.util.Position;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Un moves qui promouvoit un pion à une reine en la bougeant
+ * A move that promotes a pawn to a queen.
  */
 public class PromotionMove extends BaseMove {
     public PromotionMove(Position debut, @NotNull Position fin) {

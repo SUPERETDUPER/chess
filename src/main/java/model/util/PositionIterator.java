@@ -3,7 +3,7 @@ package model.util;
 import java.util.Iterator;
 
 /**
- * Traverse toutes les positions sur le boardregion
+ * Iterator that loops through all the position on the board
  */
 public class PositionIterator implements Iterator<Position> {
     private static final Position MAXIMUM = new Position(Position.LIMIT, 0);

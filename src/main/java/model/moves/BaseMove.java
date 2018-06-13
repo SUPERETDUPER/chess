@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Un moves qui mange une pièce
+ * A move that moves one piece to a new square (and eats the piece at that square if it exists)
  */
 public class BaseMove extends Move {
     @Nullable
-    private Piece pieceTaken;
+    private Piece eatenPiece;
 
     public BaseMove(Position debut, @NotNull Position fin) {
         super(debut, fin);
@@ -19,29 +19,30 @@ public class BaseMove extends Move {
 
     @Override
     void applyToGame(GameData data) {
-        piece = data.getBoard().removePiece(start); //Enlève la pièce et obtient la position initiale
-        pieceTaken = data.getBoard().add(end, piece); //Met la pièce à l'autre position et obtient la pièce remplacé
+        piece = data.getBoard().removePiece(start); //Remove the piece from the starting position
+        eatenPiece = data.getBoard().add(end, piece); //Place the piece at the ending position and get the piece that was replaced
 
-        if (pieceTaken != null) {
-            data.getEatenPieces().push(pieceTaken);
+        if (eatenPiece != null) {
+            data.getEatenPieces().push(eatenPiece); //Add the eaten to the stack in the game data
         }
     }
 
     @Override
     void undoToGame(GameData data) {
-        data.getBoard().movePiece(start, piece);
+        data.getBoard().movePiece(start, piece); //Move the piece to its starting position
 
-        if (pieceTaken != null) {
+        //If a piece was eaten remove it from the stack and add it to the board
+        if (eatenPiece != null) {
             data.getEatenPieces().pop();
-            data.getBoard().add(end, pieceTaken);
+            data.getBoard().add(end, eatenPiece);
         }
     }
 
     /**
-     * La valeur du moves est l'opposé de la valeur de la pièce mangé
+     * @return 0 if no piece was eating (moving a piece does not change the board value). If a piece was eaten the value is - the piece's value
      */
     @Override
     public int getValue() {
-        return pieceTaken == null ? 0 : -pieceTaken.getSignedValue();
+        return eatenPiece == null ? 0 : -eatenPiece.getSignedValue();
     }
 }

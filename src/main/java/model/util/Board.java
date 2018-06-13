@@ -34,47 +34,43 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Une structure de données pour le util du game d'échec
- * Permet aux autres class de garder un objet dans une position du tableau.
- * <p>
- * Les classes peuvent accéder les données dans la structure à l'aide de {@link Position} sans devoir se soucier de comment les données sont organisées
- * <p>
- * À l'interne, la structure de données une values qui stocke toutes les données en ordre de gauche à droite puis de haut en bas
+ * A data structure that stores an object in each position (square) of the board.
+ * These objects are accessed using a {@link Position} key.
  *
- * @param <T> Le type de donnée stockée
+ * Internally the objects are stored in a list
+ *
+ * @param <T> The object that is stored in the data structure
  */
 public class Board<T> implements Iterable<T> {
     /**
-     * La values contenant les données
+     * The data
      */
     @NotNull
-    private final List<T> values = new ArrayList<>(Position.LIMIT * Position.LIMIT);
+    private final List<T> data = new ArrayList<>(Position.LIMIT * Position.LIMIT);
 
     /**
-     * @param position la position de la donnée désirée
-     * @return la donnée désirée
+     * @param position the position key
+     * @return the object at this position
      */
     @NotNull
     public T get(@NotNull Position position) {
-        return values.get(getIndex(position));
+        return data.get(getIndex(position));
     }
 
     public void add(@NotNull Position position, @NotNull T valeur) {
-        values.add(getIndex(position), valeur);
-    }
-
-    @Contract(pure = true)
-    private int getIndex(Position position) {
-        return getIndex(position.getRow(), position.getColumn());
-    }
-
-    @Contract(pure = true)
-    private int getIndex(int rangee, int colonne) {
-        return Position.LIMIT * rangee + colonne;
+        data.add(getIndex(position), valeur);
     }
 
     /**
-     * @return un iterator qui passe sur toutes les position de la structure de données
+     * Calculates the index of an item at this position
+     */
+    @Contract(pure = true)
+    private int getIndex(Position position) {
+        return Position.LIMIT * position.getRow() + position.getColumn();
+    }
+
+    /**
+     * @return an iterator that loops through all the objects in the data structure. Uses the position iterator.
      */
     @NotNull
     @Override
@@ -94,7 +90,7 @@ public class Board<T> implements Iterable<T> {
         };
     }
 
-    public Collection<T> getValues() {
-        return values;
+    public Collection<T> getData() {
+        return data;
     }
 }

@@ -8,24 +8,24 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
- * Un player. Définit comment il va player
+ * A player. Each implementation must decide how the player is going to play (what move it is going to play)
  */
 public abstract class Player implements Serializable {
     /**
-     * Demande au player de soumettre son prochain moves par l'entremise du callback
+     * Called to ask the player to submit his move via the callback method
      *
-     * @param callback la méthode par laquelle l'on soumet son prochain moves
-     * @param colour  la colour du moves requis
+     * @param callback the consumer method through which the player should pass his move
+     * @param colour  the colour of the player that should submit his move
      */
     public abstract void getMove(Consumer<Move> callback, Colour colour);
 
     /**
-     * @param gameData le game data
+     * @param gameData called when the player is added to the game to give it access to the game data
      */
     public abstract void initializeGameData(GameData gameData);
 
     /**
-     * @return Le nom du player tel que affiché sur l'interface
+     * @return the players name to be show on the screen
      */
     protected abstract String getName();
 

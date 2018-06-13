@@ -4,9 +4,6 @@ import model.moves.Move;
 import model.util.Colour;
 import model.util.Offset;
 
-/**
- * La pièce la dame
- */
 public class Queen extends DirectionPiece {
     private static final Offset[] OFFSETS = {
             Offset.TOP_LEFT,

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * Une pièce qui attack dans une ligne dans une direction (dame, fou et tour)
+ * A piece that attacks in a line a (or several) directions (ex. Queen, Rook, Bishop)
  */
 abstract class DirectionPiece extends Piece {
     DirectionPiece(Colour colour) {
@@ -17,24 +17,23 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    Collection<Position> generatePossiblePositions(BoardMap board, Position start) {
+    Collection<Position> generatePossibleDestinations(BoardMap board, Position start) {
         Collection<Position> positions = new LinkedList<>();
 
-        //Pour chaque directions
+        //For each direction
         for (Offset direction : getDirections()) {
             Position end = start.shift(direction);
 
-            //Chaque fois décaler la pièce dans la direction
+            //Loop through all the positions in that line/direction
             while (end.isValid()) {
                 Piece piece = board.getPiece(end);
 
-                if (piece == null)
-                    positions.add(end); //Si il n'y a rien là -> moves possible
+                if (piece == null) positions.add(end); //If the square (position) is empty -> can move
                 else {
-                    //Si il y a une pièce d'une autre colour on peut manger
+                    //If piece is other colour can eat
                     if (piece.getColour() != colour) positions.add(end);
 
-                    //Une pièce bloque le chemin on ne peut pas continuer dans cette direction
+                    //Cannot go past a piece since it is blocking the line
                     break;
                 }
 
@@ -46,7 +45,7 @@ abstract class DirectionPiece extends Piece {
     }
 
     /**
-     * La liste de direction possible
+     * @return the list of directions the piece can attack
      */
     abstract Offset[] getDirections();
 }

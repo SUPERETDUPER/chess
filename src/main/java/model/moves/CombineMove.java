@@ -4,13 +4,15 @@ import model.GameData;
 import model.util.Position;
 
 /**
- * Un moves qui est un ensemble d'autre mouvements
- * La liste de mouvements est appliqué en ordre. Et la value est la somme
+ * A move which executes other moves at the same time
  */
 public class CombineMove extends BaseMove {
     private final Move[] otherMoves;
     private Integer value;
 
+    /**
+     * @param otherMoves a list of other moves to apply with this move
+     */
     public CombineMove(Position debut, Position fin, Move[] otherMoves) {
         super(debut, fin);
         this.otherMoves = otherMoves;

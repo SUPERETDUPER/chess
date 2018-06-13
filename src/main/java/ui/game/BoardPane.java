@@ -128,7 +128,7 @@ public class BoardPane extends Pane {
         }
 
         //Add all the squares and pieces to the board
-        this.getChildren().addAll(boardSquares.getValues());
+        this.getChildren().addAll(boardSquares.getData());
         this.getChildren().addAll(piecePanes.values());
 
         this.gameData.setChangeListener(this::updateBoard); //If the board model changes update the display
@@ -180,7 +180,7 @@ public class BoardPane extends Pane {
             if (pieceClicked == null || moveRequest.getColour() != pieceClicked.getColour()) return;
 
             //Calculate possible moves for piece
-            Collection<Move> moves = gameData.filterOnlyLegal(pieceClicked.generateAllMoves(gameData.getBoard(), position), pieceClicked.getColour());
+            Collection<Move> moves = gameData.filterOnlyLegal(pieceClicked.generatePossibleMoves(gameData.getBoard(), position), pieceClicked.getColour());
 
             //Highlight those moves
             highlightController.select(position, moves);

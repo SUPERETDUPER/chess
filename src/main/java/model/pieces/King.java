@@ -24,7 +24,7 @@ public class King extends OffsetPiece {
     };
 
     /**
-     * Le nombre de mouvements complétés sur la pièce
+     * The number of moves that have been applied to this piece. Used to know if the piece has moved
      */
     private int numberOfAppliedMoves = 0;
 
@@ -47,16 +47,19 @@ public class King extends OffsetPiece {
         return OFFSETS;
     }
 
+    /**
+     * Large value to show that the King is the most valuable and should not be eaten
+     */
     @Override
     public int getUnsignedValue() {
         return 1000;
     }
 
     @Override
-    Collection<Position> generatePossiblePositions(BoardMap board, Position start) {
-        Collection<Position> positions = super.generatePossiblePositions(board, start);
+    Collection<Position> generatePossibleDestinations(BoardMap board, Position start) {
+        Collection<Position> positions = super.generatePossibleDestinations(board, start);
 
-        //Ajouter les options pour casteling
+        //Add option for castling
         Position debutTour = start.shift(new Offset(0, 3));
         Position finTour = debutTour.shift(new Offset(0, -2));
         Position finRoi = start.shift(new Offset(0, 2));
@@ -73,13 +76,14 @@ public class King extends OffsetPiece {
     }
 
     @Override
-    Move makeMoveFromPosition(BoardMap board, Position start, Position end) {
-        if (end.getColumn() - start.getColumn() == 2)
-            return new CombineMove(start, end, new Move[]{
-                    new BaseMove(end.shift(Offset.RIGHT), end.shift(Offset.LEFT))
+    Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
+        //Add catch to convert castling to CombineMove
+        if (destination.getColumn() - current.getColumn() == 2)
+            return new CombineMove(current, destination, new Move[]{
+                    new BaseMove(destination.shift(Offset.RIGHT), destination.shift(Offset.LEFT))
             });
 
-        return super.makeMoveFromPosition(board, start, end);
+        return super.convertDestinationToMove(board, current, destination);
     }
 
     @Override

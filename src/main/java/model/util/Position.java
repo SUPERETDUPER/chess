@@ -7,8 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Une position du boardregion.
- * (0,0) est en haut à gauche
+ * A position (square) on the board. Top-left is (0,0)
  */
 public class Position implements Serializable {
     public static final int LIMIT = 8;
@@ -30,9 +29,8 @@ public class Position implements Serializable {
     }
 
     /**
-     * Retourne une position déplacé
-     *
-     * @return la nouvelle position
+     * @param offset how much to shift this position
+     * @return a new position that is shifted from this
      */
     @NotNull
     public Position shift(Offset offset) {
@@ -40,7 +38,7 @@ public class Position implements Serializable {
     }
 
     /**
-     * @return si la position rentre dans les limites
+     * @return if the position is within the limits (is a valid position on the board)
      */
     public boolean isValid() {
         return 0 <= row && row < LIMIT && 0 <= column && column < LIMIT;

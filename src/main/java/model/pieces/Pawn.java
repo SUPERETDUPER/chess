@@ -16,9 +16,11 @@ public class Pawn extends Piece {
     private final Offset LEFT_ATTACK = getColour() == Colour.WHITE ? Offset.TOP_RIGHT : Offset.BOTTOM_RIGHT;
     private final Offset FORWARD = getColour() == Colour.WHITE ? Offset.UP : Offset.DOWN;
     private final Offset FORWARD_BY_TWO = new Offset(Colour.WHITE == getColour() ? -2 : 2, 0);
+    private final int startRow = getColour() == Colour.WHITE ? Position.LIMIT - 2 : 1;
 
-    private int numberOfAppliedMoves = 0;
-
+    /**
+     * null when not promoted and not-null when pawn was promoted
+     */
     private Piece promotedQueen = null;
 
     public Pawn(Colour colour) {
@@ -26,61 +28,54 @@ public class Pawn extends Piece {
     }
 
     @Override
-    Move makeMoveFromPosition(BoardMap board, Position start, Position end) {
-        if (promotedQueen != null || (end.getRow() != 0 && end.getRow() != Position.LIMIT - 1))
-            return super.makeMoveFromPosition(board, start, end);
+    Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
+        //Add catch for when pawn gets promoted
+        if (promotedQueen == null && (destination.getRow() == 0 || destination.getRow() == Position.LIMIT - 1))
+            return new PromotionMove(current, destination);
 
-        return new PromotionMove(start, end);
+        return super.convertDestinationToMove(board, current, destination);
+
     }
 
     @Override
-    Collection<Position> generatePossiblePositions(BoardMap board, Position start) {
-        if (promotedQueen != null) return promotedQueen.generatePossiblePositions(board, start);
+    Collection<Position> generatePossibleDestinations(BoardMap board, Position start) {
+        //If promoted use queen to generate moves
+        if (promotedQueen != null) return promotedQueen.generatePossibleDestinations(board, start);
 
         Collection<Position> positions = new LinkedList<>();
 
-        boolean blocked = false;
+        Position forward = start.shift(FORWARD);
 
-        Position fin = start.shift(FORWARD);
+        //If no one in spot in front can move else we are blocked
+        //No need for .isValid check since when on edge piece is promoted to queen
+        boolean notBlocked = board.getPiece(forward) == null;
+        if (notBlocked) positions.add(forward);
 
-        //Si une place de plus est valide est n'est pas promotion
-        if (fin.isValid()) {
+        //If not blocked and on start row we can move forward by two
+        //No need for .isValid check since when on edge piece is promoted to queen
+        if (notBlocked && start.getRow() == startRow) {
+            forward = start.shift(FORWARD_BY_TWO);
 
-            //Si il y a personne on peut avancer
-            if (board.getPiece(fin) == null) {
-                positions.add(fin);
-            }
-            //Sinon on est bloqué
-            else blocked = true;
+            //Only move forward by two if square is empty
+            if (board.getPiece(forward) == null) positions.add(forward);
         }
 
-        //Si on est pas blocké est on a pas déjà sauté on vérifie si on peut sauter
-        if (!blocked && numberOfAppliedMoves == 0) {
-            fin = start.shift(FORWARD_BY_TWO);
+        //Try to eat pieces on the side
+        forward = start.shift(RIGHT_ATTACK);
+        if (canEat(board, forward)) positions.add(forward);
 
-            //Si la position et valide et la postion est vide on peut
-            if (fin.isValid() && board.getPiece(fin) == null) {
-                positions.add(fin);
-            }
-        }
-
-        //On essaye de manger des pièces aux côtés
-        fin = start.shift(RIGHT_ATTACK);
-        if (canEat(board, fin)) positions.add(fin);
-
-        fin = start.shift(LEFT_ATTACK);
-        if (canEat(board, fin)) positions.add(fin);
+        forward = start.shift(LEFT_ATTACK);
+        if (canEat(board, forward)) positions.add(forward);
 
         return positions;
     }
 
-    private boolean canEat(BoardMap boardMap, Position fin) {
-        if (fin.isValid()) {
-            Piece piece = boardMap.getPiece(fin);
-            return piece != null && piece.getColour() != colour;
-        }
+    private boolean canEat(BoardMap boardMap, Position destination) {
+        if (!destination.isValid()) return false;
 
-        return false;
+        Piece piece = boardMap.getPiece(destination);
+        return piece != null && piece.getColour() != colour; //Can eat if piece exists and is other colour
+
     }
 
     @Override
@@ -106,6 +101,8 @@ public class Pawn extends Piece {
     @Override
     public void notifyMoveComplete(Move move) {
         if (move instanceof PromotionMove) {
+            //Make the queen equal this since when the queen searches in the data for its position it should find itself
+            //TODO might not be required since position is passed in
             promotedQueen = new Queen(colour) {
                 @Override
                 public int hashCode() {
@@ -118,8 +115,6 @@ public class Pawn extends Piece {
                 }
             };
         }
-
-        numberOfAppliedMoves += 1;
     }
 
     @Override
@@ -127,8 +122,6 @@ public class Pawn extends Piece {
         if (move instanceof PromotionMove) {
             promotedQueen = null;
         }
-
-        numberOfAppliedMoves -= 1;
     }
 
     @Override

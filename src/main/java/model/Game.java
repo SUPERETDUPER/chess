@@ -17,11 +17,13 @@ import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
- * Classe qui supervise les players et s'assure de respecter les tours
+ * Class at the top of the hierarchy that organises when each player plays and verifies for checkmate/stalemates.
+ *
+ * When a player plays, the next player doesn't play automatically. Instead the notifyNextPlayerMethod needs to be called. This allows the UI to update first.
  */
 public class Game implements Serializable {
     /**
-     * Le résultat de la partie
+     * The result of the game
      */
     public enum Result {
         WHITE_WINS,
@@ -29,6 +31,10 @@ public class Game implements Serializable {
         TIE
     }
 
+    /**
+     * The status of the game (either waiting on a player to call the callback or inactive
+     */
+    //TODO consider merging two players
     public enum Status {
         WAITING_FOR_WHITE,
         WAITING_FOR_BLACK,
@@ -36,36 +42,37 @@ public class Game implements Serializable {
     }
 
     /**
-     * Le boardregion et les rois
+     * The actual game state
      */
     private final GameData gameData;
 
     /**
-     * La liste de players
+     * The mapping of players based on their color
      */
     @NotNull
     private final EnumMap<Colour, Player> players;
 
     /**
-     * A qui le tour
+     * Who's turn it is
      */
     transient private ReadOnlyObjectWrapper<Colour> turnMarker = new ReadOnlyObjectWrapper<>(Colour.WHITE);
+
 
     transient private ReadOnlyObjectWrapper<Status> status = new ReadOnlyObjectWrapper<>(Status.INACTIVE);
 
     /**
-     * le listener de resultat
+     * The listener of the result
      */
     transient private Consumer<Result> resultListener;
 
     /**
-     * la liste de pastMoves effectuées
+     * A list of completed moves
      */
     private final Stack<Move> pastMoves = new Stack<>();
 
     /**
-     * @param gameData l'info de game
-     * @param players les players
+     * @param gameData the game state (piece's position)
+     * @param players  the players
      */
     Game(GameData gameData, @NotNull EnumMap<Colour, Player> players) {
         this.gameData = gameData;
@@ -77,11 +84,14 @@ public class Game implements Serializable {
     }
 
     /**
-     * Commencer la partie
+     * Asks the next player to play
      */
     public void notifyNextPlayer() {
-        //Vérifier pour échec et mat ou match nul
-        Collection<Move> moves = gameData.getAllLegalMoves(turnMarker.get());
+        if (status.get() != Status.INACTIVE) throw new RuntimeException("Game is not inactive. Should not request move from player");
+
+        //TODO move check mate verification to the play and make sure no error is thrown on game finish
+        //Verifies is the game state is a checkmate/stalemate
+        Collection<Move> moves = gameData.getPossibleLegalMoves(turnMarker.get());
 
         if (moves.isEmpty()) {
             if (gameData.getBoard().isPieceAttacked(gameData.getKing(turnMarker.get()))) {
@@ -93,11 +103,12 @@ public class Game implements Serializable {
             } else {
                 resultListener.accept(Result.TIE);
             }
-        } else {
-            //Si la partie n'est pas fini notifier prochain player
-            status.set(turnMarker.get() == Colour.WHITE ? Status.WAITING_FOR_WHITE : Status.WAITING_FOR_BLACK);
-            players.get(turnMarker.get()).getMove(this::submitMove, turnMarker.get()); //Demander au player de bouger
+            return;
         }
+
+        //Switch the status and notify the player
+        status.set(turnMarker.get() == Colour.WHITE ? Status.WAITING_FOR_WHITE : Status.WAITING_FOR_BLACK);
+        players.get(turnMarker.get()).getMove(this::submitMove, turnMarker.get()); //Demander au player de bouger
     }
 
     public void setResultListener(Consumer<Result> resultListener) {
@@ -105,15 +116,15 @@ public class Game implements Serializable {
     }
 
     /**
-     * Appelé par le callback de player.getMove()
+     * Called by a player to submit its move
      *
-     * @param move le pastMoves à submitMove
+     * @param move the submited move
      */
     private void submitMove(@NotNull Move move) {
-        move.apply(gameData); //Jouer le pastMoves
-        pastMoves.push(move); //Ajouter à la liste
+        move.apply(gameData); //Apply the move to the state
+        pastMoves.push(move); //Add the move to the list
 
-        gameData.notifyListenerOfChange(); //Notifier changement
+        gameData.notifyListenerOfChange(); //Notify listener of change
 
         switchTurn();
 
@@ -121,19 +132,20 @@ public class Game implements Serializable {
     }
 
     private void switchTurn() {
-        turnMarker.set(turnMarker.getValue() == Colour.WHITE ? Colour.BLACK : Colour.WHITE); //Changer le tour
+        turnMarker.set(turnMarker.getValue() == Colour.WHITE ? Colour.BLACK : Colour.WHITE);
     }
 
     /**
-     * @param tour le nombre de pastMoves à défaire
+     * Undoes a certain number of moves
+     * @param tour the number of turns to undo
      */
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
             pastMoves.pop().undo(gameData);
-            gameData.notifyListenerOfChange();
             switchTurn();
         }
 
+        gameData.notifyListenerOfChange();
         status.set(Status.INACTIVE);
     }
 

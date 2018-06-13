@@ -15,8 +15,9 @@ import java.util.EnumMap;
 import java.util.Stack;
 
 /**
- * Représente le boardregion de game et quelle pièces sont les kings
+ * Represents the board state (piece's positions) and the pieces that were eaten
  */
+//TODO move listener to Game class
 public class GameData implements Serializable {
     @NotNull
     private final BoardMap board;
@@ -25,31 +26,28 @@ public class GameData implements Serializable {
     private final Stack<Piece> eatenPieces = new Stack<>();
 
     /**
-     * Le listener pour quand le boardregion change
+     * The listener to notify when the game state changes
      */
     @Nullable
     transient private Runnable changeListener;
 
     /**
-     * La liste de roi associé à chaque couleur
+     * The kings for each player.
      */
     @NotNull
     private final EnumMap<Colour, King> kings = new EnumMap<>(Colour.class);
 
-    /**
-     * @param board le boardregion de game
-     */
-    public GameData(@NotNull BoardMap board) {
-        for (Piece piece : board.iteratePieces()) {
+    public GameData(@NotNull BoardMap boardMap) {
+        this.board = boardMap;
+
+        for (Piece piece : boardMap.iteratePieces()) {
             if (piece instanceof King) {
                 if (kings.containsKey(piece.getColour()))
-                    throw new RuntimeException("Il y a deux kings de la même couleur");
+                    throw new RuntimeException("There are two kings for the same player");
 
                 kings.put(piece.getColour(), (King) piece);
             }
         }
-
-        this.board = board;
     }
 
     public void setChangeListener(@NotNull Runnable changeListener) {
@@ -57,7 +55,7 @@ public class GameData implements Serializable {
     }
 
     /**
-     * Appelé par {@link Game} pour notifier qu'un moves sur le boardregion a été effectué
+     * Called by {@link Game} to notify that a move was completed and the listeners should be notified
      */
     void notifyListenerOfChange() {
         changeListener.run();
@@ -69,7 +67,7 @@ public class GameData implements Serializable {
     }
 
     /**
-     * @param colour la colour du roi demandé
+     * @return the king of this colour
      */
     @NotNull
     King getKing(Colour colour) {
@@ -77,17 +75,17 @@ public class GameData implements Serializable {
     }
 
     /**
-     * @return la liste mouvements possible et légal pour cette colour
+     * @return a collection of possible legal moves that can be player
      */
     @NotNull
-    public Collection<Move> getAllLegalMoves(Colour colour) {
+    public Collection<Move> getPossibleLegalMoves(Colour colour) {
         return filterOnlyLegal(board.getAllPossibleMoves(colour), colour);
     }
 
     /**
-     * @param moves une liste de moves légals et illégals
-     * @param verifierPour la couleur du player qu'il faut vérifier
-     * @return la liste de moves avec que les moves légals
+     * @param moves a collection of legal and illegal moves
+     * @param verifierPour legal for who (will remove all moves that throw this colour's king in check)
+     * @return a filter collection containing only legal moves
      */
     @NotNull
     public Collection<Move> filterOnlyLegal(Collection<Move> moves, Colour verifierPour) {

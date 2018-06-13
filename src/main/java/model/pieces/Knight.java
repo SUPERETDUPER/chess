@@ -6,8 +6,7 @@ import model.util.Offset;
 
 public class Knight extends OffsetPiece {
     /**
-     * Les valeurs où le cavalier peut se déplacer
-     * En forme de L
+     * The Offsets where the Knight can be moved. In an L shape
      */
     private static final Offset[] OFFSETS = {
             new Offset(-1, -2),

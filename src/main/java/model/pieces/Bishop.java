@@ -39,12 +39,10 @@ public class Bishop extends DirectionPiece {
 
     @Override
     public void notifyMoveComplete(Move move) {
-
     }
 
     @Override
     public void notifyMoveUndo(Move move) {
-
     }
 
     @Override

@@ -11,11 +11,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Un moves. Représenté par une pièce qui se déplace vers une position finale
+ * A move. Each move has a start and end location. Each move has a piece (defined only when move is applied)
  */
 public abstract class Move implements Serializable {
     /**
-     * La pièce qui se déplace
+     * The piece that is moving. Gets set in method applyToGame
      */
     @Nullable
     Piece piece;
@@ -23,9 +23,6 @@ public abstract class Move implements Serializable {
     @NotNull
     final Position start;
 
-    /**
-     * La position finale de la pièce
-     */
     @NotNull
     final Position end;
 
@@ -40,19 +37,20 @@ public abstract class Move implements Serializable {
     }
 
     /**
-     * Appelé pour apply le moves sur un boardregion de game
-     *
-     * @param data le boardregion de game sur lequel on applique le moves
+     * Applies this move to the game data
      */
     public void apply(GameData data) {
         applyToGame(data);
         piece.notifyMoveComplete(this);
     }
 
+    /**
+     * Implemented by subclasses to be actually applied to game data
+     */
     abstract void applyToGame(GameData data);
 
     /**
-     * Appelé pour défaire un moves qui vient d'être appliqué sur le boardregion de game
+     * Undoes the move from the game data
      */
     public void undo(GameData data) {
         undoToGame(data);
@@ -62,14 +60,13 @@ public abstract class Move implements Serializable {
     abstract void undoToGame(GameData data);
 
     /**
-     * La valeur du moves. Une valeur négative signifie qu'une pièce blanche a été mangé
-     *
-     * @return la valeur du moves
+     * @return the value of the move (difference in board value)
      */
     public abstract int getValue();
 
-    //Si le moves est la même pièce à la même position le moves est égal
-
+    /**
+     * @return true if the obj is a move with the same start and end
+     */
     @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
@@ -86,6 +83,6 @@ public abstract class Move implements Serializable {
 
     @Override
     public String toString() {
-        return start + " à " + end;
+        return start + " to " + end;
     }
 }

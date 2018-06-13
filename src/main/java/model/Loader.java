@@ -4,25 +4,34 @@ import model.player.Player;
 import model.util.BoardMap;
 import model.util.Colour;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.EnumMap;
 
 /**
- * Responsable de saveGame et recharger le fichier contenant le Game
+ * Loads and saves the game to a file to allow the game to be saved between JVM runs
  */
 public class Loader {
-    private final File file = new File("savedGame.txt"); //Le nom du fichier
+    /**
+     * The file to load/save to
+     */
+    private final File file = new File("savedGame.txt");
+
+    /**
+     * The loaded game
+     */
+    @Nullable
     private Game game;
 
     /**
-     * Sauvegarde le game
+     * Saves the game
      */
     private void saveGame() {
         try {
-            if (!file.exists()) //noinspection ResultOfMethodCallIgnored
-                file.createNewFile(); //Si le fichier de game n'existe pas créer le fichier
+            //noinspection ResultOfMethodCallIgnored
+            file.createNewFile(); //Create a new file (fails silently if file already exists)
 
-            //Écrire le game au fichier
+            //Write the game to the file
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(game);
             objectOutputStream.close();
@@ -32,17 +41,18 @@ public class Loader {
     }
 
     /**
-     * charge le game du fichier
+     * Tries loading the game to the file.
+     * If succeeds will save the game to this.game
      *
-     * @return Si on a chargé le game avec success
+     * @return if suceeded in loading the game
      */
     public boolean loadGameFromFile() {
-        if (!file.exists()) return false; //Si aucun fichier -> échec
+        if (!file.exists()) return false; //If file does not exist there is no game to load
 
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
             this.game = (Game) objectInputStream.readObject(); //Lire le game
-            this.game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame()); //Quand le game change sauvegarder
+            this.game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame()); //Add listener such that when the game changes, it is saved
             objectInputStream.close();
             return true;
         } catch (Exception e) {
@@ -52,16 +62,18 @@ public class Loader {
     }
 
     public void createNewGame(EnumMap<Colour, Player> joueurs) {
-        //Créer les rois
-
-        //Créer le modèle de game
+        //Create the game state (in starting position)
         GameData gameData = new GameData(BoardMap.createStartingBoard());
 
-        //Créer et notifyNextPlayer la partie
+        //Create the game (players + state)
         this.game = new Game(gameData, joueurs);
-        game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame());
+        game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame());//Add listener such that when the game changes, it is saved
     }
 
+    /**
+     * @return null if loadGameFromFile and/or createNewGame was not called
+     */
+    @Nullable
     public Game getGame() {
         return game;
     }
