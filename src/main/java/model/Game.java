@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Stack;
@@ -61,7 +62,7 @@ public class Game implements Serializable {
     /**
      * The listener to notify when the board has changed
      */
-    transient private Runnable boardChangeListener;
+    transient private Collection<Runnable> boardChangeListeners = new ArrayList<>();
 
     /**
      * The listener of the result
@@ -86,8 +87,8 @@ public class Game implements Serializable {
         }
     }
 
-    public void setBoardChangeListener(Runnable boardChangeListener) {
-        this.boardChangeListener = boardChangeListener;
+    public void addBoardChangeListener(Runnable boardChangeListener) {
+        this.boardChangeListeners.add(boardChangeListener);
     }
 
     /**
@@ -131,9 +132,8 @@ public class Game implements Serializable {
         move.apply(gameData); //Apply the move to the state
         pastMoves.push(move); //Add the move to the list
 
-        boardChangeListener.run(); //Notify listener of change
-
         switchTurn();
+        notifyListeners();
 
         status.set(Status.INACTIVE);
     }
@@ -152,8 +152,15 @@ public class Game implements Serializable {
             switchTurn();
         }
 
-        boardChangeListener.run();
+        notifyListeners();
+
         status.set(Status.INACTIVE);
+    }
+
+    private void notifyListeners() {
+        for (Runnable boardChangeListener : boardChangeListeners) {
+            boardChangeListener.run();
+        }
     }
 
     public GameData getGameData() {
@@ -163,10 +170,6 @@ public class Game implements Serializable {
     @NotNull
     public EnumMap<Colour, Player> getPlayers() {
         return players;
-    }
-
-    ReadOnlyObjectProperty<Colour> turnMarkerProperty() {
-        return turnMarker.getReadOnlyProperty();
     }
 
     public ReadOnlyObjectProperty<Status> statusProperty() {
@@ -182,5 +185,6 @@ public class Game implements Serializable {
         in.defaultReadObject();
         turnMarker = new ReadOnlyObjectWrapper<>((Colour) in.readObject());
         status = new ReadOnlyObjectWrapper<>(Status.INACTIVE);
+        boardChangeListeners = new ArrayList<>();
     }
 }

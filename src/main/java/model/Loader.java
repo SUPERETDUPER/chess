@@ -52,7 +52,7 @@ public class Loader {
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
             this.game = (Game) objectInputStream.readObject(); //Lire le game
-            this.game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame()); //Add listener such that when the game changes, it is saved
+            this.game.addBoardChangeListener(this::saveGame); //Add listener such that when the game changes, it is saved
             objectInputStream.close();
             return true;
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class Loader {
 
         //Create the game (players + state)
         this.game = new Game(gameData, joueurs);
-        game.turnMarkerProperty().addListener((observable, oldValue, newValue) -> saveGame());//Add listener such that when the game changes, it is saved
+        game.addBoardChangeListener(this::saveGame);//Add listener such that when the game changes, it is saved
     }
 
     /**

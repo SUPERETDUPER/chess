@@ -135,7 +135,7 @@ public class BoardPane extends Pane {
         this.getChildren().addAll(boardSquares.getData());
         this.getChildren().addAll(piecePanes.values());
 
-        game.setBoardChangeListener(this::updateBoard); //If the board model changes update the display
+        game.addBoardChangeListener(this::updateBoard); //If the board model changes update the display
 
         //When the game is no longer waiting for a move, wait for all animations to finish then trigger the next player to play
         game.statusProperty().addListener((observable, oldValue, newValue) -> {
