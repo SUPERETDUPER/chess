@@ -1,5 +1,6 @@
 package ui.game.components;
 
+import javafx.beans.value.ObservableNumberValue;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -34,16 +35,17 @@ public class PiecePane extends StackPane {
     /**
      * @param piece    the piece to show
      * @param position the position of the piece
+     * @param size the size of the pane (width/height)
      */
-    public PiecePane(Piece piece, GraphicPosition position) {
+    public PiecePane(Piece piece, GraphicPosition position, ObservableNumberValue size) {
         super();
 
         this.piece = piece;
         this.currentPosition = position;
 
         //Bind the pane's width/height
-        this.prefHeightProperty().bind(position.getSize());
-        this.prefWidthProperty().bind(position.getSize());
+        this.prefHeightProperty().bind(size);
+        this.prefWidthProperty().bind(size);
 
         //Bind the pane to it's position
         bind(position);

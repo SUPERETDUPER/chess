@@ -9,17 +9,18 @@ import ui.game.components.PiecePane;
 /**
  * The position of a square
  */
-public class SquareGraphicPosition extends GraphicPosition {
+public class SquareGraphicPosition implements GraphicPosition {
     private final Position position;
     private final ObservableNumberValue xOffset;
+    private final ObservableNumberValue boardHeight;
 
     /**
      * @param position the square's position
-     * @param hauteur  the height of the board
+     * @param height  the height of the board
      * @param xOffset  how much the board is offset on the X axis
      */
-    public SquareGraphicPosition(Position position, ObservableNumberValue hauteur, ObservableNumberValue xOffset) {
-        super(hauteur);
+    public SquareGraphicPosition(Position position, ObservableNumberValue height, ObservableNumberValue xOffset) {
+        this.boardHeight = height;
         this.position = position;
         this.xOffset = xOffset;
     }

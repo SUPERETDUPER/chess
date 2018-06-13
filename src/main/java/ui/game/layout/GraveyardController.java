@@ -89,15 +89,11 @@ public class GraveyardController {
     /**
      * A position in the graveyard
      */
-    private class GraveyardGraphicPosition extends GraphicPosition {
+    private class GraveyardGraphicPosition implements GraphicPosition {
         /**
          * The index of the piece (one more than the past)
          */
         private final int index = piecesInGraveyard.size();
-
-        GraveyardGraphicPosition() {
-            super(GraveyardController.this.height);
-        }
 
         @Override
         public ObservableNumberValue getX() {

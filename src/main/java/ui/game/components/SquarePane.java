@@ -1,5 +1,6 @@
 package ui.game.components;
 
+import javafx.beans.value.ObservableNumberValue;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -32,13 +33,14 @@ public class SquarePane extends Rectangle {
      * @param isWhite       si la case est blanche
      * @param clickListener la fonction à appeler quand la case est appuyé
      * @param position      la position de la case
+     * @param size the size of the square (width/height)
      */
-    public SquarePane(boolean isWhite, @NotNull Consumer<GraphicPosition> clickListener, @NotNull SquareGraphicPosition position) {
+    public SquarePane(boolean isWhite, @NotNull Consumer<GraphicPosition> clickListener, @NotNull SquareGraphicPosition position, ObservableNumberValue size) {
         super();
         this.isWhite = isWhite;
 
-        this.widthProperty().bind(position.getSize());
-        this.heightProperty().bind(position.getSize());
+        this.widthProperty().bind(size);
+        this.heightProperty().bind(size);
         this.xProperty().bind(position.getX());
         this.yProperty().bind(position.getY());
 

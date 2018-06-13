@@ -1,5 +1,6 @@
 package ui.game;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
 import model.Game;
@@ -88,6 +89,8 @@ public class BoardPane extends Pane {
                 )
         );
 
+        DoubleBinding componentSize = heightProperty().divide(Position.LIMIT);
+
         //For each position create square
         PositionIterator positionIterator = new PositionIterator();
 
@@ -100,7 +103,8 @@ public class BoardPane extends Pane {
             SquarePane squarePane = new SquarePane(
                     (position.getColumn() + position.getRow()) % 2 == 0, //Calculates wheather the sqaure should be white or black (gray) (top-left is white)
                     this::handleClick,
-                    graphicPosition
+                    graphicPosition,
+                    componentSize
             );
 
             //Add the square to the list
@@ -110,7 +114,7 @@ public class BoardPane extends Pane {
             Piece piece = gameData.getBoard().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(piece, graphicPosition);
+                PiecePane piecePane = new PiecePane(piece, graphicPosition, componentSize);
 
                 piecePane.setOnMousePressed(event -> handleClick(piecePane.getCurrentPosition()));
 
@@ -121,7 +125,7 @@ public class BoardPane extends Pane {
 
         //For each already eaten piece create a piecePane and add to graveyard
         for (Piece piece : gameData.getEatenPieces()) {
-            PiecePane piecePane = new PiecePane(piece, graveyardControllers.get(piece.getColour()).getNextGraveyardPosition());
+            PiecePane piecePane = new PiecePane(piece, graveyardControllers.get(piece.getColour()).getNextGraveyardPosition(), componentSize);
             piecePane.setOnMouseClicked(event -> this.handleClick(piecePane.getCurrentPosition()));
 
             piecePanes.put(piece, piecePane);
