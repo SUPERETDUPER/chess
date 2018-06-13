@@ -19,10 +19,7 @@ import ui.game.layout.GraphicPosition;
 import ui.game.layout.GraveyardController;
 import ui.game.layout.SquareGraphicPosition;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -124,11 +121,16 @@ public class BoardPane extends Pane {
         }
 
         //For each already eaten piece create a piecePane and add to graveyard
-        for (Piece piece : gameData.getEatenPieces()) {
-            PiecePane piecePane = new PiecePane(piece, graveyardControllers.get(piece.getColour()).getNextGraveyardPosition(), componentSize);
-            piecePane.setOnMouseClicked(event -> this.handleClick(piecePane.getCurrentPosition()));
 
-            piecePanes.put(piece, piecePane);
+        for (Colour colour : Colour.values()) {
+            int counter = 0;
+
+            for (Piece eatenPiece : gameData.getEatenPieces(colour)) {
+                PiecePane piecePane = new PiecePane(eatenPiece, graveyardControllers.get(eatenPiece.getColour()).getNextGraveyardPosition(counter++), componentSize);
+                piecePane.setOnMouseClicked(event -> this.handleClick(piecePane.getCurrentPosition()));
+
+                piecePanes.put(eatenPiece, piecePane);
+            }
         }
 
         //Add all the squares and pieces to the board
@@ -155,7 +157,7 @@ public class BoardPane extends Pane {
      * Called by a player to request the board to record a users move
      *
      * @param callback the callback method to which the move should be submitted
-     * @param colour the colour of the player that should submit the move
+     * @param colour   the colour of the player that should submit the move
      */
     void requestMove(Consumer<Move> callback, Colour colour) {
         this.moveRequest = new MoveRequest(callback, colour);
@@ -172,7 +174,7 @@ public class BoardPane extends Pane {
         if (!(panePosition instanceof SquareGraphicPosition)) return;
 
         //If there are no active moveRequests do nothing
-        if (moveRequest == null || moveRequest.isSubmited()) return;
+        if (moveRequest == null || moveRequest.isSubmitted()) return;
 
         //Get the position and piece (might be null - empty square)
         Position position = ((SquareGraphicPosition) panePosition).getPosition();
@@ -206,8 +208,6 @@ public class BoardPane extends Pane {
      * Called when the model changes to update the display
      */
     private synchronized void updateBoard() {
-//        while (animationController.isRunning().get()) Thread.yield();
-
         //For each piece on the board
         for (Piece piece : gameData.getBoard().iteratePieces()) {
             Position position = gameData.getBoard().getPosition(piece);
@@ -222,16 +222,20 @@ public class BoardPane extends Pane {
             if (!piecePane.isAtPosition(panePosition)) animationController.addAnimation(piecePane, panePosition);
         }
 
-        //For each piece in graveyard
-        for (Piece piece : gameData.getEatenPieces()) {
-            PiecePane piecePane = piecePanes.get(piece);
+        //For each colour of pieces
+        for (Colour colour : Colour.values()) {
+            //For each piece in the graveyard
+            Stack<Piece> eatenPieces = gameData.getEatenPieces(colour);
+            for (Piece piece : eatenPieces) {
+                PiecePane piecePane = piecePanes.get(piece);
 
-            //If graveyard does not already contain piece make animation to move piece to graveyard
-            if (!graveyardControllers.get(piece.getColour()).isInGraveyard(piece))
-                animationController.addAnimation(
-                        piecePane,
-                        graveyardControllers.get(piece.getColour()).getNextGraveyardPosition()
-                );
+                //If piecePane not already in graveyard move the piecePane to the graveyard
+                if (!(piecePane.getCurrentPosition() instanceof GraveyardController.GraveyardGraphicPosition))
+                    animationController.addAnimation(
+                            piecePane,
+                            graveyardControllers.get(colour).getNextGraveyardPosition(eatenPieces.size() - 1)
+                    );
+            }
         }
     }
 
@@ -274,7 +278,7 @@ public class BoardPane extends Pane {
         /**
          * True if the move has already been submited
          */
-        private boolean isSubmited = false;
+        private boolean isSubmitted = false;
 
         MoveRequest(@NotNull Consumer<Move> callback, @NotNull Colour colour) {
             this.moveCallback = callback;
@@ -282,12 +286,12 @@ public class BoardPane extends Pane {
         }
 
         void submit(Move move) {
-            isSubmited = true;
+            isSubmitted = true;
             moveCallback.accept(move);
         }
 
-        boolean isSubmited() {
-            return isSubmited;
+        boolean isSubmitted() {
+            return isSubmitted;
         }
 
         @NotNull

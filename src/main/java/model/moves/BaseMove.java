@@ -23,7 +23,7 @@ public class BaseMove extends Move {
         eatenPiece = data.getBoard().add(end, piece); //Place the piece at the ending position and get the piece that was replaced
 
         if (eatenPiece != null) {
-            data.getEatenPieces().push(eatenPiece); //Add the eaten to the stack in the game data
+            data.getEatenPieces(eatenPiece.getColour()).push(eatenPiece); //Add the eaten to the stack in the game data
         }
     }
 
@@ -33,7 +33,7 @@ public class BaseMove extends Move {
 
         //If a piece was eaten remove it from the stack and add it to the board
         if (eatenPiece != null) {
-            data.getEatenPieces().pop();
+            data.getEatenPieces(eatenPiece.getColour()).pop();
             data.getBoard().add(end, eatenPiece);
         }
     }

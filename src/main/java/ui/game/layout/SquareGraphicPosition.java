@@ -4,7 +4,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.value.ObservableNumberValue;
 import model.util.Position;
-import ui.game.components.PiecePane;
 
 /**
  * The position of a square
@@ -39,14 +38,6 @@ public class SquareGraphicPosition implements GraphicPosition {
 
     public Position getPosition() {
         return position;
-    }
-
-    @Override
-    public void notifyPlaced(PiecePane piecePane) {
-    }
-
-    @Override
-    public void notifyRemoved(PiecePane piecePane) {
     }
 
     @Override

@@ -21,7 +21,7 @@ public class GameData implements Serializable {
     private final BoardMap board;
 
     @NotNull
-    private final Stack<Piece> eatenPieces = new Stack<>();
+    private final EnumMap<Colour, Stack<Piece>> eatenPieces = new EnumMap<>(Colour.class);
 
     /**
      * The kings for each player.
@@ -31,6 +31,10 @@ public class GameData implements Serializable {
 
     public GameData(@NotNull BoardMap boardMap) {
         this.board = boardMap;
+
+        for (Colour colour : Colour.values()) {
+            eatenPieces.put(colour, new Stack<>());
+        }
 
         for (Piece piece : boardMap.iteratePieces()) {
             if (piece instanceof King) {
@@ -86,8 +90,10 @@ public class GameData implements Serializable {
         return legalMoves;
     }
 
-    @NotNull
-    public Stack<Piece> getEatenPieces() {
-        return eatenPieces;
+    /**
+     * @return the stack of eaten pieces for this colour
+     */
+    public Stack<Piece> getEatenPieces(Colour colour) {
+        return eatenPieces.get(colour);
     }
 }

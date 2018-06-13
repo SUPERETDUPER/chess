@@ -81,8 +81,6 @@ public class PiecePane extends StackPane {
         this.layoutXProperty().bind(position.getX());
         this.layoutYProperty().bind(position.getY());
 
-        position.notifyPlaced(this);
-
         this.setCacheHint(CacheHint.DEFAULT);
     }
 
@@ -90,7 +88,6 @@ public class PiecePane extends StackPane {
      * Unbinds the piece from it's position
      */
     public synchronized void unBind() {
-        currentPosition.notifyRemoved(this);
         this.currentPosition = null;
         this.setCacheHint(CacheHint.SPEED);
         this.layoutXProperty().unbind();

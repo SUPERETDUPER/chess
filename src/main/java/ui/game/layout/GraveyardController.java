@@ -4,11 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
-import model.pieces.Piece;
 import model.util.Position;
-import ui.game.components.PiecePane;
-
-import java.util.Stack;
 
 /**
  * Controls one (of two) graveyards (region where pieces that were taken go)
@@ -34,11 +30,6 @@ public class GraveyardController {
      * The total width of the graveyard
      */
     private final NumberBinding totalWidth;
-
-    /**
-     * The pieces currently in the graveyard
-     */
-    private final Stack<Piece> piecesInGraveyard = new Stack<>();
 
     /**
      * @param height        the height of a column
@@ -73,33 +64,31 @@ public class GraveyardController {
     }
 
     /**
-     * @return the position of the next piece to put in the graveyard
+     * @param positionIndex the position in the stack of the piece (0 is the first piece)
+     * @return the position of the piece with this positionIndex
      */
-    public GraphicPosition getNextGraveyardPosition() {
-        return new GraveyardGraphicPosition();
-    }
-
-    /**
-     * @return true if this piece is already in the graveyard
-     */
-    public boolean isInGraveyard(Piece piece) {
-        return piecesInGraveyard.contains(piece);
+    public GraphicPosition getNextGraveyardPosition(int positionIndex) {
+        return new GraveyardGraphicPosition(positionIndex);
     }
 
     /**
      * A position in the graveyard
      */
-    private class GraveyardGraphicPosition implements GraphicPosition {
+    public class GraveyardGraphicPosition implements GraphicPosition {
         /**
-         * The index of the piece (one more than the past)
+         * The position in the stack of the piece (one more than the past)
          */
-        private final int index = piecesInGraveyard.size();
+        private final int positionIndex;
+
+        GraveyardGraphicPosition(int positionIndex) {
+            this.positionIndex = positionIndex;
+        }
 
         @Override
         public ObservableNumberValue getX() {
-            //True if we should use the left column (depends on index and isLeftToRight)
-            if ((isLeftToRight && index < Position.LIMIT) ||
-                    (!isLeftToRight && index >= Position.LIMIT)) {
+            //True if we should use the left column (depends on positionIndex and isLeftToRight)
+            if ((isLeftToRight && positionIndex < Position.LIMIT) ||
+                    (!isLeftToRight && positionIndex >= Position.LIMIT)) {
                 return xOffset;
             } else {
                 return Bindings.divide(height, Position.LIMIT).add(xOffset);
@@ -110,30 +99,19 @@ public class GraveyardController {
         public NumberBinding getY() {
             return Bindings
                     .divide(height, Position.LIMIT)
-                    .multiply(index < Position.LIMIT ? index : index - Position.LIMIT);
-        }
-
-        @Override
-        public void notifyPlaced(PiecePane piecePane) {
-            piecesInGraveyard.push(piecePane.getPiece());
-        }
-
-        @Override
-        public void notifyRemoved(PiecePane piecePane) {
-            Piece piecePoped = piecesInGraveyard.pop();
-            if (piecePoped != piecePane.getPiece()) throw new RuntimeException("Piece removed not last in stack");
+                    .multiply(positionIndex < Position.LIMIT ? positionIndex : positionIndex - Position.LIMIT);
         }
 
         @Override
         public boolean equals(Object obj) {
             if (obj == null) return false;
             if (!(obj instanceof GraveyardGraphicPosition)) return false;
-            return ((GraveyardGraphicPosition) obj).index == this.index;
+            return ((GraveyardGraphicPosition) obj).positionIndex == this.positionIndex;
         }
 
         @Override
         public String toString() {
-            return "Graveyard index: " + index;
+            return "Graveyard positionIndex: " + positionIndex;
         }
     }
 }
