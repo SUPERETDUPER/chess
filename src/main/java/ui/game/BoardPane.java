@@ -19,7 +19,6 @@ import ui.game.layout.GraveyardGraphicPosition;
 import ui.game.layout.LayoutCalculator;
 import ui.game.layout.SquareGraphicPosition;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -74,12 +73,12 @@ public class BoardPane extends Pane {
         while (positionIterator.hasNext()) {
             Position position = positionIterator.next();
 
-            GraphicPosition graphicPosition = layoutCalculator.createSquarePosition(position);
+            SquareGraphicPosition graphicPosition = layoutCalculator.createSquarePosition(position);
 
             //Create the square
             SquarePane squarePane = new SquarePane(
                     (position.getColumn() + position.getRow()) % 2 == 0, //Calculates wheather the sqaure should be white or black (gray) (top-left is white)
-                    this::handleClick,
+                    this::squareClick,
                     graphicPosition,
                     layoutCalculator.getComponentSize()
             );
@@ -93,7 +92,7 @@ public class BoardPane extends Pane {
             if (piece != null) {
                 PiecePane piecePane = new PiecePane(piece, graphicPosition, layoutCalculator.getComponentSize());
 
-                piecePane.setOnMousePressed(event -> handleClick(piecePane.getCurrentPosition()));
+                piecePane.setOnMousePressed(event -> pieceClick(piecePane));
 
                 //Add the piecePane to the map
                 piecePanes.put(piece, piecePane);
@@ -111,7 +110,7 @@ public class BoardPane extends Pane {
                         layoutCalculator.getComponentSize()
                 );
 
-                piecePane.setOnMouseClicked(event -> this.handleClick(piecePane.getCurrentPosition()));
+                piecePane.setOnMouseClicked(event -> this.pieceClick(piecePane));
 
                 piecePanes.put(eatenPiece, piecePane);
             }
@@ -148,45 +147,59 @@ public class BoardPane extends Pane {
         this.moveRequest = new MoveRequest(callback, colour);
     }
 
+    private void pieceClick(PiecePane piecePane) {
+        //If piece not at a square do nothing (if it's in graveyard)
+        if (!(piecePane.getCurrentPosition() instanceof SquareGraphicPosition)) return;
+
+        //If there are no active moveRequests do nothing
+        if (moveRequest == null || moveRequest.isSubmitted()) return;
+
+        Piece pieceClicked = piecePane.getPiece();
+        Position position = ((SquareGraphicPosition) piecePane.getCurrentPosition()).getPosition();
+
+        //If piece already selected this click was to submit move
+        if (highlightController.isSelected()) {
+            trySubmittingMove(position);
+            return;
+        }
+
+        //If move request for other player do nothing
+        if (moveRequest.getColour() != pieceClicked.getColour()) return;
+
+
+        //Calculate possible moves and highlight those moves
+        highlightController.select(position,
+                gameData.filterOnlyLegal(
+                        pieceClicked.generatePossibleMoves(gameData.getBoard(), position),
+                        pieceClicked.getColour()
+                )
+        );
+    }
+
     /**
      * Called when a component (piece or square) is clicked
      *
      * @param panePosition the components position
      */
-    //TODO separate piece click for readability
-    private void handleClick(GraphicPosition panePosition) {
-        //If not a square's position do nothing
-        if (!(panePosition instanceof SquareGraphicPosition)) return;
+    private void squareClick(SquareGraphicPosition panePosition) {
+        //If no piece already selected do nothing
+        if (!highlightController.isSelected()) return;
 
-        //If there are no active moveRequests do nothing
-        if (moveRequest == null || moveRequest.isSubmitted()) return;
+        //Get the position and try submitting move
+        trySubmittingMove(panePosition.getPosition());
+    }
 
-        //Get the position and piece (might be null - empty square)
-        Position position = ((SquareGraphicPosition) panePosition).getPosition();
-        @Nullable Piece pieceClicked = gameData.getBoard().getPiece(position);
-
-        //If no piece already selected
-        if (!highlightController.isSelected()) {
-            //If empty square or piece is for other player do nothing
-            if (pieceClicked == null || moveRequest.getColour() != pieceClicked.getColour()) return;
-
-            //Calculate possible moves for piece
-            Collection<Move> moves = gameData.filterOnlyLegal(pieceClicked.generatePossibleMoves(gameData.getBoard(), position), pieceClicked.getColour());
-
-            //Highlight those moves
-            highlightController.select(position, moves);
-        } else {
-            //If not a move option remove clear highlight and quit
-            if (!highlightController.isPossibleMove(position)) {
-                highlightController.eraseSelection();
-                return;
-            }
-
-            //Get selected move and apply (and erase highlight)
-            Move selectedMove = highlightController.getPossibleMove(position);
+    private void trySubmittingMove(Position position) {
+        //If not a move option remove highlight
+        if (!highlightController.isPossibleMove(position)) {
             highlightController.eraseSelection();
-            moveRequest.submit(selectedMove);
+            return;
         }
+
+        //Else get selected move and apply (and erase highlight)
+        Move selectedMove = highlightController.getPossibleMove(position);
+        highlightController.eraseSelection();
+        moveRequest.submit(selectedMove);
     }
 
     /**

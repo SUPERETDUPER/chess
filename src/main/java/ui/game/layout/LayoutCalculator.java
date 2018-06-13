@@ -39,7 +39,7 @@ public class LayoutCalculator {
         return new GraveyardGraphicPosition(this, position, colour);
     }
 
-    public GraphicPosition createSquarePosition(Position position) {
+    public SquareGraphicPosition createSquarePosition(Position position) {
         return new SquareGraphicPosition(position, this);
     }
 }

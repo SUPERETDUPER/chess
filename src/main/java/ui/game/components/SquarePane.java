@@ -6,7 +6,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import ui.game.layout.GraphicPosition;
+import ui.game.layout.SquareGraphicPosition;
 
 import java.util.function.Consumer;
 
@@ -34,7 +34,7 @@ public class SquarePane extends Rectangle {
      * @param position      la position de la case
      * @param size the size of the square (width/height)
      */
-    public SquarePane(boolean isWhite, @NotNull Consumer<GraphicPosition> clickListener, @NotNull GraphicPosition position, ObservableNumberValue size) {
+    public SquarePane(boolean isWhite, @NotNull Consumer<SquareGraphicPosition> clickListener, @NotNull SquareGraphicPosition position, ObservableNumberValue size) {
         super();
         this.isWhite = isWhite;
 
