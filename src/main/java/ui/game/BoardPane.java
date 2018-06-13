@@ -1,6 +1,5 @@
 package ui.game;
 
-import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
 import model.Game;
@@ -16,10 +15,14 @@ import org.jetbrains.annotations.Nullable;
 import ui.game.components.PiecePane;
 import ui.game.components.SquarePane;
 import ui.game.layout.GraphicPosition;
-import ui.game.layout.GraveyardController;
+import ui.game.layout.GraveyardGraphicPosition;
+import ui.game.layout.LayoutCalculator;
 import ui.game.layout.SquareGraphicPosition;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
@@ -33,6 +36,8 @@ public class BoardPane extends Pane {
     @NotNull
     private final Board<SquarePane> boardSquares = new Board<>();
 
+    private final LayoutCalculator layoutCalculator = new LayoutCalculator(heightProperty());
+
     @NotNull
     private final AnimationController animationController = new AnimationController();
 
@@ -44,12 +49,6 @@ public class BoardPane extends Pane {
      */
     @NotNull
     private final Map<Piece, PiecePane> piecePanes = new HashMap<>();
-
-    /**
-     * A map of the two graveyards and their colours
-     */
-    @NotNull
-    private final EnumMap<Colour, GraveyardController> graveyardControllers = new EnumMap<>(Colour.class);
 
     /**
      * The data passed through the constructor
@@ -69,39 +68,20 @@ public class BoardPane extends Pane {
     BoardPane(@NotNull Game game) {
         this.gameData = game.getGameData();
 
-        //Create graveyards
-        GraveyardController leftGraveyard = new GraveyardController(
-                this.heightProperty(),
-                false
-        );
-
-        this.graveyardControllers.put(Colour.WHITE, leftGraveyard);
-
-        this.graveyardControllers.put(
-                Colour.BLACK,
-                new GraveyardController(
-                        this.heightProperty(),
-                        true,
-                        this.heightProperty().add(leftGraveyard.getTotalWidth())
-                )
-        );
-
-        DoubleBinding componentSize = heightProperty().divide(Position.LIMIT);
-
         //For each position create square
         PositionIterator positionIterator = new PositionIterator();
 
         while (positionIterator.hasNext()) {
             Position position = positionIterator.next();
 
-            SquareGraphicPosition graphicPosition = new SquareGraphicPosition(position, this.heightProperty(), leftGraveyard.getTotalWidth());
+            GraphicPosition graphicPosition = layoutCalculator.createSquarePosition(position);
 
             //Create the square
             SquarePane squarePane = new SquarePane(
                     (position.getColumn() + position.getRow()) % 2 == 0, //Calculates wheather the sqaure should be white or black (gray) (top-left is white)
                     this::handleClick,
                     graphicPosition,
-                    componentSize
+                    layoutCalculator.getComponentSize()
             );
 
             //Add the square to the list
@@ -111,7 +91,7 @@ public class BoardPane extends Pane {
             Piece piece = gameData.getBoard().getPiece(position);
 
             if (piece != null) {
-                PiecePane piecePane = new PiecePane(piece, graphicPosition, componentSize);
+                PiecePane piecePane = new PiecePane(piece, graphicPosition, layoutCalculator.getComponentSize());
 
                 piecePane.setOnMousePressed(event -> handleClick(piecePane.getCurrentPosition()));
 
@@ -120,13 +100,17 @@ public class BoardPane extends Pane {
             }
         }
 
-        //For each already eaten piece create a piecePane and add to graveyard
-
+        //For each already eaten piece create a piecePane and add to graveyard of that colour
         for (Colour colour : Colour.values()) {
-            int counter = 0;
+            int graveyardPositionOfNext = 0;
 
             for (Piece eatenPiece : gameData.getEatenPieces(colour)) {
-                PiecePane piecePane = new PiecePane(eatenPiece, graveyardControllers.get(eatenPiece.getColour()).getNextGraveyardPosition(counter++), componentSize);
+                PiecePane piecePane = new PiecePane(
+                        eatenPiece,
+                        layoutCalculator.createGraveyardPosition(colour, graveyardPositionOfNext++),
+                        layoutCalculator.getComponentSize()
+                );
+
                 piecePane.setOnMouseClicked(event -> this.handleClick(piecePane.getCurrentPosition()));
 
                 piecePanes.put(eatenPiece, piecePane);
@@ -148,6 +132,7 @@ public class BoardPane extends Pane {
                         animationController.setOnFinishListener(null);
                         game.notifyNextPlayer();
                     });
+
                 else game.notifyNextPlayer(); //If animations not running trigger next player immediately
             }
         });
@@ -213,7 +198,7 @@ public class BoardPane extends Pane {
             Position position = gameData.getBoard().getPosition(piece);
 
             //Create graphic position
-            SquareGraphicPosition panePosition = new SquareGraphicPosition(position, this.heightProperty(), graveyardControllers.get(Colour.WHITE).getTotalWidth());
+            GraphicPosition panePosition = layoutCalculator.createSquarePosition(position);
 
             //Get piecePane
             PiecePane piecePane = piecePanes.get(piece);
@@ -230,10 +215,10 @@ public class BoardPane extends Pane {
                 PiecePane piecePane = piecePanes.get(piece);
 
                 //If piecePane not already in graveyard move the piecePane to the graveyard
-                if (!(piecePane.getCurrentPosition() instanceof GraveyardController.GraveyardGraphicPosition))
+                if (!(piecePane.getCurrentPosition() instanceof GraveyardGraphicPosition))
                     animationController.addAnimation(
                             piecePane,
-                            graveyardControllers.get(colour).getNextGraveyardPosition(eatenPieces.size() - 1)
+                            layoutCalculator.createGraveyardPosition(colour, eatenPieces.size() - 1)
                     );
             }
         }
@@ -250,13 +235,7 @@ public class BoardPane extends Pane {
      */
     @Override
     protected double computePrefWidth(double height) {
-        double ratio = 1;
-
-        for (GraveyardController graveyardController : graveyardControllers.values()) {
-            ratio += graveyardController.getTotalWidthRatio();
-        }
-
-        return height * ratio;
+        return height * layoutCalculator.getWidthRatio(); //The board takes up 1 * height and the graveyards (4 / 8) * height
     }
 
     /**

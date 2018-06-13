@@ -1,39 +1,34 @@
 package ui.game.layout;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
-import javafx.beans.value.ObservableNumberValue;
 import model.util.Position;
 
 /**
  * The position of a square
  */
 public class SquareGraphicPosition implements GraphicPosition {
+    private final LayoutCalculator layoutCalculator;
     private final Position position;
-    private final ObservableNumberValue xOffset;
-    private final ObservableNumberValue boardHeight;
 
     /**
      * @param position the square's position
-     * @param height  the height of the board
-     * @param xOffset  how much the board is offset on the X axis
+     * @param layoutCalculator  the height of the board
      */
-    public SquareGraphicPosition(Position position, ObservableNumberValue height, ObservableNumberValue xOffset) {
-        this.boardHeight = height;
+    SquareGraphicPosition(Position position, LayoutCalculator layoutCalculator) {
+        this.layoutCalculator = layoutCalculator;
         this.position = position;
-        this.xOffset = xOffset;
     }
 
     @Override
     public NumberBinding getX() {
-        return Bindings.divide(boardHeight, Position.LIMIT)
-                .multiply(position.getColumn())
-                .add(xOffset);
+        return layoutCalculator.getComponentSize()
+                .multiply(position.getColumn()).add(layoutCalculator.getBoardXOffset());
     }
 
     @Override
     public NumberBinding getY() {
-        return Bindings.divide(boardHeight, Position.LIMIT).multiply(position.getRow());
+        return layoutCalculator.getComponentSize()
+                .multiply(position.getRow());
     }
 
     public Position getPosition() {
