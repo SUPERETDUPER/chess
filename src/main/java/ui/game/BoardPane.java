@@ -69,7 +69,7 @@ public class BoardPane extends Pane {
     /**
      * @param game the game model
      */
-    public BoardPane(@NotNull Game game) {
+    BoardPane(@NotNull Game game) {
         this.gameData = game.getGameData();
 
         //Create graveyards
@@ -135,7 +135,7 @@ public class BoardPane extends Pane {
         this.getChildren().addAll(boardSquares.getData());
         this.getChildren().addAll(piecePanes.values());
 
-        this.gameData.setChangeListener(this::updateBoard); //If the board model changes update the display
+        game.setBoardChangeListener(this::updateBoard); //If the board model changes update the display
 
         //When the game is no longer waiting for a move, wait for all animations to finish then trigger the next player to play
         game.statusProperty().addListener((observable, oldValue, newValue) -> {

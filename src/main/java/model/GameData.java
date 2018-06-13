@@ -6,7 +6,6 @@ import model.pieces.Piece;
 import model.util.BoardMap;
 import model.util.Colour;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,19 +16,12 @@ import java.util.Stack;
 /**
  * Represents the board state (piece's positions) and the pieces that were eaten
  */
-//TODO move listener to Game class
 public class GameData implements Serializable {
     @NotNull
     private final BoardMap board;
 
     @NotNull
     private final Stack<Piece> eatenPieces = new Stack<>();
-
-    /**
-     * The listener to notify when the game state changes
-     */
-    @Nullable
-    transient private Runnable changeListener;
 
     /**
      * The kings for each player.
@@ -48,17 +40,6 @@ public class GameData implements Serializable {
                 kings.put(piece.getColour(), (King) piece);
             }
         }
-    }
-
-    public void setChangeListener(@NotNull Runnable changeListener) {
-        this.changeListener = changeListener;
-    }
-
-    /**
-     * Called by {@link Game} to notify that a move was completed and the listeners should be notified
-     */
-    void notifyListenerOfChange() {
-        changeListener.run();
     }
 
     @NotNull

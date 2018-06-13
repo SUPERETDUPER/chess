@@ -59,6 +59,11 @@ public class Game implements Serializable {
     transient private ReadOnlyObjectWrapper<Status> status = new ReadOnlyObjectWrapper<>(Status.INACTIVE);
 
     /**
+     * The listener to notify when the board has changed
+     */
+    transient private Runnable boardChangeListener;
+
+    /**
      * The listener of the result
      */
     transient private Consumer<Result> resultListener;
@@ -79,6 +84,10 @@ public class Game implements Serializable {
         for (Player player : players.values()) {
             player.initializeGameData(gameData);
         }
+    }
+
+    public void setBoardChangeListener(Runnable boardChangeListener) {
+        this.boardChangeListener = boardChangeListener;
     }
 
     /**
@@ -122,7 +131,7 @@ public class Game implements Serializable {
         move.apply(gameData); //Apply the move to the state
         pastMoves.push(move); //Add the move to the list
 
-        gameData.notifyListenerOfChange(); //Notify listener of change
+        boardChangeListener.run(); //Notify listener of change
 
         switchTurn();
 
@@ -143,7 +152,7 @@ public class Game implements Serializable {
             switchTurn();
         }
 
-        gameData.notifyListenerOfChange();
+        boardChangeListener.run();
         status.set(Status.INACTIVE);
     }
 
