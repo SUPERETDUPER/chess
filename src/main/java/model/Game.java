@@ -34,10 +34,8 @@ public class Game implements Serializable {
     /**
      * The status of the game (either waiting on a player to call the callback or inactive
      */
-    //TODO consider merging two players
     public enum Status {
-        WAITING_FOR_WHITE,
-        WAITING_FOR_BLACK,
+        WAITING,
         INACTIVE
     }
 
@@ -107,7 +105,7 @@ public class Game implements Serializable {
         }
 
         //Switch the status and notify the player
-        status.set(turnMarker.get() == Colour.WHITE ? Status.WAITING_FOR_WHITE : Status.WAITING_FOR_BLACK);
+        status.set(Status.WAITING);
         players.get(turnMarker.get()).getMove(this::submitMove, turnMarker.get()); //Demander au player de bouger
     }
 

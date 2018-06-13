@@ -13,7 +13,6 @@ import java.util.LinkedList;
 /**
  * A piece in the game
  */
-//TODO consider changing to decorator model for more flexibility and better implementation of special cases
 public abstract class Piece implements Serializable {
     final Colour colour;
 
