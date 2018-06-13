@@ -23,33 +23,36 @@ public class Main extends Application {
     private static final String TITRE = "Échec et Mat";
 
     /**
-     * Le loader de game
+     * The loader will load the game model
      */
     private final Loader loader = new Loader();
 
-    /**
-     * La scene
-     */
-    private final Scene scene = new Scene(new Pane());
+    private final Scene scene = new Scene(new Pane()); //The new Pane() is just temporary and will be replaced
 
     /**
-     * Le contenu pour la page d'intro
+     * The main menu page
      */
     private final Parent intro = loadFromFXML(new IntroController(this::startNewGame), getClass().getResource("/intro.fxml"));
 
     /**
-     * Commence l'interface ui
+     * Starts the UI
      */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
 
-        //Si on peut charger et charger à fonctionné montrer le game
+        //If loading the game from file succeeds go immediately to game
         if (loader.loadGameFromFile()) {
-            scene.setRoot(loadFromFXML(new GameController(() -> switchRoot(intro), loader), getClass().getResource("/jeu.fxml")));
+            scene.setRoot(loadFromFXML(
+                    new GameController(
+                            () -> switchRoot(intro),
+                            loader
+                    ),
+                    getClass().getResource("/jeu.fxml")
+            ));
         } else {
-            scene.setRoot(intro); //Sinon montrer l'intro
+            scene.setRoot(intro); //If could not load from file go to intro page
         }
 
         primaryStage.setMaximized(true);
@@ -57,15 +60,16 @@ public class Main extends Application {
     }
 
     /**
-     * Les joueurs pour le nouveau game
+     * @param joueurs the players for the new game
      */
+    //TODO pass in command but not the actual players
     private void startNewGame(EnumMap<Colour, Player> joueurs) {
-        loader.createNewGame(joueurs);
-        switchRoot(loadFromFXML(new GameController(() -> switchRoot(intro), loader), getClass().getResource("/jeu.fxml")));
+        loader.createNewGame(joueurs); //Creates a new game
+        switchRoot(loadFromFXML(new GameController(() -> switchRoot(intro), loader), getClass().getResource("/jeu.fxml"))); //Go to game page
     }
 
     /**
-     * Change au nouveau root avec un fade
+     * Switches the page with a fade transition
      */
     private void switchRoot(Parent nouveauRoot) {
         Parent pastRoot = scene.getRoot();
@@ -95,16 +99,16 @@ public class Main extends Application {
     }
 
     /**
-     * @param controller le controller à attacher
-     * @param ressource  la ressource du fichier FXML
-     * @return retourne le root du FXML avec le controller
+     * @param controller the controller for the FXML view
+     * @param url  the url of the FXML
+     * @return the view loaded from the FXML
      */
-    private static Parent loadFromFXML(Object controller, URL ressource) {
-        //Créer l'interface
-        FXMLLoader fxmlLoader = new FXMLLoader(ressource);
-        fxmlLoader.setController(controller); //Créer le controlleur
+    private static Parent loadFromFXML(Object controller, URL url) {
+        //Create the loader with the url
+        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        fxmlLoader.setController(controller); //Attach the controller
 
-        //Charger l'interface
+        //Load and return view from FXML
         try {
             return fxmlLoader.load();
         } catch (IOException e) {
@@ -113,6 +117,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args); //Commencer l'interface ui
+        launch(args); //Starts the ui
     }
 }

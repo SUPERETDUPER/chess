@@ -34,36 +34,36 @@ public class IntroController {
     @FXML
     private VBox blackPlayerContainer;
 
-    //Les drop-downs pour les joueurs blancs/noirs
+    //The drop-downs to select which player is playing
     private final JFXComboBox<Player> joueursBlanc = new JFXComboBox<>(PLAYER_OPTIONS);
     private final JFXComboBox<Player> joueursNoir = new JFXComboBox<>(PLAYER_OPTIONS);
 
     public IntroController(Consumer<EnumMap<Colour, Player>> onStart) {
         this.onStart = onStart;
 
-        //Sélectionner la première option
+        //Select the first option
         joueursNoir.getSelectionModel().select(0);
         joueursBlanc.getSelectionModel().select(0);
     }
 
     @FXML
     private void initialize() {
-        //Ajouter le drop down à l'interface
+        //Add the drop-downs to the interface
         whitePlayerContainer.getChildren().add(joueursBlanc);
         blackPlayerContainer.getChildren().add(joueursNoir);
     }
 
     /**
-     * Appelé quand le boutton player est appuyé
+     * Called when the start button is pressed
      */
     @FXML
     private void handleStart() {
-        //Obtenir les 2 joueurs et les mettres dans une liste
+        //Get the 2 selected players and add them to a EnumMap
         EnumMap<Colour, Player> joueurs = new EnumMap<>(Colour.class);
         joueurs.put(Colour.WHITE, joueursBlanc.getSelectionModel().getSelectedItem());
         joueurs.put(Colour.BLACK, joueursNoir.getSelectionModel().getSelectedItem());
 
-        //Soumettre les joueurs
+        //Call the callback with the players
         onStart.accept(joueurs);
     }
 }

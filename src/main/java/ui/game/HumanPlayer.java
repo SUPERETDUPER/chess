@@ -26,9 +26,10 @@ public class HumanPlayer extends Player {
     }
 
     /**
-     * Creates a demande to the UI for the user to submit his move
+     * Requests the UI (BoardPane) to allow the user to submit his move
      *
      * @param callback the callback method where the selected move should eventually be submitted
+     * @param colour the colour of the player that should submit his move
      */
     @Override
     public void getMove(Consumer<Move> callback, Colour colour) {
