@@ -146,6 +146,7 @@ public class Game implements Serializable {
      */
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
+            if (gameData.getPastMoves().isEmpty()) break; //If none left break
             gameData.getPastMoves().getLast().undo(gameData);
             switchTurn();
         }
