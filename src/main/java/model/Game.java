@@ -124,7 +124,6 @@ public class Game implements Serializable {
      */
     private void submitMove(@NotNull Move move) {
         move.apply(gameData); //Apply the move to the state
-        gameData.getPastMoves().add(move); //Add the move to the list
 
         switchTurn();
         notifyListeners();
@@ -142,7 +141,7 @@ public class Game implements Serializable {
      */
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
-            gameData.getPastMoves().removeLast().undo(gameData);
+            gameData.getPastMoves().getLast().undo(gameData);
             switchTurn();
         }
 
