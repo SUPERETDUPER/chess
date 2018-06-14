@@ -20,7 +20,7 @@ class PositionIteratorTest {
             } else if (i == Position.LIMIT * Position.LIMIT - 1) {
                 Assertions.assertEquals(new Position(Position.LIMIT - 1, Position.LIMIT - 1), position);
             } else if (i >= Position.LIMIT * Position.LIMIT) {
-                throw new RuntimeException("Position trop grande: " + position.toString());
+                throw new RuntimeException("Position is too large: " + position.toString());
             }
 
             i++;

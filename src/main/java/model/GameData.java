@@ -71,7 +71,7 @@ public class GameData implements Serializable {
     }
 
     /**
-     * @param moves a collection of legal and illegal moves
+     * @param moves        a collection of legal and illegal moves
      * @param verifierPour legal for who (will remove all moves that throw this colour's king in check)
      * @return a filter collection containing only legal moves
      */
@@ -79,7 +79,7 @@ public class GameData implements Serializable {
     public Collection<Move> filterOnlyLegal(@NotNull Collection<Move> moves, Colour verifierPour) {
         Collection<Move> legalMoves = new ArrayList<>();
 
-        //Pour chaque moves apply et vérifier si l'on attaque le roi
+        //For each move apply it and check if the king is in check
         for (Move move : moves) {
             move.apply(this);
 
@@ -112,7 +112,7 @@ public class GameData implements Serializable {
     }
 
     @NotNull
-    public Set<Move> getAllPossibleMoves(Colour colour) {
+    private Set<Move> getAllPossibleMoves(Colour colour) {
         Set<Move> moves = new HashSet<>();
 
         for (Piece piece : board.iteratePieces()) {

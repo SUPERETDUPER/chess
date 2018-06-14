@@ -45,7 +45,7 @@ public class Loader {
      * Tries loading the game to the file.
      * If succeeds will save the game to this.game
      *
-     * @return if suceeded in loading the game
+     * @return true if succeeded in loading the game
      */
     public boolean loadGameFromFile() {
         if (!file.exists()) return false; //If file does not exist there is no game to load
@@ -62,12 +62,12 @@ public class Loader {
         }
     }
 
-    public void createNewGame(@NotNull EnumMap<Colour, Player> joueurs) {
+    public void createNewGame(@NotNull EnumMap<Colour, Player> players) {
         //Create the game state (in starting position)
         GameData gameData = new GameData(BoardMap.createStartingBoard());
 
         //Create the game (players + state)
-        this.game = new Game(gameData, joueurs);
+        this.game = new Game(gameData, players);
         game.addBoardChangeListener(this::saveGame);//Add listener such that when the game changes, it is saved
     }
 

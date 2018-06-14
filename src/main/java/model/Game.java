@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 /**
  * Class at the top of the hierarchy that organises when each player plays and verifies for checkmate/stalemates.
- *
+ * <p>
  * When a player plays, the next player doesn't play automatically. Instead the notifyNextPlayerMethod needs to be called. This allows the UI to update first.
  */
 public class Game implements Serializable {
@@ -92,7 +92,8 @@ public class Game implements Serializable {
      * Asks the next player to play
      */
     public void notifyNextPlayer() {
-        if (status.get() != Status.INACTIVE) throw new RuntimeException("Game is not inactive. Should not request move from player");
+        if (status.get() != Status.INACTIVE)
+            throw new RuntimeException("Game is not inactive. Should not request move from player");
 
         //TODO move check mate verification to the play and make sure no error is thrown on game finish
         //Verifies is the game state is a checkmate/stalemate
@@ -113,7 +114,7 @@ public class Game implements Serializable {
 
         //Switch the status and notify the player
         status.set(Status.WAITING);
-        players.get(turnMarker.get()).getMove(this::submitMove, turnMarker.get()); //Demander au player de bouger
+        players.get(turnMarker.get()).getMove(this::submitMove, turnMarker.get()); //Request that the next player submits his move
     }
 
     public void setResultListener(Consumer<Result> resultListener) {
@@ -123,7 +124,7 @@ public class Game implements Serializable {
     /**
      * Called by a player to submit its move
      *
-     * @param move the submited move
+     * @param move the submitted move
      */
     private void submitMove(@NotNull Move move) {
         move.apply(gameData); //Apply the move to the state
@@ -140,6 +141,7 @@ public class Game implements Serializable {
 
     /**
      * Undoes a certain number of moves
+     *
      * @param tour the number of turns to undo
      */
     public void undo(int tour) {

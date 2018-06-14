@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 class BoardMapTest {
 
     /**
-     * Vérifie que
-     * 1. getPosition fonctionne
-     * 2. getPosition et null si la pièce n'existe pas
-     * 3. getPosition fonctionne avec deux fonctions identiques
+     * Verify
+     * 1. getPosition works
+     * 2. getPosition is null if piece non-existent
+     * 3. getPosition works with two identical positions
      */
     @Test
     void getPosition() {
@@ -27,9 +27,9 @@ class BoardMapTest {
     }
 
     /**
-     * Vérifie que
-     * 1. getPiece fonctionne
-     * 2. getPiece et null si la position n'existe pas
+     * Verify that
+     * 1. getPiece works
+     * 2. getPiece is null if the position does not have a piece
      */
     @Test
     void getPiece() {

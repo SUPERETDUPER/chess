@@ -28,7 +28,7 @@ class AnimationController {
     /**
      * Indicator to now if an animation is running
      */
-    private final AtomicBoolean isRunning = new AtomicBoolean(false); //Ne peut pas juste utiliser animationQueue.isEmpty();
+    private final AtomicBoolean isRunning = new AtomicBoolean(false); //Cannot rely on animationQueue,empty()
 
     /**
      * A method to run when all the animations are finished
@@ -83,7 +83,7 @@ class AnimationController {
 
         animation.setOnFinished(event -> onAnimationFinish(piecePane, destination));
 
-        piecePane.unBind(); //Unbind to allow mouvement (if not throws error)
+        piecePane.unBind(); //Unbind to allow movement (if not throws error)
         animation.play(); //Play animation
     }
 

@@ -11,11 +11,11 @@ import ui.game.layout.SquareGraphicPosition;
 import java.util.function.Consumer;
 
 /**
- * Controle une case. Une case à différents styles (couleur et bordure)
+ * Controls a square on the UI. The square can be highlighted blue or red.
  */
 public class SquarePane extends Rectangle {
     /**
-     * Les différentes couleurs et bordure possible pour la case
+     * The different highlight modes
      */
     public enum Style {
         NORMAL,
@@ -24,15 +24,15 @@ public class SquarePane extends Rectangle {
     }
 
     /**
-     * Si la case est une case blanche ou noir (grise)
+     * True if the square is a white square (false if black/gray)
      */
     private final boolean isWhite;
 
     /**
-     * @param isWhite       si la case est blanche
-     * @param clickListener la fonction à appeler quand la case est appuyé
-     * @param position      la position de la case
-     * @param size the size of the square (width/height)
+     * @param isWhite       true if the square is a white square
+     * @param clickListener the method to call when the square is clicked
+     * @param position      the squares position
+     * @param size          the size of the square (width/height)
      */
     public SquarePane(boolean isWhite, @NotNull Consumer<SquareGraphicPosition> clickListener, @NotNull SquareGraphicPosition position, ObservableNumberValue size) {
         super();
@@ -45,19 +45,18 @@ public class SquarePane extends Rectangle {
 
         this.setOnMouseClicked(event -> clickListener.accept(position));
 
-        setStyle(Style.NORMAL);  //Met la couleur de l'arrière plan de la case
+        setStyle(Style.NORMAL);  //Set the background colour
     }
 
     /**
-     * @param style la nouvelle couleur de l'arrière plan de l'arrière plan
+     * @param style the new highlight style
      */
     public void setStyle(@NotNull Style style) {
         this.setFill(getFillColour(style));
     }
 
     /**
-     * @param style le style de la case
-     * @return la couleur de remplissage pour la case
+     * @return the background fill colour for this highlight style
      */
     @Contract(pure = true)
     private Paint getFillColour(@NotNull Style style) {
@@ -69,7 +68,7 @@ public class SquarePane extends Rectangle {
             case NORMAL:
                 return isWhite ? Color.WHITE : Color.LIGHTGRAY;
             default:
-                throw new IllegalArgumentException("Colour de style inconnue");
+                throw new IllegalArgumentException("Unknown highlight colour");
         }
     }
 }

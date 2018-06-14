@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 /**
  * Controls the main region containing the board and graveyards
  */
-public class BoardPane extends Pane {
+class BoardPane extends Pane {
     /**
      * The list of squares
      */
@@ -77,7 +77,7 @@ public class BoardPane extends Pane {
 
             //Create the square
             SquarePane squarePane = new SquarePane(
-                    (position.getColumn() + position.getRow()) % 2 == 0, //Calculates wheather the sqaure should be white or black (gray) (top-left is white)
+                    (position.getColumn() + position.getRow()) % 2 == 0, //Calculates whether the square should be white or black (gray) (top-left is white)
                     this::squareClick,
                     graphicPosition,
                     layoutCalculator.getComponentSize()
@@ -237,7 +237,7 @@ public class BoardPane extends Pane {
         }
     }
 
-    //So that the width resizes based on the height
+    //So that the width is dependant on the height based on the height
     @NotNull
     @Override
     public Orientation getContentBias() {
@@ -269,7 +269,7 @@ public class BoardPane extends Pane {
         private final Colour colour;
 
         /**
-         * True if the move has already been submited
+         * True if the move has already been submitted
          */
         private boolean isSubmitted = false;
 

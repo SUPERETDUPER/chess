@@ -26,7 +26,7 @@ public abstract class Move implements Serializable {
     @NotNull
     final Position end;
 
-    public Move(@NotNull Position start, @NotNull Position end) {
+    Move(@NotNull Position start, @NotNull Position end) {
         this.start = start;
         this.end = end;
     }

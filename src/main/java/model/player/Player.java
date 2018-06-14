@@ -15,7 +15,7 @@ public abstract class Player implements Serializable {
      * Called to ask the player to submit his move via the callback method
      *
      * @param callback the consumer method through which the player should pass his move
-     * @param colour  the colour of the player that should submit his move
+     * @param colour   the colour of the player that should submit his move
      */
     public abstract void getMove(Consumer<Move> callback, Colour colour);
 

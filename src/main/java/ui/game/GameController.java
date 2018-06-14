@@ -52,7 +52,7 @@ public class GameController {
         this.boardPane = new BoardPane(loader.getGame()); //Create the board
 
         //Add a listener for when the game ends
-        loader.getGame().setResultListener(result -> Platform.runLater(() -> handleResultat(result)));
+        loader.getGame().setResultListener(result -> Platform.runLater(() -> handleGameResult(result)));
 
         //Count the number of human players
         int counter = 0;
@@ -76,7 +76,7 @@ public class GameController {
             @NotNull
             @Override
             String getName() {
-                return "Revenir au menu principal";
+                return "Return to main menu";
             }
         });
 
@@ -142,19 +142,19 @@ public class GameController {
     /**
      * Called when the result of the game is obtained
      */
-    private void handleResultat(Game.Result result) {
+    private void handleGameResult(Game.Result result) {
         //Create an alert
         //TODO Switch to material design guidelines for alert box
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         switch (result) {
             case TIE:
-                alert.setContentText("Match nul");
+                alert.setContentText("Stalemate");
                 break;
             case BLACK_WINS:
-                alert.setContentText("Les noirs ont gagnés");
+                alert.setContentText("Black wins");
                 break;
             case WHITE_WINS:
-                alert.setContentText("Les blancs ont gagnés");
+                alert.setContentText("White wins");
         }
 
         alert.showAndWait();

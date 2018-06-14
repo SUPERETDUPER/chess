@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class PositionTest {
 
     /**
-     * Vérifie que deux positions avec la même valeur sont égales
+     * Checks that two position objects with the same value are equal
      */
     @Test
     void equals() {

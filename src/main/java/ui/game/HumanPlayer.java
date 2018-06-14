@@ -30,7 +30,7 @@ public class HumanPlayer extends Player {
      * Requests the UI (BoardPane) to allow the user to submit his move
      *
      * @param callback the callback method where the selected move should eventually be submitted
-     * @param colour the colour of the player that should submit his move
+     * @param colour   the colour of the player that should submit his move
      */
     @Override
     public void getMove(@NotNull Consumer<Move> callback, @NotNull Colour colour) {
@@ -40,6 +40,6 @@ public class HumanPlayer extends Player {
     @NotNull
     @Override
     public String getName() {
-        return "Humain";
+        return "Human";
     }
 }

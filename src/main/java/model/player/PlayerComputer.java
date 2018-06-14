@@ -7,7 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.function.Consumer;
 
 //TODO Upgrade algorithm to min/max with alpha-beta pruning
@@ -17,13 +18,13 @@ import java.util.function.Consumer;
 /**
  * This player uses an algorithm to find the best next move.
  * The algorithm is a recursive min-max algorithm that uses the relative value of each move to evaluate the best move
- *
+ * <p>
  * There are two difficulty levels (Easy and Hard) they change the search depth of the algorithm
  */
 public class PlayerComputer extends Player {
     //The difficulty levels
-    public static final Difficulty EASY = new Difficulty(3, "Facile");
-    public static final Difficulty HARD = new Difficulty(4, "Difficile");
+    public static final Difficulty EASY = new Difficulty(3, "Easy");
+    public static final Difficulty HARD = new Difficulty(4, "Hard");
 
     /**
      * The difficulty level of the current instance of this player
@@ -162,6 +163,6 @@ public class PlayerComputer extends Player {
     @NotNull
     @Override
     public String getName() {
-        return "Ordinateur (" + difficulty.name + ")";
+        return "Computer (" + difficulty.name + ")";
     }
 }

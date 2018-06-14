@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import ui.game.layout.GraphicPosition;
 
 /**
- * A pane that displays a pièce
+ * A pane that displays a piece
  */
 public class PiecePane extends StackPane {
     /**
@@ -38,7 +38,7 @@ public class PiecePane extends StackPane {
     /**
      * @param piece    the piece to show
      * @param position the position of the piece
-     * @param size the size of the pane (width/height)
+     * @param size     the size of the pane (width/height)
      */
     public PiecePane(Piece piece, @NotNull GraphicPosition position, ObservableNumberValue size) {
         super();

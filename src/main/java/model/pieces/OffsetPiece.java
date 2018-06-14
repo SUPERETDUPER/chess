@@ -38,7 +38,7 @@ abstract class OffsetPiece extends Piece {
     }
 
     /**
-     * @return les offsets où la pièce peut se décaler
+     * @return the offsets where the piece can move
      */
     @NotNull
     abstract Offset[] getOffsets();

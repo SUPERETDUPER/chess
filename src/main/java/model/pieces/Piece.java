@@ -62,7 +62,8 @@ public abstract class Piece implements Serializable {
     abstract Collection<Position> generatePossibleDestinations(GameData gameData, Position start);
 
     /**
-     * Separate method to allow overiding from subclasses if a special move is required
+     * Separate method to allow overriding from subclasses if a special move is required
+     *
      * @return a move that will move the piece from its current position to its destination
      */
     Move convertDestinationToMove(BoardMap board, @NotNull Position current, @NotNull Position destination) {
@@ -71,6 +72,7 @@ public abstract class Piece implements Serializable {
 
     /**
      * Does not verify if move is legal (if king is put in check)
+     *
      * @return a collection of all the moves that can be executed
      */
     @NotNull

@@ -70,7 +70,6 @@ public class BoardMap implements Serializable {
     }
 
 
-
     @Nullable
     public Piece getPiece(Position position) {
         return board.get(position);
@@ -129,7 +128,6 @@ public class BoardMap implements Serializable {
 
         return stringBuilder.toString();
     }
-
 
 
     //Do not delete contains synchronized keyword

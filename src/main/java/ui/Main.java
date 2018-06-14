@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.EnumMap;
 
 public class Main extends Application {
-    private static final String TITRE = "Échec et Mat";
+    private static final String TITRE = "Chess";
 
     /**
      * The loader will load the game model
@@ -61,18 +61,18 @@ public class Main extends Application {
     }
 
     /**
-     * @param joueurs the players for the new game
+     * @param players the players for the new game
      */
     //TODO pass in command but not the actual players
-    private void startNewGame(EnumMap<Colour, Player> joueurs) {
-        loader.createNewGame(joueurs); //Creates a new game
+    private void startNewGame(EnumMap<Colour, Player> players) {
+        loader.createNewGame(players); //Creates a new game
         switchRoot(loadFromFXML(new GameController(() -> switchRoot(intro), loader), getClass().getResource("/jeu.fxml"))); //Go to game page
     }
 
     /**
      * Switches the page with a fade transition
      */
-    private void switchRoot(Parent nouveauRoot) {
+    private void switchRoot(Parent newRoot) {
         Parent pastRoot = scene.getRoot();
         pastRoot.setCacheHint(CacheHint.SPEED);
 
@@ -80,19 +80,19 @@ public class Main extends Application {
         fadeOut.setFromValue(100);
         fadeOut.setToValue(0);
 
-        nouveauRoot.setOpacity(0);
-        nouveauRoot.setCacheHint(CacheHint.SPEED);
+        newRoot.setOpacity(0);
+        newRoot.setCacheHint(CacheHint.SPEED);
 
-        FadeTransition fadeIn = new FadeTransition(new Duration(1000), nouveauRoot);
+        FadeTransition fadeIn = new FadeTransition(new Duration(1000), newRoot);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(100);
         fadeIn.setOnFinished(event -> {
-            nouveauRoot.setCacheHint(CacheHint.DEFAULT);
+            newRoot.setCacheHint(CacheHint.DEFAULT);
             pastRoot.setCacheHint(CacheHint.DEFAULT);
         });
 
         fadeOut.setOnFinished(event -> {
-            scene.setRoot(nouveauRoot);
+            scene.setRoot(newRoot);
             fadeIn.play();
         });
 
@@ -101,7 +101,7 @@ public class Main extends Application {
 
     /**
      * @param controller the controller for the FXML view
-     * @param url  the url of the FXML
+     * @param url        the url of the FXML
      * @return the view loaded from the FXML
      */
     private static Parent loadFromFXML(Object controller, URL url) {

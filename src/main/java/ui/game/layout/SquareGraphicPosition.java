@@ -13,8 +13,8 @@ public class SquareGraphicPosition implements GraphicPosition {
     private final Position position;
 
     /**
-     * @param position the square's position
-     * @param layoutCalculator  the height of the board
+     * @param position         the square's position
+     * @param layoutCalculator the height of the board
      */
     SquareGraphicPosition(Position position, LayoutCalculator layoutCalculator) {
         this.layoutCalculator = layoutCalculator;
