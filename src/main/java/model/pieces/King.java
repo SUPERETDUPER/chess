@@ -11,7 +11,6 @@ import model.util.Position;
 
 import java.util.Collection;
 
-//TODO Implement castling fully (currently only allows basic without conditions)
 public class King extends OffsetPiece {
     private static final Offset[] OFFSETS = {
             Offset.TOP_LEFT,
