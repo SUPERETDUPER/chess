@@ -65,9 +65,27 @@ public class King extends OffsetPiece {
                 numberOfAppliedMoves == 0) {
             Position destinationShort = start.shift(new Offset(0, 2));
             if (canCastleShort(gameData, start, destinationShort)) positions.add(destinationShort);
+
+            Position destinationLong = start.shift(new Offset(0, -2));
+            if (canCastleLong(gameData, start, destinationLong)) positions.add(destinationLong);
         }
 
         return positions;
+    }
+
+    private boolean canCastleLong(GameData gameData, Position start, Position end) {
+        Position positionLeft = start.shift(Offset.LEFT);
+        Position rookPosition = start.shift(new Offset(0, -4));
+        Piece rook = gameData.getBoard().getPiece(rookPosition);
+
+        //Piece at rook's position is a rook and has not moved
+        if (!(rook instanceof Rook) || ((Rook) rook).hasMoved()) return false;
+
+        if (gameData.getBoard().getPiece(positionLeft) != null ||
+                gameData.getBoard().getPiece(end) != null ||
+                gameData.getBoard().getPiece(end.shift(Offset.LEFT)) != null) return false;
+
+        return !gameData.isPositionAttacked(positionLeft, colour == Colour.WHITE ? Colour.BLACK : Colour.WHITE);
     }
 
     private boolean canCastleShort(GameData gameData, Position start, Position end) {
@@ -89,9 +107,13 @@ public class King extends OffsetPiece {
     @Override
     Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
         //Add catch to convert castling to CastlingMove
-        if (destination.getColumn() - current.getColumn() == 2)
+        if (current.getColumn() - destination.getColumn() == -2)
             return new CastlingMove(current, destination, new Move[]{
                     new BaseMove(destination.shift(Offset.RIGHT), destination.shift(Offset.LEFT))
+            });
+        if (current.getColumn() - destination.getColumn() == 2)
+            return new CastlingMove(current, destination, new Move[]{
+                    new BaseMove(destination.shift(new Offset(0, -2)), destination.shift(Offset.RIGHT))
             });
 
         return super.convertDestinationToMove(board, current, destination);
