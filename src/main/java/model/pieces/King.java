@@ -2,7 +2,7 @@ package model.pieces;
 
 import model.GameData;
 import model.moves.BaseMove;
-import model.moves.CombineMove;
+import model.moves.CastlingMove;
 import model.moves.Move;
 import model.util.BoardMap;
 import model.util.Colour;
@@ -60,31 +60,47 @@ public class King extends OffsetPiece {
     Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
         Collection<Position> positions = super.generatePossibleDestinations(gameData, start);
 
-        //Add option for castling
-        Position debutTour = start.shift(new Offset(0, 3));
-        Position finTour = debutTour.shift(new Offset(0, -2));
-        Position finRoi = start.shift(new Offset(0, 2));
-
-        if (gameData.getBoard().getPiece(debutTour) instanceof Rook
-                && gameData.getBoard().getPiece(finRoi) == null
-                && gameData.getBoard().getPiece(finTour) == null
-                && numberOfAppliedMoves == 0) {
-
-            positions.add(finRoi);
+        //If not in check
+        if (!gameData.isPositionAttacked(start, colour == Colour.WHITE ? Colour.BLACK : Colour.WHITE) &&
+                numberOfAppliedMoves == 0) {
+            Position destinationShort = start.shift(new Offset(0, 2));
+            if (canCastleShort(gameData, start, destinationShort)) positions.add(destinationShort);
         }
 
         return positions;
     }
 
+    private boolean canCastleShort(GameData gameData, Position start, Position end) {
+        Position positionRight = start.shift(Offset.RIGHT);
+        Position rookPosition = start.shift(new Offset(0, 3));
+        Piece rook = gameData.getBoard().getPiece(rookPosition);
+
+        //Piece at rook's position is a rook and has not moved
+        if (!(rook instanceof Rook) || ((Rook) rook).hasMoved()) return false;
+
+        //Nothing at the position to the right or at the end
+        if (gameData.getBoard().getPiece(positionRight) != null || gameData.getBoard().getPiece(end) != null)
+            return false;
+
+        //Not going through check
+        return !gameData.isPositionAttacked(positionRight, colour == Colour.WHITE ? Colour.BLACK : Colour.WHITE);
+    }
+
     @Override
     Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
-        //Add catch to convert castling to CombineMove
+        //Add catch to convert castling to CastlingMove
         if (destination.getColumn() - current.getColumn() == 2)
-            return new CombineMove(current, destination, new Move[]{
+            return new CastlingMove(current, destination, new Move[]{
                     new BaseMove(destination.shift(Offset.RIGHT), destination.shift(Offset.LEFT))
             });
 
         return super.convertDestinationToMove(board, current, destination);
+    }
+
+    @Override
+    public boolean isAttackingPosition(GameData gameData, Position position) {
+        Collection<Position> positions = super.generatePossibleDestinations(gameData, position);
+        return positions.contains(position);
     }
 
     @Override

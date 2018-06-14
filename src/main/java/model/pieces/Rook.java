@@ -12,6 +12,11 @@ public class Rook extends DirectionPiece {
             Offset.DOWN
     };
 
+    /**
+     * The number of moves that have been applied to this piece. Used to know if the piece has moved
+     */
+    private int numberOfAppliedMoves = 0;
+
     public Rook(Colour colour) {
         super(colour);
     }
@@ -38,10 +43,16 @@ public class Rook extends DirectionPiece {
 
     @Override
     public void notifyMoveComplete(Move move) {
+        numberOfAppliedMoves += 1;
     }
 
     @Override
     public void notifyMoveUndo(Move move) {
+        numberOfAppliedMoves -= 1;
+    }
+
+    boolean hasMoved() {
+        return numberOfAppliedMoves != 0;
     }
 
     @Override

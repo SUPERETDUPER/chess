@@ -5,6 +5,7 @@ import model.pieces.King;
 import model.pieces.Piece;
 import model.util.BoardMap;
 import model.util.Colour;
+import model.util.Position;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -96,9 +97,13 @@ public class GameData implements Serializable {
      * @return true if the piece is being attacked by another piece
      */
     public boolean isPieceAttacked(Piece piece) {
+        return isPositionAttacked(board.getPosition(piece), piece.getColour() == Colour.WHITE ? Colour.BLACK : Colour.WHITE);
+    }
+
+    public boolean isPositionAttacked(Position position, Colour byWho) {
         for (Piece attacker : board.iteratePieces()) {
             //If piece opposite color check if attacks position
-            if (attacker.getColour() != piece.getColour() && attacker.isAttackingPosition(this, board.getPosition(piece))) {
+            if (attacker.getColour() == byWho && attacker.isAttackingPosition(this, position)) {
                 return true;
             }
         }

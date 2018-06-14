@@ -6,14 +6,14 @@ import model.util.Position;
 /**
  * A move which executes other moves at the same time
  */
-public class CombineMove extends BaseMove {
+public class CastlingMove extends BaseMove {
     private final Move[] otherMoves;
     private Integer value;
 
     /**
      * @param otherMoves a list of other moves to apply with this move
      */
-    public CombineMove(Position debut, Position fin, Move[] otherMoves) {
+    public CastlingMove(Position debut, Position fin, Move[] otherMoves) {
         super(debut, fin);
         this.otherMoves = otherMoves;
     }
