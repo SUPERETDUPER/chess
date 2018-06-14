@@ -51,8 +51,8 @@ public abstract class Move implements Serializable {
      */
     public void apply(@NotNull GameData data) {
         applyToGame(data);
+        data.getPastMoves().add(this);
         piece.notifyMoveComplete(this);
-        data.getPastMoves().push(this);
     }
 
     /**
@@ -64,7 +64,7 @@ public abstract class Move implements Serializable {
      * Undoes the move from the game data
      */
     public void undo(@NotNull GameData data) {
-        data.getPastMoves().pop();
+        data.getPastMoves().removeLast();
         undoToGame(data);
         piece.notifyMoveUndo(this);
     }
