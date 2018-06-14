@@ -29,4 +29,9 @@ public class Offset implements Serializable {
     int getHorizontalShift() {
         return offset[1];
     }
+
+    @Override
+    public String toString() {
+        return "shift-" + offset[0] + "-down-" + offset[1] + "-up";
+    }
 }
