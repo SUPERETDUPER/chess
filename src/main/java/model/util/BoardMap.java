@@ -17,6 +17,7 @@ import java.util.Set;
  */
 //TODO review usage of synchronised
 public class BoardMap implements Serializable {
+    @NotNull
     private final BiMap<Position, Piece> board;
 
     public BoardMap() {
@@ -83,6 +84,7 @@ public class BoardMap implements Serializable {
     /**
      * @return the piece that was at this position before the new piece was added
      */
+    @Nullable
     public Piece add(@NotNull Position position, @NotNull Piece piece) {
         return board.put(position, piece);
     }
@@ -113,6 +115,7 @@ public class BoardMap implements Serializable {
         return board.values();
     }
 
+    @NotNull
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

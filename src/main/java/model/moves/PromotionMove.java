@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * A move that promotes a pawn to a queen.
  */
 public class PromotionMove extends BaseMove {
-    public PromotionMove(Position debut, @NotNull Position fin) {
+    public PromotionMove(@NotNull Position debut, @NotNull Position fin) {
         super(debut, fin);
     }
 

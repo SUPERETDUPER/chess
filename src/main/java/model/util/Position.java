@@ -33,7 +33,7 @@ public class Position implements Serializable {
      * @return a new position that is shifted from this
      */
     @NotNull
-    public Position shift(Offset offset) {
+    public Position shift(@NotNull Offset offset) {
         return new Position(row + offset.getVerticalShift(), column + offset.getHorizontalShift());
     }
 
@@ -52,6 +52,7 @@ public class Position implements Serializable {
         return ((Position) obj).getColumn() == this.column;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "r" + row + "c" + column;

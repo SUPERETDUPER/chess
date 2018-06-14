@@ -76,7 +76,7 @@ public class GameData implements Serializable {
      * @return a filter collection containing only legal moves
      */
     @NotNull
-    public Collection<Move> filterOnlyLegal(Collection<Move> moves, Colour verifierPour) {
+    public Collection<Move> filterOnlyLegal(@NotNull Collection<Move> moves, Colour verifierPour) {
         Collection<Move> legalMoves = new ArrayList<>();
 
         //Pour chaque moves apply et vérifier si l'on attaque le roi
@@ -96,7 +96,7 @@ public class GameData implements Serializable {
     /**
      * @return true if the piece is being attacked by another piece
      */
-    public boolean isPieceAttacked(Piece piece) {
+    public boolean isPieceAttacked(@NotNull Piece piece) {
         return isPositionAttacked(board.getPosition(piece), piece.getColour() == Colour.WHITE ? Colour.BLACK : Colour.WHITE);
     }
 
@@ -130,6 +130,7 @@ public class GameData implements Serializable {
         return eatenPieces.get(colour);
     }
 
+    @NotNull
     public LinkedList<Move> getPastMoves() {
         return pastMoves;
     }

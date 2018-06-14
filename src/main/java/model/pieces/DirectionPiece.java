@@ -4,6 +4,7 @@ import model.GameData;
 import model.util.Colour;
 import model.util.Offset;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -16,8 +17,9 @@ abstract class DirectionPiece extends Piece {
         super(colour);
     }
 
+    @NotNull
     @Override
-    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
+    Collection<Position> generatePossibleDestinations(@NotNull GameData gameData, @NotNull Position start) {
         //WARNING if parameter start is removed pawn promoted to queen might not work since queen will not recognize itself on the board
         Collection<Position> positions = new LinkedList<>();
 
@@ -48,5 +50,6 @@ abstract class DirectionPiece extends Piece {
     /**
      * @return the list of directions the piece can attack
      */
+    @NotNull
     abstract Offset[] getDirections();
 }

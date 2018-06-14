@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import model.Loader;
 import model.player.Player;
 import model.util.Colour;
+import org.jetbrains.annotations.NotNull;
 import ui.game.GameController;
 import ui.intro.IntroController;
 
@@ -38,7 +39,7 @@ public class Main extends Application {
      * Starts the UI
      */
     @Override
-    public void start(Stage primaryStage) {
+    public void start(@NotNull Stage primaryStage) {
         primaryStage.setTitle(TITRE);
         primaryStage.setScene(scene);
 

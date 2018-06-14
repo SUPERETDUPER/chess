@@ -5,6 +5,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ui.game.components.PiecePane;
 import ui.game.layout.GraphicPosition;
@@ -86,7 +87,7 @@ class AnimationController {
         animation.play(); //Play animation
     }
 
-    private void onAnimationFinish(PiecePane piecePane, GraphicPosition destination) {
+    private void onAnimationFinish(PiecePane piecePane, @NotNull GraphicPosition destination) {
         piecePane.setText(); //Update text for pawn promotion
         piecePane.bind(destination); //Bind to destination
 

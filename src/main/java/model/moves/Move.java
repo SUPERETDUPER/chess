@@ -49,7 +49,7 @@ public abstract class Move implements Serializable {
     /**
      * Applies this move to the game data
      */
-    public void apply(GameData data) {
+    public void apply(@NotNull GameData data) {
         applyToGame(data);
         piece.notifyMoveComplete(this);
         data.getPastMoves().push(this);
@@ -63,7 +63,7 @@ public abstract class Move implements Serializable {
     /**
      * Undoes the move from the game data
      */
-    public void undo(GameData data) {
+    public void undo(@NotNull GameData data) {
         data.getPastMoves().pop();
         undoToGame(data);
         piece.notifyMoveUndo(this);
@@ -81,7 +81,7 @@ public abstract class Move implements Serializable {
      */
     @Contract(value = "null -> false", pure = true)
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof Move)) return false;
         if (!this.start.equals(((Move) obj).start)) return false;
@@ -93,6 +93,7 @@ public abstract class Move implements Serializable {
         return Objects.hash(this.piece, this.end);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return start + " to " + end;

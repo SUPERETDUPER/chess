@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableNumberValue;
 import model.util.Colour;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Calculates the position of the elements on the display
@@ -21,6 +22,7 @@ public class LayoutCalculator {
         return componentSize;
     }
 
+    @NotNull
     ObservableNumberValue getGraveyardXOffset(Colour colour) {
         return colour == Colour.WHITE ?
                 new SimpleIntegerProperty(0) :
@@ -35,10 +37,12 @@ public class LayoutCalculator {
         return 1 + (4.0 / Position.LIMIT);
     }
 
+    @NotNull
     public GraphicPosition createGraveyardPosition(Colour colour, int position) {
         return new GraveyardGraphicPosition(this, position, colour);
     }
 
+    @NotNull
     public SquareGraphicPosition createSquarePosition(Position position) {
         return new SquareGraphicPosition(position, this);
     }

@@ -8,6 +8,7 @@ import model.util.BoardMap;
 import model.util.Colour;
 import model.util.Offset;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -42,6 +43,7 @@ public class King extends OffsetPiece {
         return 9818;
     }
 
+    @NotNull
     @Override
     Offset[] getOffsets() {
         return OFFSETS;
@@ -56,7 +58,7 @@ public class King extends OffsetPiece {
     }
 
     @Override
-    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
+    Collection<Position> generatePossibleDestinations(@NotNull GameData gameData, @NotNull Position start) {
         Collection<Position> positions = super.generatePossibleDestinations(gameData, start);
 
         //If not in check
@@ -72,7 +74,7 @@ public class King extends OffsetPiece {
         return positions;
     }
 
-    private boolean canCastleLong(GameData gameData, Position start, Position end) {
+    private boolean canCastleLong(GameData gameData, Position start, @NotNull Position end) {
         Position positionLeft = start.shift(Offset.LEFT);
         Position rookPosition = start.shift(new Offset(0, -4));
         Piece rook = gameData.getBoard().getPiece(rookPosition);
@@ -104,7 +106,7 @@ public class King extends OffsetPiece {
     }
 
     @Override
-    Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
+    Move convertDestinationToMove(BoardMap board, @NotNull Position current, @NotNull Position destination) {
         //Add catch to convert castling to CastlingMove
         if (current.getColumn() - destination.getColumn() == -2)
             return new CastlingMove(current, destination, new Move[]{
@@ -134,6 +136,7 @@ public class King extends OffsetPiece {
         numberOfAppliedMoves -= 1;
     }
 
+    @NotNull
     @Override
     String getName() {
         return "King";

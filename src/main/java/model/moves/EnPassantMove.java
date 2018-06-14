@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NotNull;
 public class EnPassantMove extends BaseMove {
     private Piece eatenPiece;
 
-    public EnPassantMove(Position start, @NotNull Position destination) {
+    public EnPassantMove(@NotNull Position start, @NotNull Position destination) {
         super(start, destination);
     }
 
     @Override
-    void applyToGame(GameData data) {
+    void applyToGame(@NotNull GameData data) {
         super.applyToGame(data);
 
         eatenPiece = data.getBoard().removePiece(end.shift(((Pawn) piece).BACKWARD));
@@ -22,7 +22,7 @@ public class EnPassantMove extends BaseMove {
     }
 
     @Override
-    void undoToGame(GameData data) {
+    void undoToGame(@NotNull GameData data) {
         data.getEatenPieces(eatenPiece.getColour()).pop();
         data.getBoard().add(end.shift(((Pawn) piece).BACKWARD), eatenPiece);
 

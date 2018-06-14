@@ -47,7 +47,7 @@ class HighlightController {
      * @param position      the selected position
      * @param possibleMoves a list of possible moves for that position
      */
-    void select(@NotNull Position position, Collection<Move> possibleMoves) {
+    void select(@NotNull Position position, @NotNull Collection<Move> possibleMoves) {
         this.eraseSelection();
 
         //Highlight position

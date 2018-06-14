@@ -4,6 +4,7 @@ import model.GameData;
 import model.moves.Move;
 import model.player.Player;
 import model.util.Colour;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -32,10 +33,11 @@ public class HumanPlayer extends Player {
      * @param colour the colour of the player that should submit his move
      */
     @Override
-    public void getMove(Consumer<Move> callback, Colour colour) {
+    public void getMove(@NotNull Consumer<Move> callback, @NotNull Colour colour) {
         boardPane.requestMove(callback, colour); //Create a request and submit to the UI
     }
 
+    @NotNull
     @Override
     public String getName() {
         return "Humain";

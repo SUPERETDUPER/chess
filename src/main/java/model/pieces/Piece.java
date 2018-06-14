@@ -6,6 +6,7 @@ import model.moves.Move;
 import model.util.BoardMap;
 import model.util.Colour;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -64,7 +65,7 @@ public abstract class Piece implements Serializable {
      * Separate method to allow overiding from subclasses if a special move is required
      * @return a move that will move the piece from its current position to its destination
      */
-    Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
+    Move convertDestinationToMove(BoardMap board, @NotNull Position current, @NotNull Position destination) {
         return new BaseMove(current, destination);
     }
 
@@ -72,7 +73,8 @@ public abstract class Piece implements Serializable {
      * Does not verify if move is legal (if king is put in check)
      * @return a collection of all the moves that can be executed
      */
-    public Collection<Move> generatePossibleMoves(GameData gameData, Position start) {
+    @NotNull
+    public Collection<Move> generatePossibleMoves(@NotNull GameData gameData, @NotNull Position start) {
         Collection<Move> moves = new LinkedList<>();
 
         //For each possible destination create a move and add it to the list
@@ -81,7 +83,7 @@ public abstract class Piece implements Serializable {
         return moves;
     }
 
-    public boolean isAttackingPosition(GameData gameData, Position position) {
+    public boolean isAttackingPosition(@NotNull GameData gameData, Position position) {
         Collection<Position> positions = generatePossibleDestinations(gameData, gameData.getBoard().getPosition(this));
         return positions.contains(position);
     }
@@ -107,6 +109,7 @@ public abstract class Piece implements Serializable {
 
     abstract String getName();
 
+    @NotNull
     @Override
     public String toString() {
         return getName() + "-" + (colour == Colour.WHITE ? "b" : "n");

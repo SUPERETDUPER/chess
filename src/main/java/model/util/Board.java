@@ -83,6 +83,7 @@ public class Board<T> implements Iterable<T> {
                 return positionIterator.hasNext();
             }
 
+            @NotNull
             @Override
             public T next() {
                 return Board.this.get(positionIterator.next());
@@ -90,6 +91,7 @@ public class Board<T> implements Iterable<T> {
         };
     }
 
+    @NotNull
     public Collection<T> getData() {
         return data;
     }

@@ -53,14 +53,17 @@ public class Game implements Serializable {
     /**
      * Who's turn it is
      */
+    @NotNull
     transient private ReadOnlyObjectWrapper<Colour> turnMarker = new ReadOnlyObjectWrapper<>(Colour.WHITE);
 
 
+    @NotNull
     transient private ReadOnlyObjectWrapper<Status> status = new ReadOnlyObjectWrapper<>(Status.INACTIVE);
 
     /**
      * The listener to notify when the board has changed
      */
+    @NotNull
     transient private Collection<Runnable> boardChangeListeners = new ArrayList<>();
 
     /**

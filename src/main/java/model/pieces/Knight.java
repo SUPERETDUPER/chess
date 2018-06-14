@@ -3,6 +3,7 @@ package model.pieces;
 import model.moves.Move;
 import model.util.Colour;
 import model.util.Offset;
+import org.jetbrains.annotations.NotNull;
 
 public class Knight extends OffsetPiece {
     /**
@@ -23,6 +24,7 @@ public class Knight extends OffsetPiece {
         super(colour);
     }
 
+    @NotNull
     @Override
     Offset[] getOffsets() {
         return OFFSETS;
@@ -51,6 +53,7 @@ public class Knight extends OffsetPiece {
     public void notifyMoveUndo(Move move) {
     }
 
+    @NotNull
     @Override
     String getName() {
         return "Knight";

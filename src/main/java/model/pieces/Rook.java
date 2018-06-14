@@ -3,6 +3,7 @@ package model.pieces;
 import model.moves.Move;
 import model.util.Colour;
 import model.util.Offset;
+import org.jetbrains.annotations.NotNull;
 
 public class Rook extends DirectionPiece {
     private static final Offset[] OFFSETS = {
@@ -31,6 +32,7 @@ public class Rook extends DirectionPiece {
         return 9820;
     }
 
+    @NotNull
     @Override
     Offset[] getDirections() {
         return OFFSETS;
@@ -55,6 +57,7 @@ public class Rook extends DirectionPiece {
         return numberOfAppliedMoves != 0;
     }
 
+    @NotNull
     @Override
     String getName() {
         return "Rook";

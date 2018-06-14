@@ -2,6 +2,8 @@ package ui.game.layout;
 
 import javafx.beans.binding.NumberBinding;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The position of a square
@@ -36,12 +38,13 @@ public class SquareGraphicPosition implements GraphicPosition {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof SquareGraphicPosition)) return false;
         return ((SquareGraphicPosition) obj).position.equals(this.position);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Square: " + position;

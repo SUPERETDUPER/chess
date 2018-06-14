@@ -13,12 +13,12 @@ public class BaseMove extends Move {
     @Nullable
     private Piece eatenPiece;
 
-    public BaseMove(Position start, @NotNull Position destination) {
+    public BaseMove(@NotNull Position start, @NotNull Position destination) {
         super(start, destination);
     }
 
     @Override
-    void applyToGame(GameData data) {
+    void applyToGame(@NotNull GameData data) {
         piece = data.getBoard().removePiece(start); //Remove the piece from the starting position
         eatenPiece = data.getBoard().add(end, piece); //Place the piece at the ending position and get the piece that was replaced
 
@@ -28,7 +28,7 @@ public class BaseMove extends Move {
     }
 
     @Override
-    void undoToGame(GameData data) {
+    void undoToGame(@NotNull GameData data) {
         data.getBoard().movePiece(start, piece); //Move the piece to its starting position
 
         //If a piece was eaten remove it from the stack and add it to the board

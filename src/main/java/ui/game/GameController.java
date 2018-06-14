@@ -47,7 +47,7 @@ public class GameController {
      * @param exit   the method to run to exit the game and return to the main menu
      * @param loader the loader that loads the game
      */
-    public GameController(Runnable exit, @NotNull Loader loader) {
+    public GameController(@NotNull Runnable exit, @NotNull Loader loader) {
         this.loader = loader;
         this.boardPane = new BoardPane(loader.getGame()); //Create the board
 
@@ -73,6 +73,7 @@ public class GameController {
                 exit.run();
             }
 
+            @NotNull
             @Override
             String getName() {
                 return "Revenir au menu principal";
@@ -91,6 +92,7 @@ public class GameController {
                     }
                 }
 
+                @NotNull
                 @Override
                 String getName() {
                     return "Undo";
@@ -170,8 +172,10 @@ public class GameController {
         /**
          * @return the actions name (to be displayed)
          */
+        @NotNull
         abstract String getName();
 
+        @NotNull
         @Override
         public String toString() {
             return getName(); //Defines the string to display when the item is put in the list view

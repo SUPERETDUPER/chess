@@ -3,6 +3,7 @@ package model;
 import model.player.Player;
 import model.util.BoardMap;
 import model.util.Colour;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -61,7 +62,7 @@ public class Loader {
         }
     }
 
-    public void createNewGame(EnumMap<Colour, Player> joueurs) {
+    public void createNewGame(@NotNull EnumMap<Colour, Player> joueurs) {
         //Create the game state (in starting position)
         GameData gameData = new GameData(BoardMap.createStartingBoard());
 

@@ -143,7 +143,7 @@ public class BoardPane extends Pane {
      * @param callback the callback method to which the move should be submitted
      * @param colour   the colour of the player that should submit the move
      */
-    void requestMove(Consumer<Move> callback, Colour colour) {
+    void requestMove(@NotNull Consumer<Move> callback, @NotNull Colour colour) {
         this.moveRequest = new MoveRequest(callback, colour);
     }
 
@@ -181,7 +181,7 @@ public class BoardPane extends Pane {
      *
      * @param panePosition the components position
      */
-    private void squareClick(SquareGraphicPosition panePosition) {
+    private void squareClick(@NotNull SquareGraphicPosition panePosition) {
         //If no piece already selected do nothing
         if (!highlightController.isSelected()) return;
 
@@ -238,6 +238,7 @@ public class BoardPane extends Pane {
     }
 
     //So that the width resizes based on the height
+    @NotNull
     @Override
     public Orientation getContentBias() {
         return Orientation.VERTICAL;

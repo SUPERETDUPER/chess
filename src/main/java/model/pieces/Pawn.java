@@ -8,6 +8,8 @@ import model.util.BoardMap;
 import model.util.Colour;
 import model.util.Offset;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ public class Pawn extends Piece {
     /**
      * null when not promoted and not-null when pawn was promoted
      */
+    @Nullable
     private Piece promotedQueen = null;
 
     public Pawn(Colour colour) {
@@ -31,7 +34,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
+    Move convertDestinationToMove(@NotNull BoardMap board, @NotNull Position current, @NotNull Position destination) {
         if (promotedQueen != null) return promotedQueen.convertDestinationToMove(board, current, destination);
 
         //Check for promotion if on last row
@@ -45,7 +48,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
+    Collection<Position> generatePossibleDestinations(@NotNull GameData gameData, @NotNull Position start) {
         //If promoted use queen to generate moves
         if (promotedQueen != null) return promotedQueen.generatePossibleDestinations(gameData, start);
 
@@ -77,7 +80,7 @@ public class Pawn extends Piece {
         return positions;
     }
 
-    private boolean canAttack(GameData gameData, Position destination) {
+    private boolean canAttack(@NotNull GameData gameData, Position destination) {
         if (!destination.isValid()) return false;
 
         //If piece there return true if same color
@@ -132,6 +135,7 @@ public class Pawn extends Piece {
         }
     }
 
+    @NotNull
     @Override
     String getName() {
         return "Pawn";

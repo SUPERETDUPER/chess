@@ -2,6 +2,7 @@ package model.moves;
 
 import model.GameData;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A move which executes other moves at the same time
@@ -13,13 +14,13 @@ public class CastlingMove extends BaseMove {
     /**
      * @param otherMoves a list of other moves to apply with this move
      */
-    public CastlingMove(Position debut, Position fin, Move[] otherMoves) {
+    public CastlingMove(@NotNull Position debut, @NotNull Position fin, Move[] otherMoves) {
         super(debut, fin);
         this.otherMoves = otherMoves;
     }
 
     @Override
-    void applyToGame(GameData data) {
+    void applyToGame(@NotNull GameData data) {
         super.applyToGame(data);
 
         for (Move move : otherMoves) {
@@ -28,7 +29,7 @@ public class CastlingMove extends BaseMove {
     }
 
     @Override
-    void undoToGame(GameData data) {
+    void undoToGame(@NotNull GameData data) {
         for (int i = (otherMoves.length - 1); i >= 0; i--) {
             otherMoves[i].undo(data);
         }

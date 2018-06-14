@@ -52,7 +52,7 @@ public class PlayerComputer extends Player {
      * Calculates the best move and returns it via the callback.
      */
     @Override
-    public void getMove(Consumer<Move> callback, Colour colour) {
+    public void getMove(@NotNull Consumer<Move> callback, Colour colour) {
         new Thread(() ->
                 callback.accept(
                         calculateBestMove(new MoveSequence(), colour)
@@ -105,6 +105,7 @@ public class PlayerComputer extends Player {
     /**
      * @return the opposite colour (used to switch turns)
      */
+    @NotNull
     private Colour getOppositeColour(Colour colour) {
         return colour == Colour.WHITE ? Colour.BLACK : Colour.WHITE;
     }
@@ -113,6 +114,7 @@ public class PlayerComputer extends Player {
      * An object representing a series of moves and its value
      */
     private class MoveSequence {
+        @NotNull
         private final LinkedList<Move> moves;
 
         /**
@@ -125,7 +127,7 @@ public class PlayerComputer extends Player {
             this.moves = new LinkedList<>();
         }
 
-        private MoveSequence(MoveSequence moveSequence, Move move) {
+        private MoveSequence(MoveSequence moveSequence, @NotNull Move move) {
             this.moves = new LinkedList<>(moveSequence.moves);
             this.moves.add(move);
             this.sequenceValue = moveSequence.sequenceValue + move.getValue();
@@ -157,6 +159,7 @@ public class PlayerComputer extends Player {
         }
     }
 
+    @NotNull
     @Override
     public String getName() {
         return "Ordinateur (" + difficulty.name + ")";

@@ -4,6 +4,8 @@ import javafx.beans.binding.NumberBinding;
 import javafx.beans.value.ObservableNumberValue;
 import model.util.Colour;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A position in the graveyard
@@ -42,12 +44,13 @@ public class GraveyardGraphicPosition implements GraphicPosition {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof GraveyardGraphicPosition)) return false;
         return ((GraveyardGraphicPosition) obj).positionIndex == this.positionIndex;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Graveyard positionIndex: " + positionIndex;

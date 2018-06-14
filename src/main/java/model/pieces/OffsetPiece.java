@@ -4,6 +4,7 @@ import model.GameData;
 import model.util.Colour;
 import model.util.Offset;
 import model.util.Position;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -17,7 +18,7 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
+    Collection<Position> generatePossibleDestinations(@NotNull GameData gameData, @NotNull Position start) {
         Collection<Position> positions = new LinkedList<>();
 
         //For each possible position
@@ -39,5 +40,6 @@ abstract class OffsetPiece extends Piece {
     /**
      * @return les offsets où la pièce peut se décaler
      */
+    @NotNull
     abstract Offset[] getOffsets();
 }

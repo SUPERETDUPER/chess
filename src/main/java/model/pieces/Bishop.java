@@ -3,6 +3,7 @@ package model.pieces;
 import model.moves.Move;
 import model.util.Colour;
 import model.util.Offset;
+import org.jetbrains.annotations.NotNull;
 
 public class Bishop extends DirectionPiece {
     private static final Offset[] DIRECTIONS = {
@@ -17,6 +18,7 @@ public class Bishop extends DirectionPiece {
         super(colour);
     }
 
+    @NotNull
     @Override
     Offset[] getDirections() {
         return DIRECTIONS;
@@ -45,6 +47,7 @@ public class Bishop extends DirectionPiece {
     public void notifyMoveUndo(Move move) {
     }
 
+    @NotNull
     @Override
     String getName() {
         return "Bishop";

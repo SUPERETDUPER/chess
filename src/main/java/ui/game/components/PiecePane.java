@@ -6,6 +6,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.pieces.Piece;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ui.game.layout.GraphicPosition;
 
 /**
@@ -30,6 +32,7 @@ public class PiecePane extends StackPane {
     /**
      * The pane's current position
      */
+    @Nullable
     private GraphicPosition currentPosition;
 
     /**
@@ -37,7 +40,7 @@ public class PiecePane extends StackPane {
      * @param position the position of the piece
      * @param size the size of the pane (width/height)
      */
-    public PiecePane(Piece piece, GraphicPosition position, ObservableNumberValue size) {
+    public PiecePane(Piece piece, @NotNull GraphicPosition position, ObservableNumberValue size) {
         super();
 
         this.piece = piece;
@@ -75,7 +78,7 @@ public class PiecePane extends StackPane {
     /**
      * Binds the piece to its position
      */
-    public synchronized void bind(GraphicPosition position) {
+    public synchronized void bind(@NotNull GraphicPosition position) {
         this.currentPosition = position;
 
         this.layoutXProperty().bind(position.getX());
@@ -97,10 +100,11 @@ public class PiecePane extends StackPane {
     /**
      * @return true if the piece is at the position
      */
-    public synchronized boolean isAtPosition(GraphicPosition position) {
+    public synchronized boolean isAtPosition(@NotNull GraphicPosition position) {
         return position.equals(currentPosition);
     }
 
+    @Nullable
     public GraphicPosition getCurrentPosition() {
         return currentPosition;
     }
