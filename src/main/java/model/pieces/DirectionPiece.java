@@ -1,6 +1,6 @@
 package model.pieces;
 
-import model.util.BoardMap;
+import model.GameData;
 import model.util.Colour;
 import model.util.Offset;
 import model.util.Position;
@@ -17,7 +17,8 @@ abstract class DirectionPiece extends Piece {
     }
 
     @Override
-    Collection<Position> generatePossibleDestinations(BoardMap board, Position start) {
+    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
+        //WARNING if parameter start is removed pawn promoted to queen might not work since queen will not recognize itself on the board
         Collection<Position> positions = new LinkedList<>();
 
         //For each direction
@@ -26,7 +27,7 @@ abstract class DirectionPiece extends Piece {
 
             //Loop through all the positions in that line/direction
             while (end.isValid()) {
-                Piece piece = board.getPiece(end);
+                Piece piece = gameData.getBoard().getPiece(end);
 
                 if (piece == null) positions.add(end); //If the square (position) is empty -> can move
                 else {

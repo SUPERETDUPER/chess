@@ -2,7 +2,6 @@ package model.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import model.moves.Move;
 import model.pieces.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -70,19 +68,7 @@ public class BoardMap implements Serializable {
         return boardMap;
     }
 
-    /**
-     * @return true if the piece is being attacked by another piece
-     */
-    public boolean isPieceAttacked(Piece piece) {
-        for (Piece attacker : iteratePieces()) {
-            //If piece opposite color check if attacks position
-            if (attacker.getColour() != piece.getColour() && attacker.isAttackingPosition(this, getPosition(piece))) {
-                return true;
-            }
-        }
 
-        return false;
-    }
 
     @Nullable
     public Piece getPiece(Position position) {
@@ -141,17 +127,7 @@ public class BoardMap implements Serializable {
         return stringBuilder.toString();
     }
 
-    @NotNull
-    public Set<Move> getAllPossibleMoves(Colour colour) {
-        Set<Move> moves = new HashSet<>();
 
-        for (Piece piece : iteratePieces()) {
-            if (piece.getColour() == colour) {
-                moves.addAll(piece.generatePossibleMoves(this, this.getPosition(piece)));
-            }
-        }
-        return moves;
-    }
 
     //Do not delete contains synchronized keyword
     private synchronized void writeObject(ObjectOutputStream out) throws IOException {

@@ -1,5 +1,6 @@
 package model.pieces;
 
+import model.GameData;
 import model.moves.BaseMove;
 import model.moves.CombineMove;
 import model.moves.Move;
@@ -56,17 +57,17 @@ public class King extends OffsetPiece {
     }
 
     @Override
-    Collection<Position> generatePossibleDestinations(BoardMap board, Position start) {
-        Collection<Position> positions = super.generatePossibleDestinations(board, start);
+    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
+        Collection<Position> positions = super.generatePossibleDestinations(gameData, start);
 
         //Add option for castling
         Position debutTour = start.shift(new Offset(0, 3));
         Position finTour = debutTour.shift(new Offset(0, -2));
         Position finRoi = start.shift(new Offset(0, 2));
 
-        if (board.getPiece(debutTour) instanceof Rook
-                && board.getPiece(finRoi) == null
-                && board.getPiece(finTour) == null
+        if (gameData.getBoard().getPiece(debutTour) instanceof Rook
+                && gameData.getBoard().getPiece(finRoi) == null
+                && gameData.getBoard().getPiece(finTour) == null
                 && numberOfAppliedMoves == 0) {
 
             positions.add(finRoi);

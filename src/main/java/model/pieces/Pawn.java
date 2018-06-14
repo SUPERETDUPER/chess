@@ -1,5 +1,7 @@
 package model.pieces;
 
+import model.GameData;
+import model.moves.EnPassantMove;
 import model.moves.Move;
 import model.moves.PromotionMove;
 import model.util.BoardMap;
@@ -10,12 +12,13 @@ import model.util.Position;
 import java.util.Collection;
 import java.util.LinkedList;
 
-//TODO Implement promotion and en passant
 public class Pawn extends Piece {
     private final Offset RIGHT_ATTACK = getColour() == Colour.WHITE ? Offset.TOP_LEFT : Offset.BOTTOM_LEFT;
     private final Offset LEFT_ATTACK = getColour() == Colour.WHITE ? Offset.TOP_RIGHT : Offset.BOTTOM_RIGHT;
     private final Offset FORWARD = getColour() == Colour.WHITE ? Offset.UP : Offset.DOWN;
+    public final Offset BACKWARD = getColour() == Colour.WHITE ? Offset.DOWN : Offset.UP;
     private final Offset FORWARD_BY_TWO = new Offset(Colour.WHITE == getColour() ? -2 : 2, 0);
+
     private final int startRow = getColour() == Colour.WHITE ? Position.LIMIT - 2 : 1;
 
     /**
@@ -29,18 +32,22 @@ public class Pawn extends Piece {
 
     @Override
     Move convertDestinationToMove(BoardMap board, Position current, Position destination) {
-        //Add catch for when pawn gets promoted
-        if (promotedQueen == null && (destination.getRow() == 0 || destination.getRow() == Position.LIMIT - 1))
+        if (promotedQueen != null) return promotedQueen.convertDestinationToMove(board, current, destination);
+
+        //Check for promotion if on last row
+        if (destination.getRow() == 0 || destination.getRow() == Position.LIMIT - 1)
             return new PromotionMove(current, destination);
+        //If moved sideways and there is no piece at destination must be en passant
+        if (current.getColumn() != destination.getColumn() && board.getPiece(destination) == null)
+            return new EnPassantMove(current, destination);
 
         return super.convertDestinationToMove(board, current, destination);
-
     }
 
     @Override
-    Collection<Position> generatePossibleDestinations(BoardMap board, Position start) {
+    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
         //If promoted use queen to generate moves
-        if (promotedQueen != null) return promotedQueen.generatePossibleDestinations(board, start);
+        if (promotedQueen != null) return promotedQueen.generatePossibleDestinations(gameData, start);
 
         Collection<Position> positions = new LinkedList<>();
 
@@ -48,7 +55,7 @@ public class Pawn extends Piece {
 
         //If no one in spot in front can move else we are blocked
         //No need for .isValid check since when on edge piece is promoted to queen
-        boolean notBlocked = board.getPiece(forward) == null;
+        boolean notBlocked = gameData.getBoard().getPiece(forward) == null;
         if (notBlocked) positions.add(forward);
 
         //If not blocked and on start row we can move forward by two
@@ -57,25 +64,38 @@ public class Pawn extends Piece {
             forward = start.shift(FORWARD_BY_TWO);
 
             //Only move forward by two if square is empty
-            if (board.getPiece(forward) == null) positions.add(forward);
+            if (gameData.getBoard().getPiece(forward) == null) positions.add(forward);
         }
 
-        //Try to eat pieces on the side
+        //Try to eat pieces on the side (add en passant)
         forward = start.shift(RIGHT_ATTACK);
-        if (canEat(board, forward)) positions.add(forward);
+        if (canAttack(gameData, forward)) positions.add(forward);
 
         forward = start.shift(LEFT_ATTACK);
-        if (canEat(board, forward)) positions.add(forward);
+        if (canAttack(gameData, forward)) positions.add(forward);
 
         return positions;
     }
 
-    private boolean canEat(BoardMap boardMap, Position destination) {
+    private boolean canAttack(GameData gameData, Position destination) {
         if (!destination.isValid()) return false;
 
-        Piece piece = boardMap.getPiece(destination);
-        return piece != null && piece.getColour() != colour; //Can eat if piece exists and is other colour
+        //If piece there return true if same color
+        Piece piece = gameData.getBoard().getPiece(destination);
+        if (piece != null) {
+            return piece.getColour() != colour;//Can eat if piece exists and is other colour
+        }
 
+        //Get piece on the side
+        Piece pieceOnSide = gameData.getBoard().getPiece(destination.shift(BACKWARD));
+        //If piece is null or not a pawn do nothing (or if same colour as me
+        if (!(pieceOnSide instanceof Pawn) || pieceOnSide.getColour() == colour) return false;
+
+        //Get last move
+        Move lastMove = gameData.getPastMoves().getLast();
+
+        //If the last move affected the piece on the side and the piece on the side moved by two
+        return lastMove.getPiece() == pieceOnSide && Math.abs(lastMove.getStart().getRow() - lastMove.getEnd().getRow()) == 2;
     }
 
     @Override
@@ -101,19 +121,7 @@ public class Pawn extends Piece {
     @Override
     public void notifyMoveComplete(Move move) {
         if (move instanceof PromotionMove) {
-            //Make the queen equal this since when the queen searches in the data for its position it should find itself
-            //TODO might not be required since position is passed in
-            promotedQueen = new Queen(colour) {
-                @Override
-                public int hashCode() {
-                    return Pawn.this.hashCode();
-                }
-
-                @Override
-                public boolean equals(Object obj) {
-                    return Pawn.this.equals(obj);
-                }
-            };
+            promotedQueen = new Queen(colour);
         }
     }
 

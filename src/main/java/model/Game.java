@@ -14,7 +14,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
@@ -70,11 +69,6 @@ public class Game implements Serializable {
     transient private Consumer<Result> resultListener;
 
     /**
-     * A list of completed moves
-     */
-    private final Stack<Move> pastMoves = new Stack<>();
-
-    /**
      * @param gameData the game state (piece's position)
      * @param players  the players
      */
@@ -102,7 +96,7 @@ public class Game implements Serializable {
         Collection<Move> moves = gameData.getPossibleLegalMoves(turnMarker.get());
 
         if (moves.isEmpty()) {
-            if (gameData.getBoard().isPieceAttacked(gameData.getKing(turnMarker.get()))) {
+            if (gameData.isPieceAttacked(gameData.getKing(turnMarker.get()))) {
                 if (turnMarker.get() == Colour.BLACK) {
                     resultListener.accept(Result.WHITE_WINS);
                 } else {
@@ -130,7 +124,7 @@ public class Game implements Serializable {
      */
     private void submitMove(@NotNull Move move) {
         move.apply(gameData); //Apply the move to the state
-        pastMoves.push(move); //Add the move to the list
+        gameData.getPastMoves().add(move); //Add the move to the list
 
         switchTurn();
         notifyListeners();
@@ -148,7 +142,7 @@ public class Game implements Serializable {
      */
     public void undo(int tour) {
         for (int i = 0; i < tour; i++) {
-            pastMoves.pop().undo(gameData);
+            gameData.getPastMoves().removeLast().undo(gameData);
             switchTurn();
         }
 

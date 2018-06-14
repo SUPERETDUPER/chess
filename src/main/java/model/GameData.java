@@ -8,10 +8,7 @@ import model.util.Colour;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Represents the board state (piece's positions) and the pieces that were eaten
@@ -22,6 +19,11 @@ public class GameData implements Serializable {
 
     @NotNull
     private final EnumMap<Colour, Stack<Piece>> eatenPieces = new EnumMap<>(Colour.class);
+
+    /**
+     * A list of completed moves
+     */
+    private final LinkedList<Move> pastMoves = new LinkedList<>();
 
     /**
      * The kings for each player.
@@ -64,7 +66,7 @@ public class GameData implements Serializable {
      */
     @NotNull
     public Collection<Move> getPossibleLegalMoves(Colour colour) {
-        return filterOnlyLegal(board.getAllPossibleMoves(colour), colour);
+        return filterOnlyLegal(getAllPossibleMoves(colour), colour);
     }
 
     /**
@@ -80,7 +82,7 @@ public class GameData implements Serializable {
         for (Move move : moves) {
             move.apply(this);
 
-            if (!getBoard().isPieceAttacked(kings.get(verifierPour))) {
+            if (!isPieceAttacked(kings.get(verifierPour))) {
                 legalMoves.add(move);
             }
 
@@ -91,9 +93,39 @@ public class GameData implements Serializable {
     }
 
     /**
+     * @return true if the piece is being attacked by another piece
+     */
+    public boolean isPieceAttacked(Piece piece) {
+        for (Piece attacker : board.iteratePieces()) {
+            //If piece opposite color check if attacks position
+            if (attacker.getColour() != piece.getColour() && attacker.isAttackingPosition(this, board.getPosition(piece))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @NotNull
+    public Set<Move> getAllPossibleMoves(Colour colour) {
+        Set<Move> moves = new HashSet<>();
+
+        for (Piece piece : board.iteratePieces()) {
+            if (piece.getColour() == colour) {
+                moves.addAll(piece.generatePossibleMoves(this, board.getPosition(piece)));
+            }
+        }
+        return moves;
+    }
+
+    /**
      * @return the stack of eaten pieces for this colour
      */
     public Stack<Piece> getEatenPieces(Colour colour) {
         return eatenPieces.get(colour);
+    }
+
+    public LinkedList<Move> getPastMoves() {
+        return pastMoves;
     }
 }

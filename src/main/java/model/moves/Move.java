@@ -36,6 +36,16 @@ public abstract class Move implements Serializable {
         return end;
     }
 
+    @NotNull
+    public Position getStart() {
+        return start;
+    }
+
+    @Nullable
+    public Piece getPiece() {
+        return piece;
+    }
+
     /**
      * Applies this move to the game data
      */

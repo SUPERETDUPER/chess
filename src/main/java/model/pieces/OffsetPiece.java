@@ -1,6 +1,6 @@
 package model.pieces;
 
-import model.util.BoardMap;
+import model.GameData;
 import model.util.Colour;
 import model.util.Offset;
 import model.util.Position;
@@ -17,7 +17,7 @@ abstract class OffsetPiece extends Piece {
     }
 
     @Override
-    Collection<Position> generatePossibleDestinations(BoardMap board, Position start) {
+    Collection<Position> generatePossibleDestinations(GameData gameData, Position start) {
         Collection<Position> positions = new LinkedList<>();
 
         //For each possible position
@@ -27,7 +27,7 @@ abstract class OffsetPiece extends Piece {
             //If not valid skip
             if (!nextPosition.isValid()) continue;
 
-            Piece piece = board.getPiece(nextPosition);
+            Piece piece = gameData.getBoard().getPiece(nextPosition);
 
             //If empty or piece other color can move
             if (piece == null || piece.getColour() != colour) positions.add(nextPosition);

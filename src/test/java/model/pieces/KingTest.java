@@ -1,5 +1,6 @@
 package model.pieces;
 
+import model.GameData;
 import model.moves.BaseMove;
 import model.moves.Move;
 import model.util.BoardMap;
@@ -21,7 +22,7 @@ class KingTest {
         Position startingPos = new Position(0, 0);
         boardMap.add(startingPos, king);
 
-        Collection<Move> moves = king.generatePossibleMoves(boardMap, startingPos);
+        Collection<Move> moves = king.generatePossibleMoves(new GameData(boardMap), startingPos);
 
         Collection<Move> expected = new LinkedList<>();
         expected.add(new BaseMove(startingPos, new Position(0, 1)));

@@ -13,8 +13,8 @@ public class BaseMove extends Move {
     @Nullable
     private Piece eatenPiece;
 
-    public BaseMove(Position debut, @NotNull Position fin) {
-        super(debut, fin);
+    public BaseMove(Position start, @NotNull Position destination) {
+        super(start, destination);
     }
 
     @Override

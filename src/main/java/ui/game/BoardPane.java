@@ -170,7 +170,7 @@ public class BoardPane extends Pane {
         //Calculate possible moves and highlight those moves
         highlightController.select(position,
                 gameData.filterOnlyLegal(
-                        pieceClicked.generatePossibleMoves(gameData.getBoard(), position),
+                        pieceClicked.generatePossibleMoves(gameData, position),
                         pieceClicked.getColour()
                 )
         );

@@ -1,5 +1,6 @@
 package model.pieces;
 
+import model.GameData;
 import model.moves.BaseMove;
 import model.moves.Move;
 import model.util.BoardMap;
@@ -53,10 +54,11 @@ public abstract class Piece implements Serializable {
 
     /**
      * Does not check for checks (king being attacked)
+     *
      * @param start where the piece is at right now
      * @return the list of positions where the piece can move
      */
-    abstract Collection<Position> generatePossibleDestinations(BoardMap board, Position start);
+    abstract Collection<Position> generatePossibleDestinations(GameData gameData, Position start);
 
     /**
      * Separate method to allow overiding from subclasses if a special move is required
@@ -70,17 +72,17 @@ public abstract class Piece implements Serializable {
      * Does not verify if move is legal (if king is put in check)
      * @return a collection of all the moves that can be executed
      */
-    public Collection<Move> generatePossibleMoves(BoardMap board, Position start) {
+    public Collection<Move> generatePossibleMoves(GameData gameData, Position start) {
         Collection<Move> moves = new LinkedList<>();
 
         //For each possible destination create a move and add it to the list
-        generatePossibleDestinations(board, start).forEach(destination -> moves.add(convertDestinationToMove(board, start, destination)));
+        generatePossibleDestinations(gameData, start).forEach(destination -> moves.add(convertDestinationToMove(gameData.getBoard(), start, destination)));
 
         return moves;
     }
 
-    public boolean isAttackingPosition(BoardMap board, Position position) {
-        Collection<Position> positions = generatePossibleDestinations(board, board.getPosition(this));
+    public boolean isAttackingPosition(GameData gameData, Position position) {
+        Collection<Position> positions = generatePossibleDestinations(gameData, gameData.getBoard().getPosition(this));
         return positions.contains(position);
     }
 
