@@ -122,7 +122,7 @@ public class King extends OffsetPiece {
 
     @Override
     public boolean isAttackingPosition(@NotNull GameData gameData, @NotNull Position position) {
-        Collection<Position> positions = super.generatePossibleDestinations(gameData, position);
+        Collection<Position> positions = super.generatePossibleDestinations(gameData, gameData.getBoard().getPosition(this));
         return positions.contains(position);
     }
 

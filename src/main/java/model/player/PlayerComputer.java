@@ -145,6 +145,15 @@ public class PlayerComputer extends Player {
         Move getFirstMove() {
             return moves.getFirst();
         }
+
+        @Override
+        public String toString() {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            moves.forEach(obj -> stringBuilder.append(obj).append(" "));
+
+            return stringBuilder.toString();
+        }
     }
 
     /**

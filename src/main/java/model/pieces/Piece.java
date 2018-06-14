@@ -114,6 +114,6 @@ public abstract class Piece implements Serializable {
     @NotNull
     @Override
     public String toString() {
-        return getName() + "-" + (colour == Colour.WHITE ? "b" : "n");
+        return getName() + "-" + (colour == Colour.WHITE ? "w" : "b");
     }
 }

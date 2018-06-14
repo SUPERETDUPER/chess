@@ -63,6 +63,7 @@ public class GameData implements Serializable {
     }
 
     /**
+     * @param colour will not allow any moves that throw this colour's king in check
      * @return a collection of possible legal moves that can be player
      */
     @NotNull
@@ -96,7 +97,7 @@ public class GameData implements Serializable {
     /**
      * @return true if the piece is being attacked by another piece
      */
-    public boolean isPieceAttacked(@NotNull Piece piece) {
+    boolean isPieceAttacked(@NotNull Piece piece) {
         return isPositionAttacked(board.getPosition(piece), piece.getColour() == Colour.WHITE ? Colour.BLACK : Colour.WHITE);
     }
 
