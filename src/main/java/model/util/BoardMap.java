@@ -15,6 +15,7 @@ import java.util.Set;
  * Represents a mapping of pieces and their position on the board.
  * Uses {@link BiMap} from Google Guava to allow quick access in both directions (find position of piece or find piece at position)
  */
+//TODO review usage of synchronised
 public class BoardMap implements Serializable {
     @NotNull
     private final BiMap<Position, Piece> board;
@@ -90,19 +91,19 @@ public class BoardMap implements Serializable {
     /**
      * @param piece the piece that was at the destination before the piece was moved
      */
-    public void movePiece(@NotNull Position destination, @NotNull Piece piece) {
+    public synchronized void movePiece(@NotNull Position destination, @NotNull Piece piece) {
         board.forcePut(destination, piece);
     }
 
     @NotNull
-    public Piece removePiece(@NotNull Position position) {
+    public synchronized Piece removePiece(@NotNull Position position) {
         Piece remove = board.remove(position);
         if (remove == null) throw new IllegalArgumentException("No piece at: " + position);
         return remove;
     }
 
     @NotNull
-    public Position removePiece(@NotNull Piece piece) {
+    public synchronized Position removePiece(@NotNull Piece piece) {
         Position position = board.inverse().remove(piece);
         if (position == null) throw new IllegalArgumentException("Piece not on the board: piece:" + piece);
         return position;
@@ -126,5 +127,11 @@ public class BoardMap implements Serializable {
         stringBuilder.append("]");
 
         return stringBuilder.toString();
+    }
+
+
+    //Do not delete contains synchronized keyword
+    private synchronized void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
     }
 }
