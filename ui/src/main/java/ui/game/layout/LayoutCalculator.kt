@@ -4,8 +4,8 @@ import javafx.beans.binding.NumberBinding
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.value.ObservableNumberValue
-import model.util.Colour
-import model.util.Position
+import engine.util.Colour
+import engine.util.Position
 
 /**
  * Calculates the position of the elements on the display

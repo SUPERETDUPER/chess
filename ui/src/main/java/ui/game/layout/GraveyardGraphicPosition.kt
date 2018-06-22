@@ -2,8 +2,8 @@ package ui.game.layout
 
 import javafx.beans.binding.NumberBinding
 import javafx.beans.value.ObservableNumberValue
-import model.util.Colour
-import model.util.Position
+import engine.util.Colour
+import engine.util.Position
 
 /**
  * A position in the graveyard

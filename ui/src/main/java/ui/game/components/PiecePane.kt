@@ -5,7 +5,7 @@ import javafx.scene.CacheHint
 import javafx.scene.layout.StackPane
 import javafx.scene.text.Font
 import javafx.scene.text.Text
-import model.pieces.Piece
+import engine.pieces.Piece
 import ui.game.layout.GraphicPosition
 
 /**

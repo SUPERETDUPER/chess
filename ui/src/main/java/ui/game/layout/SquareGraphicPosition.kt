@@ -1,7 +1,7 @@
 package ui.game.layout
 
 import javafx.beans.binding.NumberBinding
-import model.util.Position
+import engine.util.Position
 
 /**
  * The position of a square

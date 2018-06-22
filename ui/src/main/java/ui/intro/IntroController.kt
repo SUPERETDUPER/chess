@@ -4,9 +4,9 @@ import com.jfoenix.controls.JFXComboBox
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.scene.layout.VBox
-import model.player.Player
-import model.player.PlayerComputer
-import model.util.Colour
+import engine.player.Player
+import engine.player.PlayerComputer
+import engine.util.Colour
 import ui.game.HumanPlayer
 import java.util.*
 import java.util.function.Consumer

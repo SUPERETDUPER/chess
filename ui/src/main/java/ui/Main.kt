@@ -9,9 +9,9 @@ import javafx.scene.Scene
 import javafx.scene.layout.Pane
 import javafx.stage.Stage
 import javafx.util.Duration
-import model.Loader
-import model.player.Player
-import model.util.Colour
+import engine.Loader
+import engine.player.Player
+import engine.util.Colour
 import ui.game.GameController
 import ui.intro.IntroController
 import java.io.IOException
@@ -22,7 +22,7 @@ import java.util.function.Consumer
 class Main : Application() {
 
     /**
-     * The loader will load the game model
+     * The loader will load the game engine
      */
     private val loader = Loader()
 

@@ -1,11 +1,9 @@
 package ui.game
 
-import model.GameData
-import model.moves.Move
-import model.player.Player
-import model.util.Colour
-
-import java.util.function.Consumer
+import engine.GameData
+import engine.moves.Move
+import engine.player.Player
+import engine.util.Colour
 
 /**
  * A player that uses the UI to submit his moves

@@ -2,14 +2,14 @@ package ui.game
 
 import javafx.geometry.Orientation
 import javafx.scene.layout.Pane
-import model.Game
-import model.GameData
-import model.moves.Move
-import model.pieces.Piece
-import model.util.Board
-import model.util.Colour
-import model.util.Position
-import model.util.PositionIterator
+import engine.Game
+import engine.GameData
+import engine.moves.Move
+import engine.pieces.Piece
+import engine.util.Board
+import engine.util.Colour
+import engine.util.Position
+import engine.util.PositionIterator
 import ui.game.components.PiecePane
 import ui.game.components.SquarePane
 import ui.game.layout.GraveyardGraphicPosition
@@ -23,7 +23,7 @@ import java.util.function.Consumer
  */
 internal class BoardPane
 /**
- * @param game the game model
+ * @param game the game engine
  */
 (game: Game) : Pane() {
     /**
@@ -106,7 +106,7 @@ internal class BoardPane
         this.children.addAll(boardSquares.data)
         this.children.addAll(piecePanes.values)
 
-        game.addBoardChangeListener { this.updateBoard() } //If the board model changes update the display
+        game.addBoardChangeListener { this.updateBoard() } //If the board engine changes update the display
 
         //When the game is no longer waiting for a move, wait for all animations to finish then trigger the next player to play
         game.statusProperty().addListener { _, _, newValue ->
@@ -189,7 +189,7 @@ internal class BoardPane
     }
 
     /**
-     * Called when the model changes to update the display
+     * Called when the engine changes to update the display
      */
     @Synchronized
     private fun updateBoard() {

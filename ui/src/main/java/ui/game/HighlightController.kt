@@ -1,8 +1,8 @@
 package ui.game
 
-import model.moves.Move
-import model.util.Board
-import model.util.Position
+import engine.moves.Move
+import engine.util.Board
+import engine.util.Position
 import ui.game.components.SquarePane
 import java.util.*
 

@@ -8,8 +8,8 @@ import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.layout.StackPane
-import model.Game
-import model.Loader
+import engine.Game
+import engine.Loader
 
 /**
  * Controls the game page
@@ -21,7 +21,7 @@ class GameController
  */
 (exit: () -> Unit,
  /**
-  * Loads the model
+  * Loads the engine
   */
  private val loader: Loader) {
     @FXML
