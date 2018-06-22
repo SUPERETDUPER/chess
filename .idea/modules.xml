@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/chessengine/chessengine.iml" filepath="$PROJECT_DIR$/chessengine/chessengine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ui/ui.iml" filepath="$PROJECT_DIR$/ui/ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chess.iml" filepath="$PROJECT_DIR$/chess.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chess-engine/chess-engine.iml" filepath="$PROJECT_DIR$/chess-engine/chess-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chess-ui/chess-ui.iml" filepath="$PROJECT_DIR$/chess-ui/chess-ui.iml" />
     </modules>
   </component>
 </project>

@@ -6,12 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="chessengine" />
-        <module name="ui" />
+        <module name="chess-engine" />
+        <module name="chess-ui" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="chess" target="1.8" />
+      <module name="chess" target="1.5" />
+      <module name="chess-engine" target="1.5" />
+      <module name="chess-ui" target="1.5" />
       <module name="chessengine" target="1.5" />
       <module name="ui" target="1.5" />
     </bytecodeTargetLevel>
