@@ -1,5 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Maven template
 target/
-.idea/workspace.xml
+/.idea/
 /savedGame.txt
+!/.idea/runConfigurations/
+*.iml
