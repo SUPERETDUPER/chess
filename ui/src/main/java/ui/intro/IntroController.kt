@@ -17,10 +17,10 @@ import java.util.function.Consumer
 class IntroController(private val onStart: Consumer<EnumMap<Colour, Player>>) {
 
     @FXML
-    private var whitePlayerContainer: VBox? = null
+    private lateinit var whitePlayerContainer: VBox
 
     @FXML
-    private var blackPlayerContainer: VBox? = null
+    private lateinit var blackPlayerContainer: VBox
 
     //The drop-downs to select which player is playing
     private val whitePlayers = JFXComboBox(PLAYER_OPTIONS)
@@ -36,8 +36,8 @@ class IntroController(private val onStart: Consumer<EnumMap<Colour, Player>>) {
     @FXML
     private fun initialize() {
         //Add the drop-downs to the interface
-        whitePlayerContainer!!.children.add(whitePlayers)
-        blackPlayerContainer!!.children.add(blackPlayers)
+        whitePlayerContainer.children.add(whitePlayers)
+        blackPlayerContainer.children.add(blackPlayers)
     }
 
     /**

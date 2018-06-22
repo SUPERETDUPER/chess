@@ -19,7 +19,12 @@ import java.net.URL
 import java.util.*
 import java.util.function.Consumer
 
+fun main(args: Array<String>) {
+    Application.launch(Main::class.java, *args) //Starts the ui
+}
+
 class Main : Application() {
+    private val title = "Chess"
 
     /**
      * The loader will load the game engine
@@ -37,7 +42,7 @@ class Main : Application() {
      * Starts the UI
      */
     override fun start(primaryStage: Stage) {
-        primaryStage.title = TITRE
+        primaryStage.title = title
         primaryStage.scene = scene
 
         //If loading the game from file succeeds go immediately to game
@@ -96,31 +101,22 @@ class Main : Application() {
         fadeOut.play()
     }
 
-    companion object {
-        private const val TITRE = "Chess"
+    /**
+     * @param controller the controller for the FXML view
+     * @param url        the url of the FXML
+     * @return the view loaded from the FXML
+     */
+    private fun loadFromFXML(controller: Any, url: URL): Parent {
+        //Create the loader with the url
+        val fxmlLoader = FXMLLoader(url)
+        fxmlLoader.setController(controller) //Attach the controller
 
-        /**
-         * @param controller the controller for the FXML view
-         * @param url        the url of the FXML
-         * @return the view loaded from the FXML
-         */
-        private fun loadFromFXML(controller: Any, url: URL): Parent {
-            //Create the loader with the url
-            val fxmlLoader = FXMLLoader(url)
-            fxmlLoader.setController(controller) //Attach the controller
-
-            //Load and return view from FXML
-            try {
-                return fxmlLoader.load()
-            } catch (e: IOException) {
-                throw RuntimeException(e)
-            }
-
+        //Load and return view from FXML
+        try {
+            return fxmlLoader.load()
+        } catch (e: IOException) {
+            throw RuntimeException(e)
         }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            launch(Main::class.java, *args) //Starts the ui
-        }
     }
 }

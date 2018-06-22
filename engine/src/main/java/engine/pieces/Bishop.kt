@@ -6,7 +6,7 @@ import engine.util.Offset
 
 internal class Bishop(colour: Colour) : DirectionPiece(colour) {
 
-    override val directions: Array<Offset> = DIRECTIONS
+    override val directions: Array<Offset> = arrayOf(Offset.TOP_LEFT, Offset.TOP_RIGHT, Offset.BOTTOM_LEFT, Offset.BOTTOM_RIGHT)
 
     override val unicodeWhite: Int = 9815
 
@@ -20,7 +20,4 @@ internal class Bishop(colour: Colour) : DirectionPiece(colour) {
 
     override fun notifyMoveUndo(move: Move) {}
 
-    companion object {
-        private val DIRECTIONS = arrayOf(Offset.TOP_LEFT, Offset.TOP_RIGHT, Offset.BOTTOM_LEFT, Offset.BOTTOM_RIGHT)
-    }
 }

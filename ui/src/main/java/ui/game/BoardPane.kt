@@ -3,7 +3,6 @@ package ui.game
 import javafx.geometry.Orientation
 import javafx.scene.layout.Pane
 import engine.Game
-import engine.GameData
 import engine.moves.Move
 import engine.pieces.Piece
 import engine.util.Board
@@ -20,12 +19,10 @@ import java.util.function.Consumer
 
 /**
  * Controls the main region containing the board and graveyards
+ *
+ * @property game the game engine
  */
-internal class BoardPane
-/**
- * @param game the game engine
- */
-(game: Game) : Pane() {
+internal class BoardPane(private val game: Game) : Pane() {
     /**
      * The list of squares
      */
@@ -42,11 +39,6 @@ internal class BoardPane
      * A map of pieces and their associated piecePane
      */
     private val piecePanes = HashMap<Piece, PiecePane>()
-
-    /**
-     * The data passed through the constructor
-     */
-    private val gameData: GameData = game.gameData
 
     /**
      * Object representing the current move request
@@ -75,7 +67,7 @@ internal class BoardPane
             boardSquares.add(position, squarePane)
 
             //If there is a piece at this position create a piecePane it
-            val piece = gameData.board.getPiece(position)
+            val piece = game.gameData.board.getPiece(position)
 
             if (piece != null) {
                 val piecePane = PiecePane(piece, graphicPosition, layoutCalculator.componentSize)
@@ -89,7 +81,7 @@ internal class BoardPane
 
         //For each already eaten piece create a piecePane and add to graveyard of that colour
         for (colour in Colour.values()) {
-            for ((graveyardPositionOfNext, eatenPiece) in gameData.getEatenPieces(colour).withIndex()) {
+            for ((graveyardPositionOfNext, eatenPiece) in game.gameData.getEatenPieces(colour).withIndex()) {
                 val piecePane = PiecePane(
                         eatenPiece,
                         layoutCalculator.createGraveyardPosition(colour, graveyardPositionOfNext),
@@ -106,7 +98,7 @@ internal class BoardPane
         this.children.addAll(boardSquares.data)
         this.children.addAll(piecePanes.values)
 
-        game.addBoardChangeListener { this.updateBoard() } //If the board engine changes update the display
+        game.addBoardChangeListener(this::updateBoard) //If the board engine changes update the display
 
         //When the game is no longer waiting for a move, wait for all animations to finish then trigger the next player to play
         game.statusProperty().addListener { _, _, newValue ->
@@ -155,8 +147,8 @@ internal class BoardPane
 
         //Calculate possible moves and highlight those moves
         highlightController.select(position,
-                gameData.filterOnlyLegal(
-                        pieceClicked.generatePossibleMoves(gameData, position),
+                game.gameData.filterOnlyLegal(
+                        pieceClicked.generatePossibleMoves(game.gameData, position),
                         pieceClicked.colour
                 )
         )
@@ -194,8 +186,8 @@ internal class BoardPane
     @Synchronized
     private fun updateBoard() {
         //For each piece on the board
-        for (piece in gameData.board.iteratePieces()) {
-            val position = gameData.board.getPosition(piece)
+        for (piece in game.gameData.board.iteratePieces()) {
+            val position = game.gameData.board.getPosition(piece)
 
             //Create graphic position
             val panePosition = layoutCalculator.createSquarePosition(position!!)
@@ -210,7 +202,7 @@ internal class BoardPane
         //For each colour of pieces
         for (colour in Colour.values()) {
             //For each piece in the graveyard
-            val eatenPieces = gameData.getEatenPieces(colour)
+            val eatenPieces = game.gameData.getEatenPieces(colour)
             for (piece in eatenPieces) {
                 val piecePane = piecePanes[piece]
 
@@ -242,7 +234,7 @@ internal class BoardPane
      * @property moveCallback The callback method to which the selected move should be submitted
      * @property colour The colour of the player that should submit the move
      */
-    private class MoveRequest internal constructor(private val moveCallback: (Move) -> Unit, internal val colour: Colour) {
+    private data class MoveRequest internal constructor(private val moveCallback: (Move) -> Unit, internal val colour: Colour) {
         /**
          * True if the move has already been submitted
          */

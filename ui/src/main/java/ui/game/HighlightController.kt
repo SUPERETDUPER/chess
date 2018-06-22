@@ -9,16 +9,11 @@ import java.util.*
 /**
  * Controls how the squares should be highlighted
  * When a piece is highlighted, the piece's square is made red and the possible moves more the piece can go is made blue
+ *
+ *
+ * @property squares the list of squares at each position
  */
-internal class HighlightController
-/**
- * @param squares the list of squares
- */
-(
-        /**
-         * The list of squares at each position
-         */
-        private val squares: Board<SquarePane>) {
+internal class HighlightController(private val squares: Board<SquarePane>) {
 
     /**
      * The list of possible moves for the highlighted piece

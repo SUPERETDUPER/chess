@@ -13,14 +13,11 @@ class HumanPlayer : Player() {
      * The UI
      */
     @Transient
-    private var boardPane: BoardPane? = null
+    private lateinit var boardPane: BoardPane
 
-    override val name: String
-        get() = "Human"
+    override val name: String = "Human"
 
-    override fun initializeGameData(gameData: GameData) {
-
-    }
+    override fun initializeGameData(gameData: GameData) {}
 
     internal fun attachUI(boardPane: BoardPane) {
         this.boardPane = boardPane
@@ -32,7 +29,7 @@ class HumanPlayer : Player() {
      * @param callback the callback method where the selected move should eventually be submitted
      * @param colour   the colour of the player that should submit his move
      */
-    override fun getMove(callback: (Move)->Unit, colour: Colour) {
-        boardPane!!.requestMove(callback, colour) //Create a request and submit to the UI
+    override fun getMove(callback: (Move) -> Unit, colour: Colour) {
+        boardPane.requestMove(callback, colour) //Create a request and submit to the UI
     }
 }

@@ -3,38 +3,32 @@ package ui.game
 import com.jfoenix.controls.JFXDrawer
 import com.jfoenix.controls.JFXHamburger
 import com.jfoenix.controls.JFXListView
+import engine.Game
+import engine.Loader
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.layout.StackPane
-import engine.Game
-import engine.Loader
 
 /**
  * Controls the game page
- */
-class GameController
-/**
+ *
  * @param exit   the method to run to exit the game and return to the main menu
- * @param loader the loader that loads the game
+ * @property loader the loader that loads the game
  */
-(exit: () -> Unit,
- /**
-  * Loads the engine
-  */
- private val loader: Loader) {
+class GameController(exit: () -> Unit, private val loader: Loader) {
     @FXML
-    private var boardContainer: StackPane? = null
+    private lateinit var boardContainer: StackPane
 
     @FXML
-    private var drawer: JFXDrawer? = null
+    private lateinit var drawer: JFXDrawer
 
     @FXML
-    private var drawerList: JFXListView<Action>? = null
+    private lateinit var drawerList: JFXListView<Action>
 
     @FXML
-    private var hamburger: JFXHamburger? = null
+    private lateinit var hamburger: JFXHamburger
 
     private val boardPane: BoardPane = BoardPane(loader.game!!)
 
@@ -89,29 +83,29 @@ class GameController
     @FXML
     private fun initialize() {
         //Add the board to its container
-        boardContainer!!.children.add(boardPane)
+        boardContainer.children.add(boardPane)
 
         //Add the actions to the list
-        drawerList!!.items = actions
+        drawerList.items = actions
 
         //Add a click listener to the list to register when an item was pressed
         //TODO Change because throws error if called before item is selected
-        drawerList!!.setOnMouseClicked { _ ->
-            drawerList!!.selectionModel.selectedItem.onClick()
-            drawerList!!.selectionModel.clearSelection()
+        drawerList.setOnMouseClicked { _ ->
+            drawerList.selectionModel.selectedItem.onClick()
+            drawerList.selectionModel.clearSelection()
         }
 
         //Animate the hamburger when the drawer opens/closes
-        val animationRate = Math.abs(hamburger!!.animation.rate)
+        val animationRate = Math.abs(hamburger.animation.rate)
 
-        drawer!!.setOnDrawerOpening { _ ->
-            val burgerAnimation = hamburger!!.animation
+        drawer.setOnDrawerOpening { _ ->
+            val burgerAnimation = hamburger.animation
             burgerAnimation.rate = animationRate
             burgerAnimation.play()
         }
 
-        drawer!!.setOnDrawerClosing { _ ->
-            val burgerAnimation = hamburger!!.animation
+        drawer.setOnDrawerClosing { _ ->
+            val burgerAnimation = hamburger.animation
             burgerAnimation.rate = -animationRate
             burgerAnimation.play()
         }
@@ -121,7 +115,7 @@ class GameController
 
     @FXML
     private fun handleHamburgerClick() {
-        drawer!!.toggle() //When the hamburger is pressed open/close the drawer
+        drawer.toggle() //When the hamburger is pressed open/close the drawer
     }
 
     /**
