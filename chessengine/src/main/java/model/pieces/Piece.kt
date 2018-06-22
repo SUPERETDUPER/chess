@@ -69,7 +69,7 @@ abstract class Piece internal constructor(
      *
      * @return a collection of all the moves that can be executed
      */
-    internal fun generatePossibleMoves(gameData: GameData, start: Position): Collection<Move> {
+    fun generatePossibleMoves(gameData: GameData, start: Position): Collection<Move> {
         val moves = LinkedList<Move>()
 
         //For each possible destination create a move and add it to the list

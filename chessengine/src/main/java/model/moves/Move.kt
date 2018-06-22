@@ -10,7 +10,7 @@ import java.util.*
 /**
  * A move. Each move has a start and end location. Each move has a piece (defined only when move is applied)
  */
-internal abstract class Move protected constructor(val start: Position, val end: Position) : Serializable {
+abstract class Move protected constructor(val start: Position, val end: Position) : Serializable {
     /**
      * The piece that is moving. Gets set in method applyToGame
      */

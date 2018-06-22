@@ -63,7 +63,7 @@ class GameData(val board: BoardMap) : Serializable {
      * @param verifierPour legal for who (will remove all moves that throw this colour's king in check)
      * @return a filter collection containing only legal moves
      */
-    internal fun filterOnlyLegal(moves: Collection<Move>, verifierPour: Colour): Collection<Move> {
+    fun filterOnlyLegal(moves: Collection<Move>, verifierPour: Colour): Collection<Move> {
         val legalMoves = ArrayList<Move>()
 
         //For each move apply it and check if the king is in check
