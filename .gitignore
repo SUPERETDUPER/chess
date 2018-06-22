@@ -3,4 +3,4 @@
 target/
 /savedGame.txt
 /.idea
-!/.idea/runConfigurations
+!/.idea/runConfigurations/
