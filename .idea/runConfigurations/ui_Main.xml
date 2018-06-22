@@ -8,6 +8,8 @@
     <option name="PASS_PARENT_ENVS" value="true" />
     <option name="MAIN_CLASS_NAME" value="ui.Main" />
     <option name="WORKING_DIRECTORY" value="" />
-    <method />
+    <method>
+      <option name="MakeProject" enabled="true" />
+    </method>
   </configuration>
 </component>

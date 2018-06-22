@@ -23,7 +23,7 @@ abstract class Player : Serializable {
      * @param callback the consumer method through which the player should pass his move
      * @param colour   the colour of the player that should submit his move
      */
-    abstract fun getMove(callback: Consumer<Move>, colour: Colour)
+    abstract fun getMove(callback: (Move) -> Unit, colour: Colour)
 
     /**
      * @param gameData called when the player is added to the game to give it access to the game data

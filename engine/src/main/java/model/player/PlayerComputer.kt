@@ -5,7 +5,6 @@ import model.moves.Move
 import model.util.Colour
 import java.io.Serializable
 import java.util.*
-import java.util.function.Consumer
 
 //TODO Upgrade algorithm to min/max with alpha-beta pruning
 //TODO Write tests because behaves weird
@@ -17,21 +16,14 @@ import java.util.function.Consumer
  *
  *
  * There are two difficulty levels (Easy and Hard) they change the search depth of the algorithm
+ *
+ * @property difficulty The difficulty level of the current instance of this player
  */
-class PlayerComputer
-/**
- * @param difficulty the difficulty level for the algorithm
- */
-(
-        /**
-         * The difficulty level of the current instance of this player
-         */
-        private val difficulty: Difficulty) : Player() {
-
+class PlayerComputer(private val difficulty: Difficulty) : Player() {
     /**
      * The game data
      */
-    private var gameData: GameData? = null
+    private lateinit var gameData: GameData
 
     override val name: String = "Computer (" + difficulty.name + ")"
 
@@ -42,12 +34,9 @@ class PlayerComputer
     /**
      * Calculates the best move and returns it via the callback.
      */
-    override fun getMove(callback: Consumer<Move>, colour: Colour) {
+    override fun getMove(callback: (Move) -> Unit, colour: Colour) {
         Thread {
-            callback.accept(
-                    calculateBestMove(MoveSequence(), colour)
-                            .firstMove
-            )
+            callback(calculateBestMove(MoveSequence(), colour).firstMove)
         }.start()
     }
 
@@ -56,13 +45,13 @@ class PlayerComputer
         if (pastSequence.length == difficulty.searchDepth) return pastSequence
 
         //Calculate all the possible moves
-        val possibleMoves = gameData!!.getPossibleLegalMoves(colour)
+        val possibleMoves = gameData.getPossibleLegalMoves(colour)
 
         //The best move
         var bestMove: MoveSequence? = null
 
         for (move in possibleMoves) {
-            move.apply(gameData!!) //Apply the move to the data
+            move.apply(gameData) //Apply the move to the data
 
             //Calculate the value of this move (using recursion)
             val moveSequence = calculateBestMove(MoveSequence(pastSequence, move), getOppositeColour(colour))
@@ -83,10 +72,10 @@ class PlayerComputer
                 }
             }
 
-            move.undo(gameData!!) //Undo changes
+            move.undo(gameData) //Undo changes
         }
 
-        return if (bestMove == null) pastSequence else bestMove
+        return bestMove?: pastSequence
     }
 
     /**

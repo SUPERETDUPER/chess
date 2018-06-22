@@ -129,7 +129,7 @@ internal class BoardPane
      * @param callback the callback method to which the move should be submitted
      * @param colour   the colour of the player that should submit the move
      */
-    fun requestMove(callback: Consumer<Move>, colour: Colour) {
+    fun requestMove(callback: (Move) -> Unit, colour: Colour) {
         this.moveRequest = MoveRequest(callback, colour)
     }
 
@@ -238,17 +238,11 @@ internal class BoardPane
 
     /**
      * An object representing a request to the UI for a move
+     *
+     * @property moveCallback The callback method to which the selected move should be submitted
+     * @property colour The colour of the player that should submit the move
      */
-    private class MoveRequest internal constructor(
-            /**
-             * The callback method to which the selected move should be submitted
-             */
-            private val moveCallback: Consumer<Move>,
-            /**
-             * The colour of the player that should submit the move
-             */
-            internal val colour: Colour) {
-
+    private class MoveRequest internal constructor(private val moveCallback: (Move) -> Unit, internal val colour: Colour) {
         /**
          * True if the move has already been submitted
          */
@@ -257,7 +251,7 @@ internal class BoardPane
 
         internal fun submit(move: Move) {
             isSubmitted = true
-            moveCallback.accept(move)
+            moveCallback(move)
         }
     }
 }

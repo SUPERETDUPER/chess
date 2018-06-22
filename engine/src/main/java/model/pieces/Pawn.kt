@@ -33,8 +33,7 @@ class Pawn(colour: Colour) : Piece(colour) {
     override val unsignedValue: Int
         get() = if (promotedQueen != null) promotedQueen!!.unsignedValue else 1
 
-    override val name: String
-        get() = "Pawn"
+    override val name: String = "Pawn"
 
     override fun convertDestinationToMove(board: BoardMap, current: Position, destination: Position): Move {
         if (promotedQueen != null) return promotedQueen!!.convertDestinationToMove(board, current, destination)

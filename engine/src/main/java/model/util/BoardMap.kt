@@ -12,14 +12,8 @@ import java.io.Serializable
  * Represents a mapping of pieces and their position on the board.
  * Uses [BiMap] from Google Guava to allow quick access in both directions (find position of piece or find piece at position)
  */
-//TODO review usage of synchronised
 class BoardMap : Serializable {
-    private val board: BiMap<Position, Piece>
-
-    init {
-        this.board = HashBiMap.create(32)
-    }
-
+    private val board: BiMap<Position, Piece> = HashBiMap.create(32)
 
     fun getPiece(position: Position): Piece? {
         return board[position]
@@ -47,11 +41,6 @@ class BoardMap : Serializable {
     @Synchronized
     fun removePiece(position: Position): Piece {
         return board.remove(position) ?: throw IllegalArgumentException("No piece at: $position")
-    }
-
-    @Synchronized
-    fun removePiece(piece: Piece): Position {
-        return board.inverse().remove(piece) ?: throw IllegalArgumentException("Piece not on the board: piece:$piece")
     }
 
     fun iteratePieces(): Set<Piece> {

@@ -11,20 +11,15 @@ internal class Rook(colour: Colour) : DirectionPiece(colour) {
      */
     private var numberOfAppliedMoves = 0
 
-    override val unicodeWhite: Int
-        get() = 9814
+    override val unicodeWhite: Int = 9814
 
-    override val unicodeBlack: Int
-        get() = 9820
+    override val unicodeBlack: Int = 9820
 
-    override val directions: Array<Offset>
-        get() = OFFSETS
+    override val directions: Array<Offset> = arrayOf(Offset.UP, Offset.LEFT, Offset.RIGHT, Offset.DOWN)
 
-    override val unsignedValue: Int
-        get() = 5
+    override val unsignedValue: Int = 5
 
-    override val name: String
-        get() = "Rook"
+    override val name: String = "Rook"
 
     override fun notifyMoveComplete(move: Move) {
         numberOfAppliedMoves += 1
@@ -36,9 +31,5 @@ internal class Rook(colour: Colour) : DirectionPiece(colour) {
 
     internal fun hasMoved(): Boolean {
         return numberOfAppliedMoves != 0
-    }
-
-    companion object {
-        private val OFFSETS = arrayOf(Offset.UP, Offset.LEFT, Offset.RIGHT, Offset.DOWN)
     }
 }

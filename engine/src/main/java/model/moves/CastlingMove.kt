@@ -5,12 +5,11 @@ import model.util.Position
 
 /**
  * A move which executes other moves at the same time
+ *
+ * @property otherMoves a list of other moves to apply with this move
  */
-internal class CastlingMove
-/**
- * @param otherMoves a list of other moves to apply with this move
- */
-(debut: Position, fin: Position, private val otherMoves: Array<Move>) : BaseMove(debut, fin) {
+internal class CastlingMove(debut: Position, fin: Position, private val otherMoves: Array<Move>) : BaseMove(debut, fin) {
+
     override val value: Int
         get() {
             var tempValue: Int = super.value

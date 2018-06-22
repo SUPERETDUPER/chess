@@ -17,23 +17,18 @@ internal class King(colour: Colour) : OffsetPiece(colour) {
      */
     private var numberOfAppliedMoves = 0
 
-    override val unicodeWhite: Int
-        get() = 9812
+    override val unicodeWhite: Int = 9812
 
-    override val unicodeBlack: Int
-        get() = 9818
+    override val unicodeBlack: Int= 9818
 
-    override val offsets: Array<Offset>
-        get() = OFFSETS
+    override val offsets: Array<Offset> = arrayOf(Offset.TOP_LEFT, Offset.UP, Offset.TOP_RIGHT, Offset.LEFT, Offset.RIGHT, Offset.BOTTOM_LEFT, Offset.DOWN, Offset.BOTTOM_RIGHT)
 
     /**
      * Large value to show that the King is the most valuable and should not be eaten
      */
-    override val unsignedValue: Int
-        get() = 1000
+    override val unsignedValue: Int = 1000
 
-    override val name: String
-        get() = "King"
+    override val name: String = "King"
 
 
     override fun generatePossibleDestinations(gameData: GameData, start: Position): MutableCollection<Position> {
@@ -100,7 +95,4 @@ internal class King(colour: Colour) : OffsetPiece(colour) {
         numberOfAppliedMoves -= 1
     }
 
-    companion object {
-        private val OFFSETS = arrayOf(Offset.TOP_LEFT, Offset.UP, Offset.TOP_RIGHT, Offset.LEFT, Offset.RIGHT, Offset.BOTTOM_LEFT, Offset.DOWN, Offset.BOTTOM_RIGHT)
-    }
 }

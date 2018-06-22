@@ -14,11 +14,12 @@ class PositionIterator : Iterator<Position> {
     override fun next(): Position {
         val positionToReturn = position
 
-        position = if (position.column == Position.LIMIT - 1) {
-            Position(position.row + 1, 0)
-        } else {
-            position.shift(Offset.RIGHT)
-        }
+        position =
+                if (position.column == Position.LIMIT - 1) {
+                    Position(position.row + 1, 0)
+                } else {
+                    position.shift(Offset.RIGHT)
+                }
 
         return positionToReturn
     }

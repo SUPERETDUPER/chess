@@ -12,7 +12,7 @@ import java.util.*
 internal abstract class DirectionPiece(colour: Colour) : Piece(colour) {
 
     /**
-     * @return the list of directions the piece can attack
+     * the list of directions the piece can attack
      */
     internal abstract val directions: Array<Offset>
 

@@ -6,20 +6,15 @@ import model.util.Offset
 
 internal class Bishop(colour: Colour) : DirectionPiece(colour) {
 
-    override val directions: Array<Offset>
-        get() = DIRECTIONS
+    override val directions: Array<Offset> = DIRECTIONS
 
-    override val unicodeWhite: Int
-        get() = 9815
+    override val unicodeWhite: Int = 9815
 
-    override val unicodeBlack: Int
-        get() = 9821
+    override val unicodeBlack: Int = 9821
 
-    override val unsignedValue: Int
-        get() = 3
+    override val unsignedValue: Int = 3
 
-    override val name: String
-        get() = "Bishop"
+    override val name: String = "Bishop"
 
     override fun notifyMoveComplete(move: Move) {}
 

@@ -17,21 +17,11 @@ import java.util.function.Consumer
  *
  *
  * When a player plays, the next player doesn't play automatically. Instead the notifyNextPlayerMethod needs to be called. This allows the UI to update first.
+ *
+ * @property gameData the game state
+ * @property the mapping of players based on their color
  */
-class Game
-/**
- * @param gameData the game state (piece's position)
- * @param players  the players
- */
-internal constructor(
-        /**
-         * The actual game state
-         */
-        val gameData: GameData,
-        /**
-         * The mapping of players based on their color
-         */
-        val players: EnumMap<Colour, Player>) : Serializable {
+class Game internal constructor(val gameData: GameData, val players: EnumMap<Colour, Player>) : Serializable {
 
     /**
      * Who's turn it is
@@ -73,7 +63,6 @@ internal constructor(
     }
 
     init {
-
         for (player in players.values) {
             player.initializeGameData(gameData)
         }
@@ -109,7 +98,7 @@ internal constructor(
 
         //Switch the status and notify the player
         status.set(Status.WAITING)
-        players[turnMarker.get()]!!.getMove(Consumer { this.submitMove(it) }, turnMarker.get()) //Request that the next player submits his move
+        players[turnMarker.get()]!!.getMove(this::submitMove, turnMarker.get()) //Request that the next player submits his move
     }
 
     fun setResultListener(resultListener: (Result) -> Unit) {

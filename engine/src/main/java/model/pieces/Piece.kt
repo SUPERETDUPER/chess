@@ -11,12 +11,10 @@ import java.util.*
 
 /**
  * A piece in the game
+ *
+ * @property colour the pieces colour (white or black)
  */
-abstract class Piece internal constructor(
-        /**
-         * @return the pieces colour (white or black)
-         */
-        val colour: Colour) : Serializable {
+abstract class Piece internal constructor(val colour: Colour) : Serializable {
 
     /**
      * @return the unicode for the piece to allow it to be displayed as text

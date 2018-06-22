@@ -34,7 +34,7 @@ class HumanPlayer : Player() {
      * @param callback the callback method where the selected move should eventually be submitted
      * @param colour   the colour of the player that should submit his move
      */
-    override fun getMove(callback: Consumer<Move>, colour: Colour) {
+    override fun getMove(callback: (Move)->Unit, colour: Colour) {
         boardPane!!.requestMove(callback, colour) //Create a request and submit to the UI
     }
 }

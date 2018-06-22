@@ -12,7 +12,7 @@ import java.util.*
 internal abstract class OffsetPiece(colour: Colour) : Piece(colour) {
 
     /**
-     * @return the offsets where the piece can move
+     * the offsets where the piece can move
      */
     internal abstract val offsets: Array<Offset>
 
