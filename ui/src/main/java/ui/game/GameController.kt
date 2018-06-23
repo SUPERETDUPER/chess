@@ -32,7 +32,8 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
 
     private val boardPane: BoardPane = BoardPane(loader.game!!)
 
-    private val actions = FXCollections.observableArrayList<Action>()
+    //Add an action to return to the main menu
+    private val actions = FXCollections.observableArrayList<Action>(Action("Return to main menu", exit))
 
     init {
 
@@ -40,44 +41,24 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
         loader.game!!.setResultListener { result -> Platform.runLater { handleGameResult(result) } }
 
         //Count the number of human players
-        var counter = 0
+        var numberOfHumans = 0
 
         for (player in loader.game!!.players.values) {
             if (player is HumanPlayer) {
                 player.attachUI(boardPane) //Attach the UI
-                counter += 1
+                numberOfHumans += 1
             }
         }
-
-        val numberOfHumans = counter
-
-        //Add an action to return to the main menu
-        actions.add(object : Action() {
-
-            override val name: String
-                get() = "Return to main menu"
-
-            override fun onClick() {
-                exit.invoke()
-            }
-        })
 
         //If there are human players add an undo button
-        if (numberOfHumans != 0) {
-            actions.add(object : Action() {
-
-                override val name: String
-                    get() = "Undo"
-
-                override fun onClick() {
-                    if (numberOfHumans == 2) {
-                        loader.game!!.undo(1) //Undo 1 turn in human vs human
-                    } else {
-                        loader.game!!.undo(2) //Undo 2 turns in human vs computer
-                    }
+        if (numberOfHumans != 0)
+            actions.add(Action("Undo") {
+                if (numberOfHumans == 2) {
+                    loader.game!!.undo(1) //Undo 1 turn in human vs human
+                } else {
+                    loader.game!!.undo(2) //Undo 2 turns in human vs computer
                 }
             })
-        }
     }
 
     @FXML
@@ -137,18 +118,7 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
     /**
      * An action in the drawer
      */
-    internal abstract inner class Action {
-
-        /**
-         * @return the actions name (to be displayed)
-         */
-        internal abstract val name: String
-
-        /**
-         * What to run when the action is clicked
-         */
-        internal abstract fun onClick()
-
+    internal data class Action(private val name: String, val onClick: () -> Unit) {
         override fun toString(): String {
             return name //Defines the string to display when the item is put in the list view
         }

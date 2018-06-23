@@ -1,27 +1,27 @@
 package ui.game.components
 
+import engine.pieces.Piece
 import javafx.beans.value.ObservableNumberValue
 import javafx.scene.CacheHint
 import javafx.scene.layout.StackPane
 import javafx.scene.text.Font
 import javafx.scene.text.Text
-import engine.pieces.Piece
 import ui.game.layout.GraphicPosition
+
+
+/**
+ * The ratio for the size of the pane to the font size
+ */
+private const val SIZE_TO_FONT_RATIO = 0.75F
 
 /**
  * A pane that displays a piece
- */
-class PiecePane
-/**
- * @param piece    the piece to show
+ *
+ * @property piece    the piece to show in the pane
  * @param position the position of the piece
  * @param size     the size of the pane (width/height)
  */
-(
-        /**
-         * The piece in the pane
-         */
-        val piece: Piece, position: GraphicPosition, size: ObservableNumberValue) : StackPane() {
+class PiecePane(val piece: Piece, position: GraphicPosition, size: ObservableNumberValue) : StackPane() {
 
     /**
      * The text showing the piece
@@ -31,12 +31,10 @@ class PiecePane
     /**
      * The pane's current position
      */
-    var currentPosition: GraphicPosition? = null
+    var currentPosition: GraphicPosition? = position
         private set
 
     init {
-        this.currentPosition = position
-
         //Bind the pane's width/height
         this.prefHeightProperty().bind(size)
         this.prefWidthProperty().bind(size)
@@ -90,11 +88,5 @@ class PiecePane
     fun isAtPosition(position: GraphicPosition): Boolean {
         return position == currentPosition
     }
-
-    companion object {
-        /**
-         * The ratio for the size of the pane to the font size
-         */
-        private const val SIZE_TO_FONT_RATIO = 0.75f
-    }
 }
+

@@ -36,7 +36,7 @@ internal class HighlightController(private val squares: Board<SquarePane>) {
      * @param possibleMoves a list of possible moves for that position
      */
     fun select(position: Position, possibleMoves: Collection<Move>) {
-        this.eraseSelection()
+        eraseSelection()
 
         //Highlight position
         this.selectedPosition = position

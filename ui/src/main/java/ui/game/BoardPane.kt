@@ -58,7 +58,7 @@ internal class BoardPane(private val game: Game) : Pane() {
             //Create the square
             val squarePane = SquarePane(
                     (position.column + position.row) % 2 == 0, //Calculates whether the square should be white or black (gray) (top-left is white)
-                    Consumer { this.squareClick(it) },
+                    this::squareClick,
                     graphicPosition,
                     layoutCalculator.componentSize
             )

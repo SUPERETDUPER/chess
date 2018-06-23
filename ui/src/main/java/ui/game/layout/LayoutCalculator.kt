@@ -11,17 +11,12 @@ import engine.util.Position
  * Calculates the position of the elements on the display
  */
 class LayoutCalculator(boardHeight: ReadOnlyDoubleProperty) {
-    val componentSize: NumberBinding
+    val componentSize: NumberBinding = boardHeight.divide(Position.LIMIT)
 
     internal val boardXOffset: ObservableNumberValue
         get() = componentSize.multiply(2)
 
-    val widthRatio: Double
-        get() = 1 + 4.0 / Position.LIMIT
-
-    init {
-        this.componentSize = boardHeight.divide(Position.LIMIT)
-    }
+    val widthRatio: Double = 1 + 4.0 / Position.LIMIT
 
     internal fun getGraveyardXOffset(colour: Colour): ObservableNumberValue {
         return if (colour == Colour.WHITE)
@@ -31,7 +26,7 @@ class LayoutCalculator(boardHeight: ReadOnlyDoubleProperty) {
     }
 
     fun createGraveyardPosition(colour: Colour, position: Int): GraphicPosition {
-        return GraveyardGraphicPosition(this, position, colour)
+        return GraveyardGraphicPosition(position, this, colour)
     }
 
     fun createSquarePosition(position: Position): SquareGraphicPosition {

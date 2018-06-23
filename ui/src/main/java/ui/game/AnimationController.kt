@@ -87,7 +87,7 @@ internal class AnimationController {
 
         if (animationQueue.isEmpty()) {
             isRunning.set(false) //Mark as finished
-            if (onFinishListener != null) onFinishListener!!.invoke() //Run listener
+            onFinishListener?.invoke() //Run listener if not null
         } else
             startNextAnimation() //If more animations run next
     }

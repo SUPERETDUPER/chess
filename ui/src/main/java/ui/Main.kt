@@ -17,14 +17,14 @@ import ui.intro.IntroController
 import java.io.IOException
 import java.net.URL
 import java.util.*
-import java.util.function.Consumer
+
+private const val TITLE = "Chess"
 
 fun main(args: Array<String>) {
     Application.launch(Main::class.java, *args) //Starts the ui
 }
 
 class Main : Application() {
-    private val title = "Chess"
 
     /**
      * The loader will load the game engine
@@ -36,13 +36,13 @@ class Main : Application() {
     /**
      * The main menu page
      */
-    private val intro = loadFromFXML(IntroController(Consumer { this.startNewGame(it) }), javaClass.getResource("/intro.fxml"))
+    private val intro = loadFromFXML(IntroController(this::startNewGame), javaClass.getResource("/intro.fxml"))
 
     /**
      * Starts the UI
      */
     override fun start(primaryStage: Stage) {
-        primaryStage.title = title
+        primaryStage.title = TITLE
         primaryStage.scene = scene
 
         //If loading the game from file succeeds go immediately to game

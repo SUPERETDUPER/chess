@@ -14,7 +14,7 @@ import java.util.function.Consumer
 /**
  * Controls the main menu window
  */
-class IntroController(private val onStart: Consumer<EnumMap<Colour, Player>>) {
+class IntroController(private val onStart: (EnumMap<Colour, Player>) -> Unit) {
 
     @FXML
     private lateinit var whitePlayerContainer: VBox
@@ -51,7 +51,7 @@ class IntroController(private val onStart: Consumer<EnumMap<Colour, Player>>) {
         players[Colour.BLACK] = blackPlayers.selectionModel.selectedItem
 
         //Call the callback with the players
-        onStart.accept(players)
+        onStart(players)
     }
 
     companion object {
