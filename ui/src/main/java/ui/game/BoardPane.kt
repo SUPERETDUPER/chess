@@ -71,7 +71,7 @@ internal class BoardPane(private val game: Game) : Pane() {
             if (piece != null) {
                 val piecePane = PiecePane(piece, graphicPosition, layoutCalculator.componentSize)
 
-                piecePane.setOnMousePressed { _ -> pieceClick(piecePane) }
+                piecePane.setOnMousePressed { pieceClick(piecePane) }
 
                 //Add the piecePane to the map
                 piecePanes[piece] = piecePane
@@ -87,7 +87,7 @@ internal class BoardPane(private val game: Game) : Pane() {
                         layoutCalculator.componentSize
                 )
 
-                piecePane.setOnMouseClicked { _ -> this.pieceClick(piecePane) }
+                piecePane.setOnMouseClicked { pieceClick(piecePane) }
 
                 piecePanes[eatenPiece] = piecePane
             }
@@ -104,10 +104,7 @@ internal class BoardPane(private val game: Game) : Pane() {
             if (newValue == Game.Status.INACTIVE) {
                 if (animationController.isRunning.get())
                 //When animations finish remove listener and trigger next player
-                    animationController.setOnFinishListener {
-                        animationController.setOnFinishListener(null)
-                        game.notifyNextPlayer()
-                    }
+                    animationController.setOnFinishListener(game::notifyNextPlayer)
                 else
                     game.notifyNextPlayer() //If animations not running trigger next player immediately
             }
@@ -129,28 +126,28 @@ internal class BoardPane(private val game: Game) : Pane() {
         if (piecePane.currentPosition !is SquareGraphicPosition) return
 
         //If there are no active moveRequests do nothing
-        if (moveRequest == null || moveRequest!!.isSubmitted) return
+        moveRequest?.run {
+            if (isSubmitted) return
 
-        val pieceClicked = piecePane.piece
-        val position = (piecePane.currentPosition as SquareGraphicPosition).position
+            val graphicPosition = (piecePane.currentPosition as SquareGraphicPosition).position
 
-        //If pieceMap already selected this click was to submit move
-        if (highlightController.isSelected) {
-            trySubmittingMove(position)
-            return
+            //If pieceMap already selected this click was to submit move
+            if (highlightController.isSelected) {
+                trySubmittingMove(graphicPosition)
+                return
+            }
+
+            //If move request for other player do nothing
+            if (this.colour != piecePane.piece.colour) return
+
+            //Calculate possible moves and highlight those moves
+            highlightController.select(graphicPosition,
+                    game.gameData.filterOnlyLegal(
+                            piecePane.piece.generatePossibleMoves(game.gameData, graphicPosition),
+                            piecePane.piece.colour
+                    )
+            )
         }
-
-        //If move request for other player do nothing
-        if (moveRequest!!.colour != pieceClicked.colour) return
-
-
-        //Calculate possible moves and highlight those moves
-        highlightController.select(position,
-                game.gameData.filterOnlyLegal(
-                        pieceClicked.generatePossibleMoves(game.gameData, position),
-                        pieceClicked.colour
-                )
-        )
     }
 
     /**
@@ -235,7 +232,7 @@ internal class BoardPane(private val game: Game) : Pane() {
         /**
          * True if the move has already been submitted
          */
-        internal var isSubmitted = false
+        internal var isSubmitted: Boolean = false
             private set
 
         internal fun submit(move: Move) {

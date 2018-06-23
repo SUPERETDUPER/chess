@@ -29,7 +29,7 @@ class SquarePane(private val isWhite: Boolean, clickListener: (SquareGraphicPosi
         this.xProperty().bind(position.x)
         this.yProperty().bind(position.y)
 
-        this.setOnMouseClicked { _ -> clickListener(position) }
+        this.setOnMouseClicked { clickListener(position) }
 
         setStyle(Style.NORMAL)  //Set the background colour
     }

@@ -1,5 +1,8 @@
 package ui
 
+import engine.Loader
+import engine.player.Player
+import engine.util.Colour
 import javafx.animation.FadeTransition
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
@@ -9,12 +12,8 @@ import javafx.scene.Scene
 import javafx.scene.layout.Pane
 import javafx.stage.Stage
 import javafx.util.Duration
-import engine.Loader
-import engine.player.Player
-import engine.util.Colour
 import ui.game.GameController
 import ui.intro.IntroController
-import java.io.IOException
 import java.net.URL
 import java.util.*
 
@@ -36,7 +35,7 @@ class Main : Application() {
     /**
      * The main menu page
      */
-    private val intro = loadFromFXML(IntroController(this::startNewGame), javaClass.getResource("/intro.fxml"))
+    private val intro by lazy { loadFromFXML(IntroController(this::startNewGame), javaClass.getResource("/intro.fxml")) }
 
     /**
      * Starts the UI
@@ -44,21 +43,14 @@ class Main : Application() {
     override fun start(primaryStage: Stage) {
         primaryStage.title = TITLE
         primaryStage.scene = scene
-
-        //If loading the game from file succeeds go immediately to game
-        if (loader.loadGameFromFile()) {
-            scene.root = loadFromFXML(
-                    GameController(
-                            { switchRoot(intro) },
-                            loader
-                    ),
-                    javaClass.getResource("/jeu.fxml")
-            )
-        } else {
-            scene.root = intro //If could not load from file go to intro page
-        }
-
         primaryStage.isMaximized = true
+
+        //If loading the game from file succeeds go immediately to game if not use intro
+        scene.root =
+                if (loader.loadGameFromFile())
+                    loadFromFXML(GameController({ switchRoot(intro) }, loader), javaClass.getResource("/jeu.fxml"))
+                else intro //If could not load from file go to intro page
+
         primaryStage.show()
     }
 
@@ -75,25 +67,20 @@ class Main : Application() {
      * Switches the page with a fade transition
      */
     private fun switchRoot(newRoot: Parent) {
-        val pastRoot = scene.root
-        pastRoot.cacheHint = CacheHint.SPEED
-
-        val fadeOut = FadeTransition(Duration(1000.0), pastRoot)
-        fadeOut.fromValue = 100.0
-        fadeOut.toValue = 0.0
+        scene.root.cacheHint = CacheHint.SPEED
+        newRoot.cacheHint = CacheHint.SPEED
 
         newRoot.opacity = 0.0
-        newRoot.cacheHint = CacheHint.SPEED
 
         val fadeIn = FadeTransition(Duration(1000.0), newRoot)
         fadeIn.fromValue = 0.0
         fadeIn.toValue = 100.0
-        fadeIn.setOnFinished { _ ->
-            newRoot.cacheHint = CacheHint.DEFAULT
-            pastRoot.cacheHint = CacheHint.DEFAULT
-        }
+        fadeIn.setOnFinished { newRoot.cacheHint = CacheHint.DEFAULT }
 
-        fadeOut.setOnFinished { _ ->
+        val fadeOut = FadeTransition(Duration(1000.0), scene.root)
+        fadeOut.fromValue = 100.0
+        fadeOut.toValue = 0.0
+        fadeOut.setOnFinished {
             scene.root = newRoot
             fadeIn.play()
         }
@@ -104,6 +91,7 @@ class Main : Application() {
     /**
      * @param controller the controller for the FXML view
      * @param url        the url of the FXML
+     *
      * @return the view loaded from the FXML
      */
     private fun loadFromFXML(controller: Any, url: URL): Parent {
@@ -112,11 +100,6 @@ class Main : Application() {
         fxmlLoader.setController(controller) //Attach the controller
 
         //Load and return view from FXML
-        try {
-            return fxmlLoader.load()
-        } catch (e: IOException) {
-            throw RuntimeException(e)
-        }
-
+        return fxmlLoader.load()
     }
 }

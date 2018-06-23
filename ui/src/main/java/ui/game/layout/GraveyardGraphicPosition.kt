@@ -13,12 +13,12 @@ import javafx.beans.value.ObservableNumberValue
 data class GraveyardGraphicPosition internal constructor(private val positionIndex: Int, private val layoutCalculator: LayoutCalculator, private val colour: Colour) : GraphicPosition {
 
     //True if we should use the left column (depends on the colour)
-    override val x: ObservableNumberValue = if (colour == Colour.BLACK && positionIndex < LIMIT || colour == Colour.WHITE && positionIndex >= LIMIT) {
-            layoutCalculator.getGraveyardXPosition(colour)
-        } else {
-            layoutCalculator.componentSize.add(layoutCalculator.getGraveyardXPosition(colour))
-        }
+    override val x: ObservableNumberValue =
+            if (colour == Colour.BLACK && positionIndex < LIMIT || colour == Colour.WHITE && positionIndex >= LIMIT) {
+                layoutCalculator.getGraveyardXPosition(colour)
+            } else {
+                layoutCalculator.componentSize.add(layoutCalculator.getGraveyardXPosition(colour))
+            }
 
-    override val y: NumberBinding = layoutCalculator.componentSize
-                .multiply(if (positionIndex < LIMIT) positionIndex else positionIndex - LIMIT)
+    override val y: NumberBinding = layoutCalculator.componentSize.multiply(if (positionIndex < LIMIT) positionIndex else positionIndex - LIMIT)
 }

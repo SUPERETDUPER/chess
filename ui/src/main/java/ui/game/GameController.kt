@@ -30,7 +30,7 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
     @FXML
     private lateinit var hamburger: JFXHamburger
 
-    private val boardPane: BoardPane = BoardPane(loader.game!!)
+    private val boardPane: BoardPane = BoardPane(loader.game)
 
     //Add an action to return to the main menu
     private val actions = FXCollections.observableArrayList<Action>(Action("Return to main menu", exit))
@@ -38,15 +38,15 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
     init {
 
         //Add a listener for when the game ends
-        loader.game!!.setResultListener { result -> Platform.runLater { handleGameResult(result) } }
+        loader.game.setResultListener { result -> Platform.runLater { handleGameResult(result) } }
 
         //Count the number of human players
         var numberOfHumans = 0
 
-        for (player in loader.game!!.players.values) {
+        for (player in loader.game.players.values) {
             if (player is HumanPlayer) {
                 player.attachUI(boardPane) //Attach the UI
-                numberOfHumans += 1
+                numberOfHumans++
             }
         }
 
@@ -54,9 +54,9 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
         if (numberOfHumans != 0)
             actions.add(Action("Undo") {
                 if (numberOfHumans == 2) {
-                    loader.game!!.undo(1) //Undo 1 turn in human vs human
+                    loader.game.undo(1) //Undo 1 turn in human vs human
                 } else {
-                    loader.game!!.undo(2) //Undo 2 turns in human vs computer
+                    loader.game.undo(2) //Undo 2 turns in human vs computer
                 }
             })
     }
@@ -71,7 +71,7 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
 
         //Add a click listener to the list to register when an item was pressed
         //TODO Change because throws error if called before item is selected
-        drawerList.setOnMouseClicked { _ ->
+        drawerList.setOnMouseClicked {
             drawerList.selectionModel.selectedItem.onClick()
             drawerList.selectionModel.clearSelection()
         }
@@ -79,19 +79,19 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
         //Animate the hamburger when the drawer opens/closes
         val animationRate = Math.abs(hamburger.animation.rate)
 
-        drawer.setOnDrawerOpening { _ ->
+        drawer.setOnDrawerOpening {
             val burgerAnimation = hamburger.animation
             burgerAnimation.rate = animationRate
             burgerAnimation.play()
         }
 
-        drawer.setOnDrawerClosing { _ ->
+        drawer.setOnDrawerClosing {
             val burgerAnimation = hamburger.animation
             burgerAnimation.rate = -animationRate
             burgerAnimation.play()
         }
 
-        loader.game!!.notifyNextPlayer() //Start the game
+        loader.game.notifyNextPlayer() //Start the game
     }
 
     @FXML

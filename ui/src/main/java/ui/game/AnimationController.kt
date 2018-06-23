@@ -35,7 +35,7 @@ internal class AnimationController {
      *
      * @param onFinishListener the Runnable to run when all the animations are finished
      */
-    fun setOnFinishListener(onFinishListener: (() -> Unit)?) {
+    fun setOnFinishListener(onFinishListener: (() -> Unit)) {
         this.onFinishListener = onFinishListener
     }
 
@@ -75,7 +75,7 @@ internal class AnimationController {
                 )
         ))
 
-        animation.setOnFinished { _ -> onAnimationFinish(piecePane, destination) }
+        animation.setOnFinished { onAnimationFinish(piecePane, destination) }
 
         piecePane.unBind() //Unbind to allow movement (if not throws error)
         animation.play() //Play animation
@@ -88,6 +88,7 @@ internal class AnimationController {
         if (animationQueue.isEmpty()) {
             isRunning.set(false) //Mark as finished
             onFinishListener?.invoke() //Run listener if not null
+            onFinishListener = null
         } else
             startNextAnimation() //If more animations run next
     }

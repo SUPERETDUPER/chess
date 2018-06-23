@@ -18,11 +18,14 @@ class Loader {
     /**
      * The loaded game
      */
-    /**
-     * @return null if loadGameFromFile and/or createNewGame was not called
-     */
-    lateinit var game: Game
-        private set
+    private lateinit var _game: Game
+
+    var game: Game
+        get() = _game
+        private set(value) {
+            value.addBoardChangeListener(::saveGame) //Add listener such that when the game changes, it is saved
+            _game = value
+        }
 
     /**
      * Saves the game
@@ -39,7 +42,6 @@ class Loader {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
     }
 
     /**
@@ -54,14 +56,12 @@ class Loader {
         return try {
             val objectInputStream = ObjectInputStream(FileInputStream(file))
             this.game = objectInputStream.readObject() as Game //Lire le game
-            this.game.addBoardChangeListener { this.saveGame() } //Add listener such that when the game changes, it is saved
             objectInputStream.close()
             true
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
-
     }
 
     fun createNewGame(players: EnumMap<Colour, Player>) {
@@ -70,6 +70,5 @@ class Loader {
 
         //Create the game (players + state)
         game = Game(gameData, players)
-        game.addBoardChangeListener(this::saveGame) //Add listener such that when the game changes, it is saved
     }
 }
