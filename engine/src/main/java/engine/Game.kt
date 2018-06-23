@@ -18,7 +18,7 @@ import java.util.*
  * When a player plays, the next player doesn't play automatically. Instead the notifyNextPlayerMethod needs to be called. This allows the UI to update first.
  *
  * @property gameData the game state
- * @property the mapping of players based on their color
+ * @property players the mapping of players based on their color
  */
 class Game internal constructor(val gameData: GameData, val players: EnumMap<Colour, Player>) : Serializable {
 

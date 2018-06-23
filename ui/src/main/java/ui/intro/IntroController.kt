@@ -9,7 +9,6 @@ import engine.player.PlayerComputer
 import engine.util.Colour
 import ui.game.HumanPlayer
 import java.util.*
-import java.util.function.Consumer
 
 /**
  * Controls the main menu window

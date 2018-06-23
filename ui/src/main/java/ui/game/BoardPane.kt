@@ -15,7 +15,6 @@ import ui.game.layout.GraveyardGraphicPosition
 import ui.game.layout.LayoutCalculator
 import ui.game.layout.SquareGraphicPosition
 import java.util.*
-import java.util.function.Consumer
 
 /**
  * Controls the main region containing the board and graveyards
