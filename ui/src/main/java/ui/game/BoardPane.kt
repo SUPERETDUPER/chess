@@ -1,7 +1,5 @@
 package ui.game
 
-import javafx.geometry.Orientation
-import javafx.scene.layout.Pane
 import engine.Game
 import engine.moves.Move
 import engine.pieces.Piece
@@ -9,6 +7,8 @@ import engine.util.Board
 import engine.util.Colour
 import engine.util.Position
 import engine.util.PositionIterator
+import javafx.geometry.Orientation
+import javafx.scene.layout.Pane
 import ui.game.components.PiecePane
 import ui.game.components.SquarePane
 import ui.game.layout.GraveyardGraphicPosition
@@ -17,7 +17,7 @@ import ui.game.layout.SquareGraphicPosition
 import java.util.*
 
 /**
- * Controls the main region containing the board and graveyards
+ * Controls the main region containing the pieceMap and graveyards
  *
  * @property game the game engine
  */
@@ -25,7 +25,7 @@ internal class BoardPane(private val game: Game) : Pane() {
     /**
      * The list of squares
      */
-    //Warning if refactoring board data structure make sure highlight controller get populated list
+    //Warning if refactoring pieceMap data structure make sure highlight controller get populated list
     private val boardSquares = Board<SquarePane>()
 
     private val layoutCalculator = LayoutCalculator(heightProperty())
@@ -65,8 +65,8 @@ internal class BoardPane(private val game: Game) : Pane() {
             //Add the square to the list
             boardSquares.add(position, squarePane)
 
-            //If there is a piece at this position create a piecePane it
-            val piece = game.gameData.board.getPiece(position)
+            //If there is a pieceMap at this position create a piecePane it
+            val piece = game.gameData.pieceMap[position]
 
             if (piece != null) {
                 val piecePane = PiecePane(piece, graphicPosition, layoutCalculator.componentSize)
@@ -78,7 +78,7 @@ internal class BoardPane(private val game: Game) : Pane() {
             }
         }
 
-        //For each already eaten piece create a piecePane and add to graveyard of that colour
+        //For each already eaten pieceMap create a piecePane and put to graveyard of that colour
         for (colour in Colour.values()) {
             for ((graveyardPositionOfNext, eatenPiece) in game.gameData.getEatenPieces(colour).withIndex()) {
                 val piecePane = PiecePane(
@@ -93,11 +93,11 @@ internal class BoardPane(private val game: Game) : Pane() {
             }
         }
 
-        //Add all the squares and pieces to the board
+        //Add all the squares and pieces to the pieceMap
         this.children.addAll(boardSquares.data)
         this.children.addAll(piecePanes.values)
 
-        game.addBoardChangeListener(this::updateBoard) //If the board engine changes update the display
+        game.addBoardChangeListener(this::updateBoard) //If the pieceMap engine changes update the display
 
         //When the game is no longer waiting for a move, wait for all animations to finish then trigger the next player to play
         game.statusProperty().addListener { _, _, newValue ->
@@ -115,7 +115,7 @@ internal class BoardPane(private val game: Game) : Pane() {
     }
 
     /**
-     * Called by a player to request the board to record a users move
+     * Called by a player to request the pieceMap to record a users move
      *
      * @param callback the callback method to which the move should be submitted
      * @param colour   the colour of the player that should submit the move
@@ -125,7 +125,7 @@ internal class BoardPane(private val game: Game) : Pane() {
     }
 
     private fun pieceClick(piecePane: PiecePane) {
-        //If piece not at a square do nothing (if it's in graveyard)
+        //If pieceMap not at a square do nothing (if it's in graveyard)
         if (piecePane.currentPosition !is SquareGraphicPosition) return
 
         //If there are no active moveRequests do nothing
@@ -134,7 +134,7 @@ internal class BoardPane(private val game: Game) : Pane() {
         val pieceClicked = piecePane.piece
         val position = (piecePane.currentPosition as SquareGraphicPosition).position
 
-        //If piece already selected this click was to submit move
+        //If pieceMap already selected this click was to submit move
         if (highlightController.isSelected) {
             trySubmittingMove(position)
             return
@@ -154,12 +154,12 @@ internal class BoardPane(private val game: Game) : Pane() {
     }
 
     /**
-     * Called when a component (piece or square) is clicked
+     * Called when a component (pieceMap or square) is clicked
      *
      * @param panePosition the components position
      */
     private fun squareClick(panePosition: SquareGraphicPosition) {
-        //If no piece already selected do nothing
+        //If no pieceMap already selected do nothing
         if (!highlightController.isSelected) return
 
         //Get the position and try submitting move
@@ -184,23 +184,21 @@ internal class BoardPane(private val game: Game) : Pane() {
      */
     @Synchronized
     private fun updateBoard() {
-        //For each piece on the board
-        for (piece in game.gameData.board.iteratePieces()) {
-            val position = game.gameData.board.getPosition(piece)
-
+        //For each pieceMap on the pieceMap
+        for ((position, piece) in game.gameData.pieceMap) {
             //Create graphic position
-            val panePosition = layoutCalculator.createSquarePosition(position!!)
+            val panePosition = layoutCalculator.createSquarePosition(position)
 
             //Get piecePane
             val piecePane = piecePanes[piece]
 
-            //If piece pane not already at position make animation
+            //If pieceMap pane not already at position make animation
             if (!piecePane!!.isAtPosition(panePosition)) animationController.addAnimation(piecePane, panePosition)
         }
 
         //For each colour of pieces
         for (colour in Colour.values()) {
-            //For each piece in the graveyard
+            //For each pieceMap in the graveyard
             val eatenPieces = game.gameData.getEatenPieces(colour)
             for (piece in eatenPieces) {
                 val piecePane = piecePanes[piece]
@@ -224,7 +222,7 @@ internal class BoardPane(private val game: Game) : Pane() {
      * Sets the preferred width as a factor of the height
      */
     override fun computePrefWidth(height: Double): Double {
-        return height * layoutCalculator.widthRatio //The board takes up 1 * height and the graveyards (4 / 8) * height
+        return height * layoutCalculator.widthRatio //The pieceMap takes up 1 * height and the graveyards (4 / 8) * height
     }
 
     /**

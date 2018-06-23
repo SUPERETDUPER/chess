@@ -4,24 +4,19 @@ import engine.GameData
 import engine.moves.BaseMove
 import engine.moves.CastlingMove
 import engine.moves.Move
-import engine.util.BoardMap
-import engine.util.Colour
-import engine.util.Offset
-import engine.util.Position
+import engine.util.*
 
-internal class King(colour: Colour) : OffsetPiece(colour) {
-
-
+internal class King(colour: Colour) : PositionPiece(colour) {
     /**
-     * The number of moves that have been applied to this piece. Used to know if the piece has moved
+     * The number of moves that have been applied to this pieceMap. Used to know if the pieceMap has moved
      */
     private var numberOfAppliedMoves = 0
 
     override val unicodeWhite: Int = 9812
 
-    override val unicodeBlack: Int= 9818
+    override val unicodeBlack: Int = 9818
 
-    override val offsets: Array<Offset> = arrayOf(Offset.TOP_LEFT, Offset.UP, Offset.TOP_RIGHT, Offset.LEFT, Offset.RIGHT, Offset.BOTTOM_LEFT, Offset.DOWN, Offset.BOTTOM_RIGHT)
+    override val offsets: Array<Position> = arrayOf(SHIFT_TOP_LEFT, SHIFT_UP, SHIFT_TOP_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, SHIFT_BOTTOM_LEFT, SHIFT_DOWN, SHIFT_BOTTOM_RIGHT)
 
     /**
      * Large value to show that the King is the most valuable and should not be eaten
@@ -30,61 +25,59 @@ internal class King(colour: Colour) : OffsetPiece(colour) {
 
     override val name: String = "King"
 
-
     override fun generatePossibleDestinations(gameData: GameData, start: Position): MutableCollection<Position> {
         val positions: MutableCollection<Position> = super.generatePossibleDestinations(gameData, start)
 
-        //If not in check
-        if (!gameData.isPositionAttacked(start, if (colour == Colour.WHITE) Colour.BLACK else Colour.WHITE) && numberOfAppliedMoves == 0) {
-            val destinationShort = start.shift(Offset(0, 2))
+        //If not in check and has not moved
+        if (!gameData.isPositionAttacked(start, switch(colour)) && numberOfAppliedMoves == 0) {
+            val castleShift = Position(0, 2)
+            val destinationShort = start + castleShift
             if (canCastleShort(gameData, start, destinationShort)) positions.add(destinationShort)
 
-            val destinationLong = start.shift(Offset(0, -2))
+            val destinationLong = start - castleShift
             if (canCastleLong(gameData, start, destinationLong)) positions.add(destinationLong)
         }
 
         return positions
     }
 
-    private fun canCastleLong(gameData: GameData, start: Position, end: Position): Boolean {
-        val positionLeft = start.shift(Offset.LEFT)
-        val rookPosition = start.shift(Offset(0, -4))
-        val rook = gameData.board.getPiece(rookPosition)
+    private fun canCastleLong(gameData: GameData, kingStart: Position, kingEnd: Position): Boolean {
+        val rook = gameData.pieceMap[kingEnd + Position(0, -2)]
+        val rookDestination = kingStart + SHIFT_LEFT
 
-        //Piece at rook's position is a rook and has not moved
-        if (rook !is Rook || rook.hasMoved()) return false
-
-        return if (gameData.board.getPiece(positionLeft) != null ||
-                gameData.board.getPiece(end) != null ||
-                gameData.board.getPiece(end.shift(Offset.LEFT)) != null) false else !gameData.isPositionAttacked(positionLeft, if (colour == Colour.WHITE) Colour.BLACK else Colour.WHITE)
-
+        return rook is Rook && //There is a rook
+                rook.numberOfAppliedMoves == 0 && //The rook did not move
+                rookDestination !in gameData.pieceMap && //No piece where rook is going
+                kingEnd !in gameData.pieceMap && //No piece where king is going
+                (kingEnd + SHIFT_LEFT) !in gameData.pieceMap && //No piece where rook is passing through
+                !gameData.isPositionAttacked(rookDestination, switch(colour)) //King not going through check
     }
 
-    private fun canCastleShort(gameData: GameData, start: Position, end: Position): Boolean {
-        val positionRight = start.shift(Offset.RIGHT)
-        val rookPosition = start.shift(Offset(0, 3))
-        val rook = gameData.board.getPiece(rookPosition)
+    private fun canCastleShort(gameData: GameData, kingStart: Position, kingEnd: Position): Boolean {
+        val rook = gameData.pieceMap[kingEnd + SHIFT_RIGHT]
+        val rookDestination = kingStart + SHIFT_RIGHT
 
-        //Piece at rook's position is a rook and has not moved
-        if (rook !is Rook || rook.hasMoved()) return false
-
-        //Nothing at the position to the right or at the end
-        return if (gameData.board.getPiece(positionRight) != null || gameData.board.getPiece(end) != null) false else !gameData.isPositionAttacked(positionRight, if (colour == Colour.WHITE) Colour.BLACK else Colour.WHITE)
-
-        //Not going through check
+        return rook is Rook && //There is a rook
+                rook.numberOfAppliedMoves == 0 && //The rook did not move
+                rookDestination !in gameData.pieceMap && //No piece at the rook's destination
+                kingEnd !in gameData.pieceMap && //No piece at the kings destination
+                !gameData.isPositionAttacked(rookDestination, switch(colour)) //King not going through check
     }
 
-    override fun convertDestinationToMove(board: BoardMap, current: Position, destination: Position): Move {
+    override fun convertDestinationToMove(piece: PieceMap, current: Position, destination: Position): Move {
         //Add catch to convert castling to CastlingMove
+        //Short castling
         if (current.column - destination.column == -2)
-            return CastlingMove(current, destination, arrayOf(BaseMove(destination.shift(Offset.RIGHT), destination.shift(Offset.LEFT))))
-        return if (current.column - destination.column == 2) CastlingMove(current, destination, arrayOf(BaseMove(destination.shift(Offset(0, -2)), destination.shift(Offset.RIGHT)))) else super.convertDestinationToMove(board, current, destination)
-
+            return CastlingMove(current, destination, BaseMove(destination + SHIFT_RIGHT, destination + SHIFT_LEFT))
+        //Long castling
+        if (current.column - destination.column == 2)
+            return CastlingMove(current, destination, BaseMove(destination + Position(0, -2), destination + SHIFT_RIGHT))
+        return super.convertDestinationToMove(piece, current, destination)
     }
 
-    override fun isAttackingPosition(gameData: GameData, position: Position): Boolean {
-        val positions = super.generatePossibleDestinations(gameData, gameData.board.getPosition(this)!!)
-        return positions.contains(position)
+    override fun isAttackingPosition(gameData: GameData, attackingPosition: Position, attackersPosition: Position): Boolean {
+        //Do not remove, prevents infinite loop by using super generate possible destinations (without castling)
+        return super.generatePossibleDestinations(gameData, attackersPosition).contains(attackingPosition)
     }
 
     override fun notifyMoveComplete(move: Move) {
@@ -94,5 +87,4 @@ internal class King(colour: Colour) : OffsetPiece(colour) {
     override fun notifyMoveUndo(move: Move) {
         numberOfAppliedMoves -= 1
     }
-
 }

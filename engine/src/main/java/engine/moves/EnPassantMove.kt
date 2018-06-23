@@ -2,25 +2,26 @@ package engine.moves
 
 import engine.GameData
 import engine.pieces.Pawn
-import engine.pieces.Piece
 import engine.util.Position
 
 internal class EnPassantMove(start: Position, destination: Position) : BaseMove(start, destination) {
-    private var eatenPiece: Piece? = null
+    //Do not use eaten from base move because will add it to destination on undo
+    private lateinit var enPassantEatenPiece: Pawn
 
     override val value: Int
-        get() = -eatenPiece!!.signedValue
+            get() = -enPassantEatenPiece.signedValue
 
     override fun applyToGame(data: GameData) {
         super.applyToGame(data)
 
-        eatenPiece = data.board.removePiece(end.shift((piece as Pawn).backward))
-        data.getEatenPieces(eatenPiece!!.colour).push(eatenPiece)
+        enPassantEatenPiece = data.pieceMap.removePiece(end + (piece as Pawn).backwardShift) as Pawn
+
+        data.getEatenPieces(enPassantEatenPiece.colour).push(enPassantEatenPiece)
     }
 
     override fun undoToGame(data: GameData) {
-        data.getEatenPieces(eatenPiece!!.colour).pop()
-        data.board.add(end.shift((piece as Pawn).backward), eatenPiece!!)
+        data.getEatenPieces(enPassantEatenPiece.colour).pop()
+        data.pieceMap.put(end + (piece as Pawn).backwardShift, enPassantEatenPiece)
 
         super.undoToGame(data)
     }

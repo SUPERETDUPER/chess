@@ -1,8 +1,8 @@
 package engine
 
 import engine.player.Player
-import engine.util.BoardMap
 import engine.util.Colour
+import engine.util.PieceMap
 import java.io.*
 import java.util.*
 
@@ -21,7 +21,7 @@ class Loader {
     /**
      * @return null if loadGameFromFile and/or createNewGame was not called
      */
-    var game: Game? = null
+    lateinit var game: Game
         private set
 
     /**
@@ -54,7 +54,7 @@ class Loader {
         return try {
             val objectInputStream = ObjectInputStream(FileInputStream(file))
             this.game = objectInputStream.readObject() as Game //Lire le game
-            this.game!!.addBoardChangeListener { this.saveGame() } //Add listener such that when the game changes, it is saved
+            this.game.addBoardChangeListener { this.saveGame() } //Add listener such that when the game changes, it is saved
             objectInputStream.close()
             true
         } catch (e: Exception) {
@@ -66,10 +66,10 @@ class Loader {
 
     fun createNewGame(players: EnumMap<Colour, Player>) {
         //Create the game state (in starting position)
-        val gameData = GameData(BoardMap.createStartingBoard())
+        val gameData = GameData(PieceMap.createStartingBoard())
 
         //Create the game (players + state)
-        this.game = Game(gameData, players)
-        game!!.addBoardChangeListener { this.saveGame() }//Add listener such that when the game changes, it is saved
+        game = Game(gameData, players)
+        game.addBoardChangeListener(this::saveGame) //Add listener such that when the game changes, it is saved
     }
 }

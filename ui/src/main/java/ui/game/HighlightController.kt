@@ -8,7 +8,7 @@ import java.util.*
 
 /**
  * Controls how the squares should be highlighted
- * When a piece is highlighted, the piece's square is made red and the possible moves more the piece can go is made blue
+ * When a pieceMap is highlighted, the pieceMap's square is made red and the possible moves more the pieceMap can go is made blue
  *
  *
  * @property squares the list of squares at each position
@@ -16,13 +16,13 @@ import java.util.*
 internal class HighlightController(private val squares: Board<SquarePane>) {
 
     /**
-     * The list of possible moves for the highlighted piece
-     * Empty if no piece is highlighted
+     * The list of possible moves for the highlighted pieceMap
+     * Empty if no pieceMap is highlighted
      */
     private val possibleMoves = HashMap<Position, Move>()
 
     /**
-     * The selected piece's position
+     * The selected pieceMap's position
      */
     private var selectedPosition: Position? = null
 
@@ -30,7 +30,7 @@ internal class HighlightController(private val squares: Board<SquarePane>) {
         get() = selectedPosition != null
 
     /**
-     * Selects a square (with a piece on it) and highlights the possible moves for that piece to move to
+     * Selects a square (with a pieceMap on it) and highlights the possible moves for that pieceMap to move to
      *
      * @param position      the selected position
      * @param possibleMoves a list of possible moves for that position

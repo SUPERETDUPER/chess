@@ -5,19 +5,19 @@ import org.jetbrains.annotations.Contract
 import java.util.*
 
 /**
- * A data structure that stores an object in each position (square) of the board.
+ * A data structure that stores an object in each position (square) of the pieceMap.
  * These objects are accessed using a [Position] key.
  *
  *
  * Internally the objects are stored in a list
  *
  * @param <T> The object that is stored in the data structure
-</T> */
+ */
 class Board<T> : Iterable<T> {
     /**
      * The data
      */
-    val data = ArrayList<T>(Position.LIMIT * Position.LIMIT)
+    val data = ArrayList<T>(LIMIT * LIMIT)
 
     /**
      * @param position the position key
@@ -36,7 +36,7 @@ class Board<T> : Iterable<T> {
      */
     @Contract(pure = true)
     private fun getIndex(position: Position): Int {
-        return Position.LIMIT * position.row + position.column
+        return LIMIT * position.row + position.column
     }
 
     /**

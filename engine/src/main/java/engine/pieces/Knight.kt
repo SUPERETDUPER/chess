@@ -2,11 +2,11 @@ package engine.pieces
 
 import engine.moves.Move
 import engine.util.Colour
-import engine.util.Offset
+import engine.util.Position
 
-internal class Knight(colour: Colour) : OffsetPiece(colour) {
+internal class Knight(colour: Colour) : PositionPiece(colour) {
 
-    override val offsets: Array<Offset> = arrayOf(Offset(-1, -2), Offset(-2, -1), Offset(-2, 1), Offset(-1, 2), Offset(1, 2), Offset(2, 1), Offset(2, -1), Offset(1, -2))
+    override val offsets: Array<Position> = arrayOf(Position(-1, -2), Position(-2, -1), Position(-2, 1), Position(-1, 2), Position(1, 2), Position(2, 1), Position(2, -1), Position(1, -2))
 
     override val unicodeWhite: Int = 9816
 
@@ -19,5 +19,4 @@ internal class Knight(colour: Colour) : OffsetPiece(colour) {
     override fun notifyMoveComplete(move: Move) {}
 
     override fun notifyMoveUndo(move: Move) {}
-
 }

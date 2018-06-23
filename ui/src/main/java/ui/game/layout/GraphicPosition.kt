@@ -4,7 +4,7 @@ package ui.game.layout
 import javafx.beans.value.ObservableValue
 
 /**
- * Represents the X and Y coordinates (position) of a piece
+ * Represents the X and Y coordinates (position) of a pieceMap
  */
 interface GraphicPosition {
 

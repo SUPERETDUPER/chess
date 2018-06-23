@@ -1,11 +1,10 @@
 package engine.pieces
 
 import engine.moves.Move
-import engine.util.Colour
-import engine.util.Offset
+import engine.util.*
 
 internal class Queen(colour: Colour) : DirectionPiece(colour) {
-    override val directions: Array<Offset> = arrayOf(Offset.TOP_LEFT, Offset.UP, Offset.TOP_RIGHT, Offset.LEFT, Offset.RIGHT, Offset.BOTTOM_LEFT, Offset.DOWN, Offset.BOTTOM_RIGHT)
+    override val directions: Array<Position> = arrayOf(SHIFT_TOP_LEFT, SHIFT_UP, SHIFT_TOP_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, SHIFT_BOTTOM_LEFT, SHIFT_DOWN, SHIFT_BOTTOM_RIGHT)
 
     override val unicodeWhite: Int = 9813
 

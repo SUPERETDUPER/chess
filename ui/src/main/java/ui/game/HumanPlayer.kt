@@ -1,6 +1,5 @@
 package ui.game
 
-import engine.GameData
 import engine.moves.Move
 import engine.player.Player
 import engine.util.Colour
@@ -16,8 +15,6 @@ class HumanPlayer : Player() {
     private lateinit var boardPane: BoardPane
 
     override val name: String = "Human"
-
-    override fun initializeGameData(gameData: GameData) {}
 
     internal fun attachUI(boardPane: BoardPane) {
         this.boardPane = boardPane

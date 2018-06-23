@@ -15,16 +15,16 @@ import ui.game.layout.GraphicPosition
 private const val SIZE_TO_FONT_RATIO = 0.75F
 
 /**
- * A pane that displays a piece
+ * A pane that displays a pieceMap
  *
- * @property piece    the piece to show in the pane
- * @param position the position of the piece
+ * @property piece    the pieceMap to show in the pane
+ * @param position the position of the pieceMap
  * @param size     the size of the pane (width/height)
  */
 class PiecePane(val piece: Piece, position: GraphicPosition, size: ObservableNumberValue) : StackPane() {
 
     /**
-     * The text showing the piece
+     * The text showing the pieceMap
      */
     private val text = Text()
 
@@ -51,14 +51,14 @@ class PiecePane(val piece: Piece, position: GraphicPosition, size: ObservableNum
     }
 
     /**
-     * Update the text based on the piece (actually matters for pawn promotion where pawn becomes queen)
+     * Update the text based on the pieceMap (actually matters for pawn promotion where pawn becomes queen)
      */
     fun setText() {
-        text.text = Character.toString(piece.unicode.toChar()) //Set the text to the unicode value of the piece
+        text.text = Character.toString(piece.unicode.toChar()) //Set the text to the unicode value of the pieceMap
     }
 
     /**
-     * Binds the piece to its position
+     * Binds the pieceMap to its position
      */
     @Synchronized
     fun bind(position: GraphicPosition) {
@@ -71,7 +71,7 @@ class PiecePane(val piece: Piece, position: GraphicPosition, size: ObservableNum
     }
 
     /**
-     * Unbinds the piece from it's position
+     * Unbinds the pieceMap from it's position
      */
     @Synchronized
     fun unBind() {
@@ -82,7 +82,7 @@ class PiecePane(val piece: Piece, position: GraphicPosition, size: ObservableNum
     }
 
     /**
-     * @return true if the piece is at the position
+     * @return true if the pieceMap is at the position
      */
     @Synchronized
     fun isAtPosition(position: GraphicPosition): Boolean {

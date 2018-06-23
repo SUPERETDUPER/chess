@@ -1,12 +1,10 @@
 package engine.pieces
 
 import engine.moves.Move
-import engine.util.Colour
-import engine.util.Offset
+import engine.util.*
 
 internal class Bishop(colour: Colour) : DirectionPiece(colour) {
-
-    override val directions: Array<Offset> = arrayOf(Offset.TOP_LEFT, Offset.TOP_RIGHT, Offset.BOTTOM_LEFT, Offset.BOTTOM_RIGHT)
+    override val directions: Array<Position> = arrayOf(SHIFT_TOP_LEFT, SHIFT_TOP_RIGHT, SHIFT_BOTTOM_LEFT, SHIFT_BOTTOM_RIGHT)
 
     override val unicodeWhite: Int = 9815
 
@@ -19,5 +17,4 @@ internal class Bishop(colour: Colour) : DirectionPiece(colour) {
     override fun notifyMoveComplete(move: Move) {}
 
     override fun notifyMoveUndo(move: Move) {}
-
 }

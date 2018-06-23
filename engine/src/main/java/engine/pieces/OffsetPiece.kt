@@ -2,33 +2,32 @@ package engine.pieces
 
 import engine.GameData
 import engine.util.Colour
-import engine.util.Offset
 import engine.util.Position
 import java.util.*
 
 /**
- * A piece that can move to squares next to it (King and Knight)
+ * A pieceMap that can move to squares next to it (King and Knight)
  */
-internal abstract class OffsetPiece(colour: Colour) : Piece(colour) {
+internal abstract class PositionPiece(colour: Colour) : Piece(colour) {
 
     /**
-     * the offsets where the piece can move
+     * the offsets where the pieceMap can move
      */
-    internal abstract val offsets: Array<Offset>
+    internal abstract val offsets: Array<Position>
 
     override fun generatePossibleDestinations(gameData: GameData, start: Position): MutableCollection<Position> {
         val positions = LinkedList<Position>()
 
         //For each possible position
-        for (offset in offsets) {
-            val nextPosition = start.shift(offset)
+        for (Position in offsets) {
+            val nextPosition = start + Position
 
             //If not valid skip
             if (!nextPosition.isValid) continue
 
-            val piece = gameData.board.getPiece(nextPosition)
+            val piece = gameData.pieceMap[nextPosition]
 
-            //If empty or piece other color can move
+            //If empty or pieceMap other color can move
             if (piece == null || piece.colour != colour) positions.add(nextPosition)
         }
 

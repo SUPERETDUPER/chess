@@ -3,17 +3,17 @@ package engine
 import engine.moves.Move
 import engine.pieces.King
 import engine.pieces.Piece
-import engine.util.BoardMap
 import engine.util.Colour
+import engine.util.PieceMap
 import engine.util.Position
-
+import engine.util.switch
 import java.io.Serializable
 import java.util.*
 
 /**
- * Represents the board state (piece's positions) and the pieces that were eaten
+ * Represents the pieceMap state (pieceMap's positions) and the pieces that were eaten
  */
-class GameData(val board: BoardMap) : Serializable {
+class GameData(val pieceMap: PieceMap) : Serializable {
 
     private val eatenPieces = EnumMap<Colour, Stack<Piece>>(Colour::class.java)
 
@@ -33,7 +33,7 @@ class GameData(val board: BoardMap) : Serializable {
             eatenPieces[colour] = Stack()
         }
 
-        for (piece in board.iteratePieces()) {
+        for ((_, piece) in pieceMap) {
             if (piece is King) {
                 if (kings.containsKey(piece.colour))
                     throw RuntimeException("There are two kings for the same player")
@@ -81,16 +81,16 @@ class GameData(val board: BoardMap) : Serializable {
     }
 
     /**
-     * @return true if the piece is being attacked by another piece
+     * @return true if the pieceMap is being attacked by another pieceMap
      */
     internal fun isPieceAttacked(piece: Piece): Boolean {
-        return isPositionAttacked(board.getPosition(piece), if (piece.colour == Colour.WHITE) Colour.BLACK else Colour.WHITE)
+        return isPositionAttacked(this.pieceMap[piece], switch(piece.colour))
     }
 
     fun isPositionAttacked(position: Position?, byWho: Colour): Boolean {
-        for (attacker in board.iteratePieces()) {
-            //If piece opposite color check if attacks position
-            if (attacker.colour == byWho && attacker.isAttackingPosition(this, position!!)) {
+        for ((attackersPosition, attacker) in pieceMap) {
+            //If pieceMap opposite color check if attacks position
+            if (attacker.colour == byWho && attacker.isAttackingPosition(this, position!!, attackersPosition)) {
                 return true
             }
         }
@@ -101,9 +101,9 @@ class GameData(val board: BoardMap) : Serializable {
     private fun getAllPossibleMoves(colour: Colour): Set<Move> {
         val moves = HashSet<Move>()
 
-        for (piece in board.iteratePieces()) {
+        for ((position, piece) in pieceMap) {
             if (piece.colour == colour) {
-                moves.addAll(piece.generatePossibleMoves(this, board.getPosition(piece)!!))
+                moves.addAll(piece.generatePossibleMoves(this, position))
             }
         }
         return moves

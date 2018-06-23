@@ -44,7 +44,7 @@ class IntroController(private val onStart: (EnumMap<Colour, Player>) -> Unit) {
      */
     @FXML
     private fun handleStart() {
-        //Get the 2 selected players and add them to a EnumMap
+        //Get the 2 selected players and put them to a EnumMap
         val players = EnumMap<Colour, Player>(Colour::class.java)
         players[Colour.WHITE] = whitePlayers.selectionModel.selectedItem
         players[Colour.BLACK] = blackPlayers.selectionModel.selectedItem

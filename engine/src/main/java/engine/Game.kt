@@ -5,6 +5,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper
 import engine.moves.Move
 import engine.player.Player
 import engine.util.Colour
+import engine.util.switch
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -33,7 +34,7 @@ class Game internal constructor(val gameData: GameData, val players: EnumMap<Col
     private var status = ReadOnlyObjectWrapper(Status.INACTIVE)
 
     /**
-     * The listener to notify when the board has changed
+     * The listener to notify when the pieceMap has changed
      */
     @Transient
     private var boardChangeListeners: MutableCollection<() -> Unit> = ArrayList()
@@ -63,7 +64,7 @@ class Game internal constructor(val gameData: GameData, val players: EnumMap<Col
 
     init {
         for (player in players.values) {
-            player.initializeGameData(gameData)
+            player.gameData = gameData
         }
     }
 
@@ -119,7 +120,7 @@ class Game internal constructor(val gameData: GameData, val players: EnumMap<Col
     }
 
     private fun switchTurn() {
-        turnMarker.set(if (turnMarker.value == Colour.WHITE) Colour.BLACK else Colour.WHITE)
+        turnMarker.set(switch(turnMarker.value))
     }
 
     /**

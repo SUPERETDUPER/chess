@@ -2,43 +2,41 @@ package engine.pieces
 
 import engine.GameData
 import engine.util.Colour
-import engine.util.Offset
 import engine.util.Position
 import java.util.*
 
 /**
- * A piece that attacks in a line a (or several) directions (ex. Queen, Rook, Bishop)
+ * A pieceMap that attacks in a line a (or several) directions (ex. Queen, Rook, Bishop)
  */
 internal abstract class DirectionPiece(colour: Colour) : Piece(colour) {
 
     /**
-     * the list of directions the piece can attack
+     * the list of directions the pieceMap can attack
      */
-    internal abstract val directions: Array<Offset>
+    internal abstract val directions: Array<Position>
 
     override fun generatePossibleDestinations(gameData: GameData, start: Position): Collection<Position> {
-        //WARNING if parameter start is removed pawn promoted to queen might not work since queen will not recognize itself on the board
+        //WARNING if parameter start is removed pawn promoted to queen might not work since queen will not recognize itself on the pieceMap
         val positions = LinkedList<Position>()
 
         //For each direction
         for (direction in directions) {
-            var end = start.shift(direction)
+            var end = start + direction
 
             //Loop through all the positions in that line/direction
             while (end.isValid) {
-                val piece = gameData.board.getPiece(end)
+                val piece = gameData.pieceMap[end]
 
-                if (piece == null)
-                    positions.add(end) //If the square (position) is empty -> can move
+                if (piece == null) positions.add(end) //If the square (position) is empty -> can move
                 else {
-                    //If piece is other colour can eat
-                    if (piece.colour != colour) positions.add(end)
+                    //If pieceMap is other colour can eat
+                    if (piece.colour != this.colour) positions.add(end)
 
-                    //Cannot go past a piece since it is blocking the line
+                    //Cannot go past a pieceMap since it is blocking the line
                     break
                 }
 
-                end = end.shift(direction)
+                end += direction
             }
         }
 

@@ -3,7 +3,7 @@ package engine.pieces
 import engine.GameData
 import engine.moves.BaseMove
 import engine.moves.Move
-import engine.util.BoardMap
+import engine.util.PieceMap
 import engine.util.Colour
 import engine.util.Position
 import org.junit.jupiter.api.Assertions
@@ -16,9 +16,9 @@ internal class KingTest {
     fun generateMoves() {
         val king = King(Colour.WHITE)
 
-        val boardMap = BoardMap()
+        val boardMap = PieceMap()
         val startingPos = Position(0, 0)
-        boardMap.add(startingPos, king)
+        boardMap.put(startingPos, king)
 
         val moves = king.generatePossibleMoves(GameData(boardMap), startingPos)
 

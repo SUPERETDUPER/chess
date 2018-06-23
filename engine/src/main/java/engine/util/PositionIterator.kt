@@ -1,30 +1,24 @@
 package engine.util
 
 /**
- * Iterator that loops through all the position on the board
+ * Iterator that loops through all the position on the pieceMap
  */
 class PositionIterator : Iterator<Position> {
+    private val maximum = Position(LIMIT, 0) //One row below max
 
-    private var position = Position(0, 0)
+    private var nextPosition = Position(0, 0)
 
     override fun hasNext(): Boolean {
-        return position != MAXIMUM
+        return nextPosition != maximum
     }
 
     override fun next(): Position {
-        val positionToReturn = position
+        val currentPosition = nextPosition
 
-        position =
-                if (position.column == Position.LIMIT - 1) {
-                    Position(position.row + 1, 0)
-                } else {
-                    position.shift(Offset.RIGHT)
-                }
+        nextPosition += SHIFT_RIGHT
 
-        return positionToReturn
-    }
+        if (nextPosition.column == LIMIT) nextPosition = Position(nextPosition.row + 1, 0)
 
-    companion object {
-        private val MAXIMUM = Position(Position.LIMIT, 0)
+        return currentPosition
     }
 }

@@ -16,6 +16,8 @@ abstract class Player : Serializable {
      */
     protected abstract val name: String
 
+    lateinit var gameData: GameData
+
     /**
      * Called to ask the player to submit his move via the callback method
      *
@@ -23,11 +25,6 @@ abstract class Player : Serializable {
      * @param colour   the colour of the player that should submit his move
      */
     abstract fun getMove(callback: (Move) -> Unit, colour: Colour)
-
-    /**
-     * @param gameData called when the player is added to the game to give it access to the game data
-     */
-    abstract fun initializeGameData(gameData: GameData)
 
     override fun toString(): String {
         return name

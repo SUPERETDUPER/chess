@@ -1,8 +1,8 @@
 package engine.player
 
-import engine.GameData
 import engine.moves.Move
 import engine.util.Colour
+import engine.util.switch
 import java.io.Serializable
 import java.util.*
 
@@ -20,16 +20,7 @@ import java.util.*
  * @property difficulty The difficulty level of the current instance of this player
  */
 class PlayerComputer(private val difficulty: Difficulty) : Player() {
-    /**
-     * The game data
-     */
-    private lateinit var gameData: GameData
-
     override val name: String = "Computer (" + difficulty.name + ")"
-
-    override fun initializeGameData(gameData: GameData) {
-        this.gameData = gameData
-    }
 
     /**
      * Calculates the best move and returns it via the callback.
@@ -54,7 +45,7 @@ class PlayerComputer(private val difficulty: Difficulty) : Player() {
             move.apply(gameData) //Apply the move to the data
 
             //Calculate the value of this move (using recursion)
-            val moveSequence = calculateBestMove(MoveSequence(pastSequence, move), getOppositeColour(colour))
+            val moveSequence = calculateBestMove(MoveSequence(pastSequence, move), switch(colour))
 
             //If the move is better than bestMove update bestMove.
             //If the move is equal to bestMove update bestMove 50% of the time (to allow for variation)
@@ -76,13 +67,6 @@ class PlayerComputer(private val difficulty: Difficulty) : Player() {
         }
 
         return bestMove?: pastSequence
-    }
-
-    /**
-     * @return the opposite colour (used to switch turns)
-     */
-    private fun getOppositeColour(colour: Colour): Colour {
-        return if (colour == Colour.WHITE) Colour.BLACK else Colour.WHITE
     }
 
     /**

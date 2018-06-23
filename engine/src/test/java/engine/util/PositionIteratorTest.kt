@@ -16,8 +16,8 @@ internal class PositionIteratorTest {
             when {
                 i == 0 -> Assertions.assertEquals(Position(0, 0), position)
                 i == 1 -> Assertions.assertEquals(Position(0, 1), position)
-                i == Position.LIMIT * Position.LIMIT - 1 -> Assertions.assertEquals(Position(Position.LIMIT - 1, Position.LIMIT - 1), position)
-                i >= Position.LIMIT * Position.LIMIT -> throw RuntimeException("Position is too large: " + position.toString())
+                i == LIMIT * LIMIT - 1 -> Assertions.assertEquals(Position(LIMIT - 1, LIMIT - 1), position)
+                i >= LIMIT * LIMIT -> throw RuntimeException("Position is too large: " + position.toString())
             }
 
             i++

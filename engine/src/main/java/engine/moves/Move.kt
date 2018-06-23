@@ -8,17 +8,17 @@ import java.io.Serializable
 import java.util.*
 
 /**
- * A move. Each move has a start and end location. Each move has a piece (defined only when move is applied)
+ * A move. Each move has a start and end location. Each move has a pieceMap (defined only when move is applied)
  */
 abstract class Move protected constructor(val start: Position, val end: Position) : Serializable {
     /**
-     * The piece that is moving. Gets set in method applyToGame
+     * The pieceMap that is moving. Gets set in method applyToGame
      */
-    var piece: Piece? = null
+    lateinit var piece: Piece
         protected set
 
     /**
-     * @return the value of the move (difference in board value)
+     * @return the value of the move (difference in pieceMap value)
      */
     abstract val value: Int
 
@@ -28,7 +28,7 @@ abstract class Move protected constructor(val start: Position, val end: Position
     fun apply(data: GameData) {
         applyToGame(data)
         data.pastMoves.add(this)
-        piece!!.notifyMoveComplete(this)
+        piece.notifyMoveComplete(this)
     }
 
     /**
@@ -42,7 +42,7 @@ abstract class Move protected constructor(val start: Position, val end: Position
     fun undo(data: GameData) {
         data.pastMoves.removeLast()
         undoToGame(data)
-        piece!!.notifyMoveUndo(this)
+        piece.notifyMoveUndo(this)
     }
 
     internal abstract fun undoToGame(data: GameData)
@@ -58,10 +58,10 @@ abstract class Move protected constructor(val start: Position, val end: Position
     }
 
     override fun hashCode(): Int {
-        return Objects.hash(this.piece, this.end)
+        return Objects.hash(this.start, this.end)
     }
 
     override fun toString(): String {
-        return start.toString() + " to " + end
+        return "$start to $end"
     }
 }

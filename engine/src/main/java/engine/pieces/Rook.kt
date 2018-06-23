@@ -1,21 +1,21 @@
 package engine.pieces
 
 import engine.moves.Move
-import engine.util.Colour
-import engine.util.Offset
+import engine.util.*
 
 internal class Rook(colour: Colour) : DirectionPiece(colour) {
 
     /**
-     * The number of moves that have been applied to this piece. Used to know if the piece has moved
+     * The number of moves that have been applied to this pieceMap. Used to know if the pieceMap has moved
      */
-    private var numberOfAppliedMoves = 0
+    var numberOfAppliedMoves = 0
+        private set
 
     override val unicodeWhite: Int = 9814
 
     override val unicodeBlack: Int = 9820
 
-    override val directions: Array<Offset> = arrayOf(Offset.UP, Offset.LEFT, Offset.RIGHT, Offset.DOWN)
+    override val directions: Array<Position> = arrayOf(SHIFT_UP, SHIFT_LEFT, SHIFT_RIGHT, SHIFT_DOWN)
 
     override val unsignedValue: Int = 5
 
@@ -27,9 +27,5 @@ internal class Rook(colour: Colour) : DirectionPiece(colour) {
 
     override fun notifyMoveUndo(move: Move) {
         numberOfAppliedMoves -= 1
-    }
-
-    internal fun hasMoved(): Boolean {
-        return numberOfAppliedMoves != 0
     }
 }

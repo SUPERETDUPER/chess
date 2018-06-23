@@ -50,7 +50,7 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
             }
         }
 
-        //If there are human players add an undo button
+        //If there are human players put an undo button
         if (numberOfHumans != 0)
             actions.add(Action("Undo") {
                 if (numberOfHumans == 2) {
@@ -63,7 +63,7 @@ class GameController(exit: () -> Unit, private val loader: Loader) {
 
     @FXML
     private fun initialize() {
-        //Add the board to its container
+        //Add the pieceMap to its container
         boardContainer.children.add(boardPane)
 
         //Add the actions to the list
